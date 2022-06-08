@@ -2,26 +2,35 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://carlosolmos.github.io/tags/ai/</loc>
+    <lastmod>2022-06-07T21:39:31-07:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.github.io/posts/ai-colonialism/</loc>
+    <lastmod>2022-06-07T21:39:31-07:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.github.io/tags/article/</loc>
+    <lastmod>2022-06-07T21:39:31-07:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.github.io/tags/ethics/</loc>
+    <lastmod>2022-06-07T21:39:31-07:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.github.io/tags/governance/</loc>
+    <lastmod>2022-06-07T21:39:31-07:00</lastmod>
+  </url><url>
     <loc>https://carlosolmos.github.io/</loc>
-    <lastmod>2022-06-07T00:00:00+00:00</lastmod>
+    <lastmod>2022-06-07T21:39:31-07:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.github.io/posts/</loc>
+    <lastmod>2022-06-07T21:39:31-07:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.github.io/tags/</loc>
+    <lastmod>2022-06-07T21:39:31-07:00</lastmod>
   </url><url>
     <loc>https://carlosolmos.github.io/posts/i-learned-today-how-to-make-a-blog-with-hugo/</loc>
     <lastmod>2022-06-07T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://carlosolmos.github.io/tags/ilearnedtoday/</loc>
     <lastmod>2022-06-07T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://carlosolmos.github.io/posts/</loc>
-    <lastmod>2022-06-07T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://carlosolmos.github.io/tags/</loc>
-    <lastmod>2022-06-07T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://carlosolmos.github.io/tags/bio/</loc>
-    <lastmod>2022-02-20T09:28:04-08:00</lastmod>
-  </url><url>
-    <loc>https://carlosolmos.github.io/posts/intro/</loc>
-    <lastmod>2022-02-20T09:28:04-08:00</lastmod>
   </url><url>
     <loc>https://carlosolmos.github.io/about/</loc>
     <priority>0</priority>

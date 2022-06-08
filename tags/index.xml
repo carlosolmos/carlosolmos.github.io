@@ -1,27 +1,54 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Tags on Carlos A Olmos - Life, the universe, and everything else</title>
+    <title>Tags on Life, the universe, and everything else</title>
     <link>https://carlosolmos.github.io/tags/</link>
-    <description>Recent content in Tags on Carlos A Olmos - Life, the universe, and everything else</description>
+    <description>Recent content in Tags on Life, the universe, and everything else</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 07 Jun 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://carlosolmos.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 07 Jun 2022 21:39:31 -0700</lastBuildDate><atom:link href="https://carlosolmos.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>ai</title>
+      <link>https://carlosolmos.github.io/tags/ai/</link>
+      <pubDate>Tue, 07 Jun 2022 21:39:31 -0700</pubDate>
+      
+      <guid>https://carlosolmos.github.io/tags/ai/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>article</title>
+      <link>https://carlosolmos.github.io/tags/article/</link>
+      <pubDate>Tue, 07 Jun 2022 21:39:31 -0700</pubDate>
+      
+      <guid>https://carlosolmos.github.io/tags/article/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>ethics</title>
+      <link>https://carlosolmos.github.io/tags/ethics/</link>
+      <pubDate>Tue, 07 Jun 2022 21:39:31 -0700</pubDate>
+      
+      <guid>https://carlosolmos.github.io/tags/ethics/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>governance</title>
+      <link>https://carlosolmos.github.io/tags/governance/</link>
+      <pubDate>Tue, 07 Jun 2022 21:39:31 -0700</pubDate>
+      
+      <guid>https://carlosolmos.github.io/tags/governance/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>iLearnedToday</title>
       <link>https://carlosolmos.github.io/tags/ilearnedtoday/</link>
       <pubDate>Tue, 07 Jun 2022 00:00:00 +0000</pubDate>
       
       <guid>https://carlosolmos.github.io/tags/ilearnedtoday/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>bio</title>
-      <link>https://carlosolmos.github.io/tags/bio/</link>
-      <pubDate>Sun, 20 Feb 2022 09:28:04 -0800</pubDate>
-      
-      <guid>https://carlosolmos.github.io/tags/bio/</guid>
       <description></description>
     </item>
     
