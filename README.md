@@ -1,2 +1,0 @@
-# carlosolmos.github.io
-Blog
