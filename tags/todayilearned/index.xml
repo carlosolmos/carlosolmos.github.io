@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>TodayILearned on Life, the universe, and everything else</title>
+    <link>https://carlosolmos.github.io/tags/todayilearned/</link>
+    <description>Recent content in TodayILearned on Life, the universe, and everything else</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 07 Jun 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://carlosolmos.github.io/tags/todayilearned/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Today I Learned: How to make a blog with Hugo</title>
+      <link>https://carlosolmos.github.io/posts/today-i-learned-how-to-make-a-blog-with-hugo/</link>
+      <pubDate>Tue, 07 Jun 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://carlosolmos.github.io/posts/today-i-learned-how-to-make-a-blog-with-hugo/</guid>
+      <description>Using Hugo to Create a Static Blog 🔗Create your own free blog website using Hugo in less than 1 hour
+A goog example site: https://github.com/nodejh/hugo-theme-mini/tree/master/exampleSite</description>
+    </item>
+    
+  </channel>
+</rss>
