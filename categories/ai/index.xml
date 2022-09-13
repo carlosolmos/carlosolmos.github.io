@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>ai on Life, the universe, and everything else</title>
+    <link>https://carlosolmos.github.io/categories/ai/</link>
+    <description>Recent content in ai on Life, the universe, and everything else</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 07 Jun 2022 21:39:31 -0700</lastBuildDate><atom:link href="https://carlosolmos.github.io/categories/ai/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>AI Colonialism</title>
+      <link>https://carlosolmos.github.io/posts/ai-colonialism/</link>
+      <pubDate>Tue, 07 Jun 2022 21:39:31 -0700</pubDate>
+      
+      <guid>https://carlosolmos.github.io/posts/ai-colonialism/</guid>
+      <description>From the MIT Technology Review:
+Artificial Intelligence is creating a new colonial world order.
+Big tech is following concerning patterns when deploying their services in developing countries. Just like the colonialists of the past, this companies are extracting value from vulnerable communities for their enrichment. This MIT Technology Review series of articles is a real eye-opener.
+ &amp;ldquo;The AI industry does not seek to capture land as the conquistadors of the Caribbean and Latin America did, but the same desire for profit drives it to expand its reach.</description>
+    </item>
+    
+  </channel>
+</rss>
