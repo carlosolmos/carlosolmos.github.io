@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>TodayILearned on Life, the universe, and everything else</title>
+    <title>TodayILearned on Brain dump</title>
     <link>https://carlosolmos.dev/tags/todayilearned/</link>
-    <description>Recent content in TodayILearned on Life, the universe, and everything else</description>
+    <description>Recent content in TodayILearned on Brain dump</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 07 Jun 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://carlosolmos.dev/tags/todayilearned/index.xml" rel="self" type="application/rss+xml" />

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Tags on Life, the universe, and everything else</title>
+    <title>Tags on Brain dump</title>
     <link>https://carlosolmos.dev/tags/</link>
-    <description>Recent content in Tags on Life, the universe, and everything else</description>
+    <description>Recent content in Tags on Brain dump</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Mon, 12 Sep 2022 22:21:32 -0700</lastBuildDate><atom:link href="https://carlosolmos.dev/tags/index.xml" rel="self" type="application/rss+xml" />
