@@ -18,7 +18,7 @@
 
   
     
-    <link rel="stylesheet" href="https://carlosolmos.dev/css/custom.css">
+    <link rel="stylesheet" href="http://localhost:8000/css/custom.css">
   
 
 
@@ -128,7 +128,7 @@
 <p>I like RabbitMQ. It has always served me well in pub/sub and queueing scenarios. And because it is so popular, chances are you already have an instance running in your stack. RabbitMQ&rsquo;s main protocol AMQP offers more flexibility than standard MQTT to create data pipelines at scale. By Implementing MQTT with RabbitMQ you can crossover to the AMQP world and leverage its features.</p>
 <p>While there are all kinds of software products to implement an MQTT broker, in this article, I will show you how to implement a robust, scalable, and flexible MQTT solution using RabbitMQ as the broker. But first, let&rsquo;s take a look at some of the basic concepts.</p>
 <h2 id="mqtt---the-iot-messaging-protocol">MQTT - The IoT messaging protocol <a href="#mqtt---the-iot-messaging-protocol" class="anchor">🔗</a></h2><p><a href="https://mqtt.org/" target="_blank" rel="noopener">MQTT</a>  — Message Queuing Telemetry Transport — protocol is the favorited publish/subscribe messaging protocol for Internet of Things (IoT) solutions. It is designed as publish/subscribe messaging transport with very useful features like topic hierarchies, quality of service, persistent connections, retained messages, and connection&rsquo;s &ldquo;Last Will and Testament&rdquo;, among others.</p>
-<h3 id="publishers-subscribers-messages-and-topics">Publishers, Subscribers, Messages, and Topics <a href="#publishers-subscribers-messages-and-topics" class="anchor">🔗</a></h3><img src="../img/732c22e65c2e46318243149bd01fedc9.png" alt="MQTT Protocol" width="519" height="341">
+<h3 id="publishers-subscribers-messages-and-topics">Publishers, Subscribers, Messages, and Topics <a href="#publishers-subscribers-messages-and-topics" class="anchor">🔗</a></h3><img src="../img/732c22e65c2e46318243149bd01fedc9.png" alt="MQTT Protocol" width="519" height="341" class="post-image">
 <p><strong>MQTT Clients</strong> subscribe to topics to receive messages of interest. The topics are organized in hierarchical paths: <code>a/b/c/d</code>. The subscriptions can be specified using wildcards to tap messages at different levels of the topic hierarchy.</p>
 <p>Some typical examples of topic subscriptions look like these:</p>
 <p><em>Subscribe to the readings of sensor X from machine B in building A:</em></p>
@@ -254,7 +254,7 @@ mosquitto_sub -h <span style="color:#b68;font-weight:bold">${</span><span style=
   <img src="../img/64b851f92d9e48a288ed9c4611f7b6f9.png" alt="queues"  />
 </p></p>
 <p>The queue is set with <code>auto-delete:true</code> which means it will be deleted when the client disconnects.</p>
-<img src="../img/5e89ab988a124b43bc1d8f02e08584ce.png" alt="queues" width="342" height="209" class="jop-noMdConv">
+<img src="../img/5e89ab988a124b43bc1d8f02e08584ce.png" alt="queues" width="342" height="209" class="post-image">
 <blockquote>
 <p>Note that the queues are only created by subscribing to a topic. Publishing does not create queues since the client publishes to the exchange, not a queue.</p>
 </blockquote>
@@ -264,7 +264,7 @@ mosquitto_sub -h <span style="color:#b68;font-weight:bold">${</span><span style=
 </code></pre></div><p><p class="markdown-image">
   <img src="../img/126a38dc70914788bc22a74cce564bf4.png" alt="queues"  />
 </p></p>
-<img src="../img/b624feb79b69443e91b4fe1bb80cf61f.png" alt="queues" width="293" height="201" class="jop-noMdConv">
+<img src="../img/b624feb79b69443e91b4fe1bb80cf61f.png" alt="queues" width="293" height="201" class="post-image">
 <p>This means the queue does not disappear when the client disconnects, but more importantly, it will keep accumulating the messages that are being published, up to the expiration time. When the client reconnects, the pending messages in <em>&ldquo;ready&rdquo;</em> state will be delivered.</p>
 <p><p class="markdown-image">
   <img src="../img/8f5f2366299441c39cc4a84d4bd0bac6.png" alt="Screen Shot"  />
@@ -274,16 +274,16 @@ mosquitto_sub -h <span style="color:#b68;font-weight:bold">${</span><span style=
 </blockquote>
 <h3 id="topics-and-bindings">Topics and Bindings <a href="#topics-and-bindings" class="anchor">🔗</a></h3><p>For every subscription a new binding to the Topic Exchange <code>amq.topic</code> is created inside the queue. The binding is set to match the routing key with the topic pattern.</p>
 <p>Subscribing to <code>&quot;my/topic&quot;</code> creates a binding for routing key equal to <code>&quot;my.topic&quot;</code></p>
-<img src="../img/1026c7002a214c8c8c6ac00b648556d9.png" alt="Screen Shot" width="283" height="120" class="jop-noMdConv">
+<img src="../img/1026c7002a214c8c8c6ac00b648556d9.png" alt="Screen Shot" width="283" height="120" class="post-image">
 <p>Subscribing to all topics <code>&quot;#&quot;</code>, creates a wildcard binding.</p>
-<img src="../img/3a95c2b825a545269a3e81818aedf87d.png" alt="Screen Shot" width="320" height="178" class="jop-noMdConv">
+<img src="../img/3a95c2b825a545269a3e81818aedf87d.png" alt="Screen Shot" width="320" height="178" class="post-image">
 <h2 id="crossing-over-to-amqp">Crossing over to AMQP <a href="#crossing-over-to-amqp" class="anchor">🔗</a></h2><p>Now that you have a standard MQTT service going, is time to leverage RabbitMQ and the AMQP protocol features. We can play around with queues, exchanges, and bindings to move our data in different ways. Let&rsquo;s take a look at some use cases.</p>
 <h3 id="retain-messages-in-a-custom-queue">Retain messages in a custom queue <a href="#retain-messages-in-a-custom-queue" class="anchor">🔗</a></h3><p>Sometimes you want to be able to retain the messages for AMQP clients in a way that doesn&rsquo;t depend on the MQTT connections. For this, you can create a custom queue that pulls the messages directly from the Topic Exchange and applies its own rules.</p>
 <p><p class="markdown-image">
   <img src="../img/d110b9dcc8f54c00ab55b9caff49e90d.png" alt="Screen Shot"  />
 </p></p>
 <p>First, we create a <a href="https://www.rabbitmq.com/quorum-queues.html" target="_blank" rel="noopener">Quorum Queue</a> for high availability:</p>
-<img src="../img/cb6b72d2e77f46c3a8885656bfa34500.png" alt="Screen Shot" width="306" height="148" class="jop-noMdConv">
+<img src="../img/cb6b72d2e77f46c3a8885656bfa34500.png" alt="Screen Shot" width="306" height="148" class="post-image">
 <p>And we add a binding to get a copy of all messages (all topics) from the Topic Exchange (amq.topic) into this queue:</p>
 <p><p class="markdown-image">
   <img src="../img/0ba07c011b7849f492ee5e05d0fad17e.png" alt="Screen Shot"  />
@@ -325,7 +325,7 @@ mosquitto_sub -h <span style="color:#b68;font-weight:bold">${</span><span style=
   <img src="../img/b7453bbfa060433abbc57b2ebfe52f50.png" alt="Screen Shot"  />
 </p></p>
 <p>Finally, we bind these new queues to the Fanout Exchange to receive the messages. The fanout binding does not require routing keys.</p>
-<img src="../img/43c901b54bce40c58938f42d4afc2ad9.png" alt="Screen Shot " width="370" height="159" class="jop-noMdConv">
+<img src="../img/43c901b54bce40c58938f42d4afc2ad9.png" alt="Screen Shot " width="370" height="159" class="post-image">
 <p>Now, if we push some messages through or MQTT client we see all the pieces working together:</p>
 <p><p class="markdown-image">
   <img src="../img/277837882c5e4c77bcd8171e3eb7b0a5.png" alt="Screen Shot "  />

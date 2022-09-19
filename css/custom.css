@@ -3,3 +3,16 @@
     vertical-align: middle;
     padding: 1em;
 }
+
+p.markdown-image img {
+    border:solid 2px #41403E;
+    box-shadow: 20px 38px 34px -26px hsla(0,0%,0%,.2);
+    border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+}
+
+.post-image {
+    border:solid 2px #41403E;
+    box-shadow: 20px 38px 34px -26px hsla(0,0%,0%,.2);
+    border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+}
+
