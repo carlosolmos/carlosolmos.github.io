@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <title>MQTT with RabbitMQ | Life, the universe, and everything else</title>
+
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">    
+<meta name="viewport" content="width=device-width,minimum-scale=1">
+<meta name="description" content="MQTT is a widely used protocol in the IoT world. RabbitMQ is one of the most popular message brokers and supports different kinds of messaging protocols. One of them is MQTT. In this article, I will show you how to implement a robust, scalable, and flexible MQTT solution using RabbitMQ as the broker.">
+<meta name="generator" content="Hugo 0.92.2" />
+
+
+  <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+  
+    
+    <link rel="stylesheet" href="https://carlosolmos.dev/css/custom.css">
+  
+
+
+<link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+
+
+
+
+
+
+
+  </head>
+
+  <body>
+    <nav class="navigation">
+	
+		<a href="/"> <span class="arrow">←</span>Home</a>
+	
+	<a href="/posts">Archive</a>
+	<a href="/tags">Tags</a>
+	<a href="/about">About</a>
+
+	
+
+	
+	  <a class="button" href="https://carlosolmos.dev/index.xml">Subscribe</a>
+	
+</nav>
+
+
+    <main class="main">
+      
+
+<section id="single">
+    <h1 class="title">MQTT with RabbitMQ</h1>
+
+    <div class="tip">
+        <time datetime="2022-09-12 22:21:32 -0700 PDT">Sep 12, 2022</time>
+        <span class="split">
+          ·
+        </span>
+        <span>
+          2585 words
+        </span>
+        <span class="split">
+          ·
+        </span>
+        <span>
+          13 minute read
+        </span>
+    </div>
+
+    
+    
+        
+  
+    <aside class="toc">
+      <details>
+          <summary>Table of Contents
+          </summary>
+          <div>
+              <nav id="TableOfContents">
+  <ul>
+    <li><a href="#mqtt---the-iot-messaging-protocol">MQTT - The IoT messaging protocol</a>
+      <ul>
+        <li><a href="#publishers-subscribers-messages-and-topics">Publishers, Subscribers, Messages, and Topics</a></li>
+        <li><a href="#qos">QoS</a></li>
+        <li><a href="#client-id">Client ID</a></li>
+      </ul>
+    </li>
+    <li><a href="#rabbitmq">RabbitMQ</a>
+      <ul>
+        <li><a href="#a-little-about-amqp">A little about AMQP</a></li>
+        <li><a href="#why-use-rabbitmq-for-mqtt">Why use RabbitMQ for MQTT?</a></li>
+        <li><a href="#mqtt-plugin">MQTT Plugin</a></li>
+      </ul>
+    </li>
+    <li><a href="#implementing-an-mqtt-service-with-rabbitmq">Implementing an MQTT service with RabbitMQ</a></li>
+    <li><a href="#how-it-works">How it works</a>
+      <ul>
+        <li><a href="#mqtt-subscriptions-and-amqp-queues">MQTT Subscriptions and AMQP Queues</a></li>
+        <li><a href="#topics-and-bindings">Topics and Bindings</a></li>
+      </ul>
+    </li>
+    <li><a href="#crossing-over-to-amqp">Crossing over to AMQP</a>
+      <ul>
+        <li><a href="#retain-messages-in-a-custom-queue">Retain messages in a custom queue</a></li>
+        <li><a href="#move-messages-to-another-exchanges">Move messages to another exchanges</a></li>
+        <li><a href="#publish-with-amqp-and-receive-via-mqtt">Publish with AMQP and receive via MQTT</a></li>
+      </ul>
+    </li>
+    <li><a href="#conclusions">Conclusions</a></li>
+  </ul>
+</nav>
+          </div>
+      </details>
+    </aside>
+  
+
+
+    
+
+
+    <div class="content">
+      <p>MQTT is a widely used protocol in the IoT world. There are different products to implement an MQTT server. From small standalone applications like <em>mosquitto</em> to large highly available services like HiveMQ, and of course the cloud vendors' IoT products like AWS IoT core and Azure IoT Hub.</p>
+<p>RabbitMQ is one of the most popular message brokers. It is easy to deploy and solves all kinds of messaging requirements at small and large scales. RabbitMQ supports different kinds of messaging protocols. One of them is MQTT.</p>
+<p>I like RabbitMQ. It has always served me well in pub/sub and queueing scenarios. And because it is so popular, chances are you already have an instance running in your stack. RabbitMQ&rsquo;s main protocol AMQP offers more flexibility than standard MQTT to create data pipelines at scale. By Implementing MQTT with RabbitMQ you can crossover to the AMQP world and leverage its features.</p>
+<p>In this article, I will show you how to implement a robust, scalable, and flexible MQTT solution using RabbitMQ as the broker. But first, let&rsquo;s take a look at some of the basic concepts.</p>
+<h2 id="mqtt---the-iot-messaging-protocol">MQTT - The IoT messaging protocol <a href="#mqtt---the-iot-messaging-protocol" class="anchor">🔗</a></h2><p><a href="https://mqtt.org/" target="_blank" rel="noopener">MQTT</a>  — Message Queuing Telemetry Transport — protocol is the favorited publish/subscribe messaging protocol for Internet of Things (IoT) solutions. It is lightweight, with a small code footprint and minimal bandwidth requirements, which makes it ideal for connecting remote small devices. It is designed as publish/subscribe messaging transport with very useful features like topic hierarchies, quality of service, persistent connections, retained messages, and connection&rsquo;s &ldquo;Last Will and Testament&rdquo;, among others.</p>
+<h3 id="publishers-subscribers-messages-and-topics">Publishers, Subscribers, Messages, and Topics <a href="#publishers-subscribers-messages-and-topics" class="anchor">🔗</a></h3><img src="../img/732c22e65c2e46318243149bd01fedc9.png" alt="MQTT Protocol" width="519" height="341">
+<p><strong>MQTT Clients</strong> subscribe to topics to receive messages of interest. The topics are organized in hierarchical paths: <code>a/b/c/d</code>. The subscriptions can be specified using wildcards to tap messages at different levels of the topic hierarchy.</p>
+<p>Some typical examples of topic subscriptions look like these:</p>
+<p><em>Subscribe to the readings of sensor X from machine B in building A:</em></p>
+<blockquote>
+<p><code>buildingA/machineB/sensorX/temp</code></p>
+</blockquote>
+<p><em>Subscribe to all the messages from building A:</em></p>
+<blockquote>
+<p><code>buildingA/#</code></p>
+</blockquote>
+<p><em>Subscribe to all the temp readings from all sensors on all machines in building A:</em></p>
+<blockquote>
+<p><code>buildingA/+/+/temp</code></p>
+</blockquote>
+<p><em>Give me all the messages from all topics:</em></p>
+<blockquote>
+<p><code>#</code></p>
+</blockquote>
+<p><strong>Publishers</strong> connect to the broker and deliver messages on specific topics for example <code>a/b/c/d</code>. There is no need to set up a topic, publishing on the topic is enough to create it. There are no wildcards for publishing but you can publish to any level in the path.</p>
+<p>The protocol is bidirectional. Clients can receive and publish on any topic they have access to. Every client can specify certain properties of the connection to control the pub/sub behavior: like the QoS or the &ldquo;Will and Testament&rdquo;.</p>
+<h3 id="qos">QoS <a href="#qos" class="anchor">🔗</a></h3><p>One very important concept in MQTT is the Quality of Service (QoS) of the pub/sub connections. MQTT defines three incremental levels, from 0 to 2. Higher levels of QoS are more reliable but involve higher latency and complexity:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">0: The broker/client will deliver the message once, with no confirmation.
+1: The broker/client will deliver the message at least once, with confirmation required.
+2: The broker/client will deliver the message exactly once by using a four step handshake.
+</code></pre></div><h3 id="client-id">Client ID <a href="#client-id" class="anchor">🔗</a></h3><p>In MQTT, clients connect with a unique ID that is associated with the subscriptions. The client ID is used to resume subscriptions when operating at QoS &gt; 0. If a new client connects with a client id that is already in use, the oldest connection will be terminated. Always make sure that different clients or subscriptions have different client Ids.</p>
+<p>For more details about the MQTT protocol, I recommend you to visit <a href="https://www.hivemq.com/blog/mqtt-essentials-part-1-introducing-mqtt" target="_blank" rel="noopener">https://www.hivemq.com/blog/mqtt-essentials-part-1-introducing-mqtt</a> and  <a href="http://mosquitto.org/man/mqtt-7.html" target="_blank" rel="noopener">http://mosquitto.org/man/mqtt-7.html</a></p>
+<h2 id="rabbitmq">RabbitMQ <a href="#rabbitmq" class="anchor">🔗</a></h2><p><a href="https://www.rabbitmq.com" target="_blank" rel="noopener">RabbitMQ</a> is one of the most popular message brokers in the market. It is easy to deploy and solves all kinds of messaging requirements at small and large scales. RabbitMQ&rsquo;s primary protocol is AMQP (Advanced Message Queuing Protocol), but it also supports MQTT.</p>
+<h3 id="a-little-about-amqp">A little about AMQP <a href="#a-little-about-amqp" class="anchor">🔗</a></h3><p>In AMQP, messages are published to <em>exchanges</em>. Exchanges then route message copies to <em>queues</em> using rules called <em>bindings</em> that use header attributes and routing keys to route messages. Then the broker either delivers messages to consumers subscribed to queues, or consumers fetch/pull messages from queues on demand.</p>
+<p><p class="markdown-image">
+  <img src="../img/ffc22d0a4ba0469ca5293ae2c3bba000.png" alt="AMQP Protocol"  />
+</p></p>
+<p>There are different types of exchanges that support different distribution or routing rules.</p>
+<ul>
+<li>Direct exchange:  delivers messages to queues based on the message routing key.</li>
+<li>Fanout exchange: every queue bound to the exchange receives every message.</li>
+<li>Topic exchange: messages are routed to queues based on the routing key pattern defined in the binding.</li>
+<li>Headers exchange: similar to the topic exchange but it uses the message headers for the pattern matching.</li>
+</ul>
+<p>A great article about Exchanges and Routing: <a href="https://www.cloudamqp.com/blog/part4-rabbitmq-for-beginners-exchanges-routing-keys-bindings.html" target="_blank" rel="noopener">https://www.cloudamqp.com/blog/part4-rabbitmq-for-beginners-exchanges-routing-keys-bindings.html</a></p>
+<h4 id="virtual-hosts">Virtual Hosts <a href="#virtual-hosts" class="anchor">🔗</a></h4><p>Virtual Hosts (vhosts) are how RabbitMQ implements multi-tenancy. Exchanges, queues, bindings, and user privileges belong to specific Virtual Hosts. Vhosts are a good way to isolate data and functionality. The default vhost is the root (empty) virtual host. Learn more about vhosts here: <a href="https://www.rabbitmq.com/vhosts.html" target="_blank" rel="noopener">https://www.rabbitmq.com/vhosts.html</a></p>
+<p>RabbitMQ offers a great deal of control over the queues, exchanges, and messages. It supports rules like queue durability, message TTL, exclusivity, replication, and more. You will find more details about RabbitMQ and the AMQP Protocol here <a href="https://www.rabbitmq.com/tutorials/amqp-concepts.html" target="_blank" rel="noopener">https://www.rabbitmq.com/tutorials/amqp-concepts.html</a></p>
+<h3 id="why-use-rabbitmq-for-mqtt">Why use RabbitMQ for MQTT? <a href="#why-use-rabbitmq-for-mqtt" class="anchor">🔗</a></h3><p>In a word: flexibility. The MQTT protocol is designed to be light and simple and provides great guarantees for message delivery. However, it is limited to only one type of pub/sub mechanism. AMQP on the other hand, give us a great deal of flexibility with the different exchange types, message headers, and other useful features.</p>
+<p>With RabbitMQ we can have the best of both worlds. We can connect remote MQTT clients to deliver and receive messages efficiently on one end, and we can make use of the different exchange types, routing, and other messaging features with AMQP clients on the other end.  It is easy to deploy scalable, highly available brokers with RabbitMQ.</p>
+<p><p class="markdown-image">
+  <img src="../img/6091a4a50f3446b2bec19d7805a5cea0.png" alt="MQTT on RabbitMQ"  />
+</p></p>
+<h3 id="mqtt-plugin">MQTT Plugin <a href="#mqtt-plugin" class="anchor">🔗</a></h3><p>Support for MQTT in RabbitMQ is provided by a Protocol Plugin: <a href="https://www.rabbitmq.com/mqtt.html" target="_blank" rel="noopener">https://www.rabbitmq.com/mqtt.html</a>. Since RabbitMQ 3.0.0, the plugin implements  MQTT 3.1.1 with QoS0 and QoS1, TLS connections and authentication, durable sessions, last will, and retained messages. Thanks to this plugin the MQTT clients can interoperate with the AMQP protocol.</p>
+<p>To work with MQTT you need to be aware of how the protocol relates to AMQP in RabbitMQ:</p>
+<ul>
+<li>MQTT clients publish messages to the Topic Exchange</li>
+<li>The MQTT Topic is translated to a Routing Key for every message.</li>
+<li>MQTT Topic paths change from forward slash to dot notation: <code>a/b/c</code> &mdash;&gt; <code>a.b.c</code></li>
+<li>RabbitMQ attaches a few headers to every message</li>
+<li>Every MQTT subscription will create a queue and binding to the Topic exchange. The attributes of the queue will depend on the subscription QoS.</li>
+<li>RabbitMQ requires MQTT clients to specify <code>vhost:user</code> for authentication.</li>
+</ul>
+<p>Read <a href="https://www.rabbitmq.com/mqtt.html#implementation" target="_blank" rel="noopener">https://www.rabbitmq.com/mqtt.html#implementation</a> for more details.</p>
+<h2 id="implementing-an-mqtt-service-with-rabbitmq">Implementing an MQTT service with RabbitMQ <a href="#implementing-an-mqtt-service-with-rabbitmq" class="anchor">🔗</a></h2><p>The first thing to do is to get an instance of RabbitMQ with the <strong>MQTT plugin</strong> enabled. The plugin comes already bundled in the base package, we just need to enable it.</p>
+<p>For this article, I&rsquo;ll use a managed instance of RabbitMQ provided by <a href="https://www.cloudamqp.com" target="_blank" rel="noopener">CloudAMQP</a>. I like their service. I&rsquo;ve been using it in production for a few years now. It allows me to do my testing with secured connections — something I highly recommend—  and their free tier comes with the MQTT plugin already enabled.</p>
+<p>However, if Docker is your thing, I prepared a Dockerfile for you to work locally. It includes the MQTT and other interesting plugins.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Dockerfile" data-lang="Dockerfile"><span style="color:#a2f;font-weight:bold">FROM</span><span style="color:#b44"> rabbitmq:3.9-management-alpine</span><span style="">
+</span><span style=""></span><span style="color:#a2f;font-weight:bold">RUN</span> rabbitmq-plugins <span style="color:#a2f">enable</span> --offline rabbitmq_management rabbitmq_mqtt rabbitmq_federation_management rabbitmq_shovel rabbitmq_shovel_management<span style="">
+</span></code></pre></div><p>You can run the container like this:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#080;font-style:italic"># Build the image</span>
+docker build -t rabbitmqtt:local .
+
+<span style="color:#080;font-style:italic"># Run the container with port 8888 for Management UI, 1883 for MQTT, and 5672 for AMQP</span>
+docker run -d --hostname my-rabbit --name rabbitmqtt -p 8888:15672 -p 1883:1883 -p 5672:5672 rabbitmqtt:local
+
+<span style="color:#080;font-style:italic"># Check the list of plugins</span>
+docker <span style="color:#a2f">exec</span> rabbitmqtt rabbitmq-plugins list
+</code></pre></div><blockquote>
+<p>By default, the container creates an admin user with credentials: guest/guest.</p>
+</blockquote>
+<p>Go to the RabbitMQ Management UI (<code>http://localhost:8888</code> in your container) to verify everything is working fine.</p>
+<p><p class="markdown-image">
+  <img src="../img/a97df24dc11c4a54998f626314342012.png" alt="RabbitMQ UI"  />
+</p></p>
+<blockquote>
+<p>A good guide on the Management UI: <a href="https://www.cloudamqp.com/blog/part3-rabbitmq-for-beginners_the-management-interface.html" target="_blank" rel="noopener">https://www.cloudamqp.com/blog/part3-rabbitmq-for-beginners_the-management-interface.html</a></p>
+</blockquote>
+<p>Let&rsquo;s verify that we can connect with MQTT clients to our RabbitMQ instance. I am going to use <a href="http://mosquitto.org/download/" target="_blank" rel="noopener">mosquitto</a>, but you can use your preferred brand.</p>
+<p>Get your connection credentials ready. For the local container the connection parameters will look like this:</p>
+<ul>
+<li>Host: localhost</li>
+<li>Port: 1883 (plain)</li>
+<li>User: guest (vhost not necessary for the root)</li>
+<li>Password: guest</li>
+<li>Client id: test.sub</li>
+<li>Topic: &ldquo;my/topic&rdquo;</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#080;font-style:italic"># connecting to the topic &#34;my/topic&#34; in vhost &#34;root&#34; with user &#34;guest&#34;, and client id &#34;test.sub&#34; on port &#34;1883&#34; (unsecured)</span>
+<span style="color:#080;font-style:italic"># qos = 0</span>
+mosquitto_sub -h localhost -d -t <span style="color:#b44">&#34;my/topic&#34;</span> -u guest -P guest -c -i test.sub -q <span style="color:#666">0</span> -p <span style="color:#666">1883</span>
+</code></pre></div><p>For my managed instance, I can use a secure connection parameters:</p>
+<p><p class="markdown-image">
+  <img src="../img/19988572e1fe4fff8f2e42f38157f0a2.png" alt="CloudAMQP"  />
+</p></p>
+<blockquote>
+<p>Remember that in RabbitMQ, if you are connecting to a vhost, the username for the MQTT connection is formed by joining the virtual host and the user: <code>vhost:user</code>.</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback"># connecting on TLS port 8883
+mosquitto_sub -h ${RABBITMQ_HOST} -d -t &#34;my/topic&#34; -u ${RABBITMQ_USER} -P ${RABBITMQ_PWD} -c -i test.sub -p 8883 -q 0
+</code></pre></div><p>Now let&rsquo;s publish a simple message to test our subscription.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#080;font-style:italic"># To local docker</span>
+mosquitto_pub -h localhost -t <span style="color:#b44">&#34;my/topic&#34;</span> -u guest -P guest -c -i test.pub -q <span style="color:#666">0</span> -p <span style="color:#666">1883</span> -m <span style="color:#b44">&#34;hola mundo&#34;</span>
+
+<span style="color:#080;font-style:italic"># To managed RMQ (TLS)</span>
+❯ mosquitto_pub -h <span style="color:#b68;font-weight:bold">${</span><span style="color:#b8860b">RABBITMQ_HOST</span><span style="color:#b68;font-weight:bold">}</span> -d -t <span style="color:#b44">&#34;my/topic&#34;</span> -u <span style="color:#b68;font-weight:bold">${</span><span style="color:#b8860b">RABBITMQ_USER</span><span style="color:#b68;font-weight:bold">}</span> -P <span style="color:#b68;font-weight:bold">${</span><span style="color:#b8860b">RABBITMQ_PWD</span><span style="color:#b68;font-weight:bold">}</span> -i test.pub -q <span style="color:#666">0</span> -p <span style="color:#666">8883</span> -m <span style="color:#b44">&#34;hola mundo&#34;</span>
+</code></pre></div><p>You should see the message coming down to the subscriber:</p>
+<p><p class="markdown-image">
+  <img src="../img/2eb2f283b9b34be484f9edab0bec7f9e.png" alt="console"  />
+</p></p>
+<blockquote>
+<p>It is very important that the client id for the subscriber and the publisher are different. I cannot tell you how many problems are often caused by duplicated client ids.</p>
+</blockquote>
+<h2 id="how-it-works">How it works <a href="#how-it-works" class="anchor">🔗</a></h2><p>Let&rsquo;s take a look at what is happening in RabbitMQ because of the MQTT connections. We can use the Management UI.</p>
+<h3 id="mqtt-subscriptions-and-amqp-queues">MQTT Subscriptions and AMQP Queues <a href="#mqtt-subscriptions-and-amqp-queues" class="anchor">🔗</a></h3><p>The first important thing to notice is how an MQTT subscription creates a new queue in RabbitMQ automatically. The queue features depend on the subscription QoS. See what happens when we subscribe the MQTT client with QoS=0.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#080;font-style:italic"># Connecting with QoS 0</span>
+mosquitto_sub -h <span style="color:#b68;font-weight:bold">${</span><span style="color:#b8860b">RABBITMQ_HOST</span><span style="color:#b68;font-weight:bold">}</span> -d -t <span style="color:#b44">&#34;#&#34;</span> -u <span style="color:#b68;font-weight:bold">${</span><span style="color:#b8860b">RABBITMQ_USER</span><span style="color:#b68;font-weight:bold">}</span> -P <span style="color:#b68;font-weight:bold">${</span><span style="color:#b8860b">RABBITMQ_PWD</span><span style="color:#b68;font-weight:bold">}</span> -c -i test.sub -p <span style="color:#666">8883</span> -q <span style="color:#666">0</span>
+</code></pre></div><p>A new queue is automatically created with the name pattern <code>mqtt-subscription-{client id}{qos}</code></p>
+<p><p class="markdown-image">
+  <img src="../img/64b851f92d9e48a288ed9c4611f7b6f9.png" alt="queues"  />
+</p></p>
+<p>The queue is set with <code>auto-delete:true</code> which means it will be deleted when the client disconnects.</p>
+<img src="../img/5e89ab988a124b43bc1d8f02e08584ce.png" alt="queues" width="342" height="209" class="jop-noMdConv">
+<blockquote>
+<p>Note that the queues are only created by subscribing to a topic. Publishing does not create queues since the client publishes to the exchange, not a queue.</p>
+</blockquote>
+<p>Subscribing with QoS1 causes the queue to be created as  &ldquo;Durable&rdquo;, but with an expiration.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#080;font-style:italic"># Connecting with QoS 1</span>
+mosquitto_sub -h <span style="color:#b68;font-weight:bold">${</span><span style="color:#b8860b">RABBITMQ_HOST</span><span style="color:#b68;font-weight:bold">}</span> -d -t <span style="color:#b44">&#34;#&#34;</span> -u <span style="color:#b68;font-weight:bold">${</span><span style="color:#b8860b">RABBITMQ_USER</span><span style="color:#b68;font-weight:bold">}</span> -P <span style="color:#b68;font-weight:bold">${</span><span style="color:#b8860b">RABBITMQ_PWD</span><span style="color:#b68;font-weight:bold">}</span> -c -i test.sub -p <span style="color:#666">8883</span> -q <span style="color:#666">1</span>
+</code></pre></div><p><p class="markdown-image">
+  <img src="../img/126a38dc70914788bc22a74cce564bf4.png" alt="queues"  />
+</p></p>
+<img src="../img/b624feb79b69443e91b4fe1bb80cf61f.png" alt="queues" width="293" height="201" class="jop-noMdConv">
+<p>This means the queue does not disappear when the client disconnects, but more importantly, it will keep accumulating the messages that are being published, up to the expiration time. When the client reconnects, the pending messages in <em>&ldquo;ready&rdquo;</em> state will be delivered.</p>
+<p><p class="markdown-image">
+  <img src="../img/8f5f2366299441c39cc4a84d4bd0bac6.png" alt="Screen Shot"  />
+</p></p>
+<blockquote>
+<p>The expiration of messages can be controlled with custom Policies or with the client parameter <code>persistent_client_expiration</code>. See the MQTT documentation for more information.</p>
+</blockquote>
+<h3 id="topics-and-bindings">Topics and Bindings <a href="#topics-and-bindings" class="anchor">🔗</a></h3><p>For every subscription a new binding to the Topic Exchange <code>amq.topic</code> is created inside the queue. The binding is set to match the routing key with the topic pattern.</p>
+<p>Subscribing to <code>&quot;my/topic&quot;</code> creates a binding for routing key equal to <code>&quot;my.topic&quot;</code></p>
+<img src="../img/1026c7002a214c8c8c6ac00b648556d9.png" alt="Screen Shot" width="283" height="120" class="jop-noMdConv">
+<p>Subscribing to all topics <code>&quot;#&quot;</code>, creates a wildcard binding.</p>
+<img src="../img/3a95c2b825a545269a3e81818aedf87d.png" alt="Screen Shot" width="320" height="178" class="jop-noMdConv">
+<h2 id="crossing-over-to-amqp">Crossing over to AMQP <a href="#crossing-over-to-amqp" class="anchor">🔗</a></h2><p>Now that you have a standard MQTT service going, is time to leverage RabbitMQ and the AMQP protocol features. We can play around with queues, exchanges, and bindings to move our data in different ways. Let&rsquo;s take a look at some use cases.</p>
+<h3 id="retain-messages-in-a-custom-queue">Retain messages in a custom queue <a href="#retain-messages-in-a-custom-queue" class="anchor">🔗</a></h3><p>Sometimes you want to be able to retain the messages for AMQP clients in a way that doesn&rsquo;t depend on the MQTT connections. For this, you can create a custom queue that pulls the messages directly from the Topic Exchange and applies its own rules.</p>
+<p><p class="markdown-image">
+  <img src="../img/d110b9dcc8f54c00ab55b9caff49e90d.png" alt="Screen Shot"  />
+</p></p>
+<p>First, we create a <a href="https://www.rabbitmq.com/quorum-queues.html" target="_blank" rel="noopener">Quorum Queue</a> for high availability:</p>
+<img src="../img/cb6b72d2e77f46c3a8885656bfa34500.png" alt="Screen Shot" width="306" height="148" class="jop-noMdConv">
+<p>And we add a binding to get a copy of all messages (all topics) from the Topic Exchange (amq.topic) into this queue:</p>
+<p><p class="markdown-image">
+  <img src="../img/0ba07c011b7849f492ee5e05d0fad17e.png" alt="Screen Shot"  />
+</p></p>
+<p>Now, as the messages come in, a copy of every message will be sent to our new queue <code>messagedepot</code> even if there is no active MQTT subscriptions.</p>
+<p><p class="markdown-image">
+  <img src="../img/041d51e7648645faba39b6d33c077afa.png" alt="Screen Shot"  />
+</p></p>
+<p>From this queue you can take the messages with any other supported client protocol like AMQP or Websockets. Here I use the AMQP client <code>raptab</code> to pull the messages from our custom queue:</p>
+<p><p class="markdown-image">
+  <img src="../img/1ca4b5507ecc4799a9f416998840e18f.png" alt="Screen Shot"  />
+</p></p>
+<blockquote>
+<p>I recommend you take a look at rabtap if you haven&rsquo;t already. It is a very useful RabbitMQ client:  <a href="https://github.com/jandelgado/rabtap/" target="_blank" rel="noopener">https://github.com/jandelgado/rabtap/</a></p>
+</blockquote>
+<h3 id="move-messages-to-another-exchanges">Move messages to another exchanges <a href="#move-messages-to-another-exchanges" class="anchor">🔗</a></h3><p>RabbitMQ has another cool feature called Shovels. Shovels let you move messages between queues, exchanges, and even clusters. In a way, shovels are like internal client applications that consume and publish messages with well-defined rules. To work with shovels you need the RabbitMQ Shovel plugin. To learn more about Shovels go here <a href="https://www.rabbitmq.com/shovel.html" target="_blank" rel="noopener">https://www.rabbitmq.com/shovel.html</a></p>
+<blockquote>
+<p>CloudAMQP free tier supports shovels by default, and we enabled it in our Docker image example.</p>
+</blockquote>
+<p>Create a new Shovel to move messages from the Topic Exchange to the Fanout Exchange.</p>
+<p><p class="markdown-image">
+  <img src="../img/c3495937232542a985587616d79cad94.png" alt="Screen Shot"  />
+</p></p>
+<p><p class="markdown-image">
+  <img src="../img/031ea00223874ed9a1cfea4705045704.png" alt="Screen Shot"  />
+</p></p>
+<p>The shovel creates a dynamic queue (amq.gen-******) that is used to receive the messages from the source exchange and move them to the destination. You don&rsquo;t have to worry about this queue, it is handled automatically by RabbitMQ.</p>
+<p><p class="markdown-image">
+  <img src="../img/b6055b519543438f9f944d55c3c13a7d.png" alt="Screen Shot"  />
+</p>
+<p class="markdown-image">
+  <img src="../img/bc2b63fd7cf648c898dd90fd6974b848.png" alt="Screen Shot"  />
+</p></p>
+<p>Let&rsquo;s create a couple of queues to receive the fanout messages. We will call them fanout01 and fanout02. We will also add a TTL policy to these queues to avoid saturation.</p>
+<p><p class="markdown-image">
+  <img src="../img/3c7c2dcf803e434092b3f4f5499fb782.png" alt="Screen Shot"  />
+</p>
+<p class="markdown-image">
+  <img src="../img/b7453bbfa060433abbc57b2ebfe52f50.png" alt="Screen Shot"  />
+</p></p>
+<p>Finally, we bind these new queues to the Fanout Exchange to receive the messages. The fanout binding does not require routing keys.</p>
+<img src="../img/43c901b54bce40c58938f42d4afc2ad9.png" alt="Screen Shot " width="370" height="159" class="jop-noMdConv">
+<p>Now, if we push some messages through or MQTT client we see all the pieces working together:</p>
+<p><p class="markdown-image">
+  <img src="../img/277837882c5e4c77bcd8171e3eb7b0a5.png" alt="Screen Shot "  />
+</p></p>
+<p>We publish 3 messages to the <code>my/topic</code> topic:</p>
+<p><p class="markdown-image">
+  <img src="../img/bbb03f5f01bb4c668dd408774463086e.png" alt="Screen Shot"  />
+</p></p>
+<p>A regular MQTT client will receive its copy of every message immediately:</p>
+<p><p class="markdown-image">
+  <img src="../img/e64f25ac91e041aea73b6049401a3c8e.png" alt="Screen Shot "  />
+</p></p>
+<p>The messages are copied to our custom Quorum queue <code>messagedepot</code> from the Topic Exchange using the queue&rsquo;s binding rule. We can use <code>rabtap</code> to consume those messages later.</p>
+<p><p class="markdown-image">
+  <img src="../img/7bf5e3b8020049648fb0f019160f28eb.png" alt="Screen Shot"  />
+</p></p>
+<p>The messages are also copied to the fanout queues thanks to the shovel we set up. The fanout binding in the destination queues receive a copy of every message automatically. The messages will linger in there until a consumer pulls the data or the TTL is reached.</p>
+<p><p class="markdown-image">
+  <img src="../img/367b43f0e5394c5989de51ce300778c4.png" alt="Screen Shot"  />
+</p></p>
+<h3 id="publish-with-amqp-and-receive-via-mqtt">Publish with AMQP and receive via MQTT <a href="#publish-with-amqp-and-receive-via-mqtt" class="anchor">🔗</a></h3><p>So far all the examples we have seen start with an MQTT client publishing messages. But everything about MQTT and AMQP is bidirectional. We can use an AMQP client to publish to the Topic Exchange so that the subscribed MQTT clients can receive the messages.</p>
+<p>If we use <code>rabtap</code> to publish directly to the <code>amq.topic</code> exchange with the routing key <code>my.topic</code></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">❯ <span style="color:#a2f">echo</span> <span style="color:#b44">&#34;hello back&#34;</span> | rabtap pub --exchange<span style="color:#666">=</span>amq.topic --routingkey<span style="color:#666">=</span>my.topic --uri amqps://<span style="color:#b68;font-weight:bold">${</span><span style="color:#b8860b">RABBITMQ_USER</span><span style="color:#b68;font-weight:bold">}</span>:<span style="color:#b68;font-weight:bold">${</span><span style="color:#b8860b">RABBITMQ_PWD</span><span style="color:#b68;font-weight:bold">}</span>@<span style="color:#b68;font-weight:bold">${</span><span style="color:#b8860b">RABBITMQ_HOST</span><span style="color:#b68;font-weight:bold">}</span>/<span style="color:#b68;font-weight:bold">${</span><span style="color:#b8860b">RABBITMQ_VHOST</span><span style="color:#b68;font-weight:bold">}</span>
+</code></pre></div><p>We see the MQTT client receiving the messages immediately on the &ldquo;my/topic&rdquo; topic:</p>
+<p><p class="markdown-image">
+  <img src="../img/8f2a279525a6489a9dcebe2e23e21925.png" alt="Screen Shot"  />
+</p></p>
+<h2 id="conclusions">Conclusions <a href="#conclusions" class="anchor">🔗</a></h2><p>MQTT is an excellent protocol for the Internet of Things. It is lightweight, with a small code base and well-suited for low bandwidth or unreliable connections.</p>
+<p>RabbitMQ is one of the most popular messaging brokers in the market. It offers more flexibility with message handling and routing options. It also supports multiple protocols, including MQTT.</p>
+<p>By implementing the MQTT broker service with RabbitMQ you gain the possibility to cross over to the AMQP world and build flexible and stable data pipelines.</p>
+<p>I hope you find this article useful and it can save you some time.</p>
+
+    </div>
+
+    
+        <div class="tags">
+            
+                <a href="https://carlosolmos.dev/tags/iot">iot</a>
+            
+                <a href="https://carlosolmos.dev/tags/guides">guides</a>
+            
+        </div>
+    
+    
+    
+
+</section>
+
+
+    </main>
+    
+    <footer id="footer">
+    
+        <div id="social">
+
+
+    <a class="symbol" href="https://github.com/carlosolmos/" rel="me" target="_blank">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="28"><rect x="0" fill="none" width="24" height="24"/><g><path d="M12 2C6.477 2 2 6.477 2 12c0 4.419 2.865 8.166 6.839 9.489.5.09.682-.218.682-.484 0-.236-.009-.866-.014-1.699-2.782.602-3.369-1.34-3.369-1.34-.455-1.157-1.11-1.465-1.11-1.465-.909-.62.069-.608.069-.608 1.004.071 1.532 1.03 1.532 1.03.891 1.529 2.341 1.089 2.91.833.091-.647.349-1.086.635-1.337-2.22-.251-4.555-1.111-4.555-4.943 0-1.091.39-1.984 1.03-2.682-.103-.254-.447-1.27.097-2.646 0 0 .84-.269 2.75 1.025A9.548 9.548 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.748-1.025 2.748-1.025.546 1.376.202 2.394.1 2.646.64.699 1.026 1.591 1.026 2.682 0 3.841-2.337 4.687-4.565 4.935.359.307.679.917.679 1.852 0 1.335-.012 2.415-.012 2.741 0 .269.18.579.688.481A9.997 9.997 0 0022 12c0-5.523-4.477-10-10-10z" fill="#bbbbbb"/></g></svg>
+    </a>
+
+    <a class="symbol" href="https://www.linkedin.com/in/carlosaolmos" rel="me" target="_blank">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="28"><rect x="0" fill="none" width="24" height="24"/><g><path d="M19.7 3H4.3A1.3 1.3 0 003 4.3v15.4A1.3 1.3 0 004.3 21h15.4a1.3 1.3 0 001.3-1.3V4.3A1.3 1.3 0 0019.7 3zM8.339 18.338H5.667v-8.59h2.672v8.59zM7.004 8.574a1.548 1.548 0 11-.002-3.096 1.548 1.548 0 01.002 3.096zm11.335 9.764H15.67v-4.177c0-.996-.017-2.278-1.387-2.278-1.389 0-1.601 1.086-1.601 2.206v4.249h-2.667v-8.59h2.559v1.174h.037c.356-.675 1.227-1.387 2.526-1.387 2.703 0 3.203 1.779 3.203 4.092v4.711z" fill="#bbbbbb"/></g></svg>
+    </a>
+
+    <a class="symbol" href="https://twitter.com/carlosolmos" rel="me" target="_blank">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="28">
+    <rect x="0" fill="none" width="24" height="24"/>
+    <g>
+        <path d="M19 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2zm-2.534 6.71c.004.099.007.198.007.298 0 3.045-2.318 6.556-6.556 6.556a6.52 6.52 0 01-3.532-1.035 4.626 4.626 0 003.412-.954 2.307 2.307 0 01-2.152-1.6 2.295 2.295 0 001.04-.04 2.306 2.306 0 01-1.848-2.259v-.029c.311.173.666.276 1.044.288a2.303 2.303 0 01-.713-3.076 6.54 6.54 0 004.749 2.407 2.305 2.305 0 013.926-2.101 4.602 4.602 0 001.463-.559 2.31 2.31 0 01-1.013 1.275c.466-.056.91-.18 1.323-.363-.31.461-.7.867-1.15 1.192z" fill="#bbbbbb"/>
+    </g>
+</svg>
+    </a>
+
+
+</div>
+
+    
+
+    <div class="copyright">
+    
+       © Copyright 
+       2022 
+       <span class="split">
+        Made with <svg fill="#bbbbbb" width="15" height="15" version="1.1" id="heart-15" xmlns="http://www.w3.org/2000/svg" width="15px" height="15px" viewBox="0 0 15 15">
+  <path d="M13.91,6.75c-1.17,2.25-4.3,5.31-6.07,6.94c-0.1903,0.1718-0.4797,0.1718-0.67,0C5.39,12.06,2.26,9,1.09,6.75&#xA;&#x9;C-1.48,1.8,5-1.5,7.5,3.45C10-1.5,16.48,1.8,13.91,6.75z"/>
+</svg>
+       </span>
+       by Carlos A Olmos
+    
+    </div>
+
+    
+      <div class="powerby">
+        Powered by <a href='http://www.gohugo.io/'>Hugo</a> Based on Theme mini By <a href='https://github.com/nodejh/hugo-theme-cactus-plus'>nodejh</a>
+      </div>
+    
+</footer>
+
+
+
+  </body>
+</html>

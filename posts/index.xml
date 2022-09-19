@@ -6,7 +6,17 @@
     <description>Recent content in Posts on Life, the universe, and everything else</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 07 Jun 2022 21:39:31 -0700</lastBuildDate><atom:link href="https://carlosolmos.dev/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 12 Sep 2022 22:21:32 -0700</lastBuildDate><atom:link href="https://carlosolmos.dev/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>MQTT with RabbitMQ</title>
+      <link>https://carlosolmos.dev/posts/mqtt-with-rabbitmq/</link>
+      <pubDate>Mon, 12 Sep 2022 22:21:32 -0700</pubDate>
+      
+      <guid>https://carlosolmos.dev/posts/mqtt-with-rabbitmq/</guid>
+      <description>MQTT is a widely used protocol in the IoT world. There are different products to implement an MQTT server. From small standalone applications like mosquitto to large highly available services like HiveMQ, and of course the cloud vendors&#39; IoT products like AWS IoT core and Azure IoT Hub.
+RabbitMQ is one of the most popular message brokers. It is easy to deploy and solves all kinds of messaging requirements at small and large scales.</description>
+    </item>
+    
     <item>
       <title>AI Colonialism</title>
       <link>https://carlosolmos.dev/posts/ai-colonialism/</link>
