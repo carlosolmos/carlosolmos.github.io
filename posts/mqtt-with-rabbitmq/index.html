@@ -61,7 +61,7 @@
           ·
         </span>
         <span>
-          2585 words
+          2586 words
         </span>
         <span class="split">
           ·
@@ -123,11 +123,11 @@
 
 
     <div class="content">
-      <p>MQTT is a widely used protocol in the IoT world. There are different products to implement an MQTT server. From small standalone applications like <em>mosquitto</em> to large highly available services like HiveMQ, and of course the cloud vendors' IoT products like AWS IoT core and Azure IoT Hub.</p>
-<p>RabbitMQ is one of the most popular message brokers. It is easy to deploy and solves all kinds of messaging requirements at small and large scales. RabbitMQ supports different kinds of messaging protocols. One of them is MQTT.</p>
+      <p>MQTT is a widely used protocol in the IoT world. It is a lightweight pub/sub messaging system, with a small code footprint and minimal bandwidth requirements, which makes it ideal for connecting remote small devices. To implement the MQTT protocol you need a robust broker service to handle the connections and the messages transportation.</p>
+<p>RabbitMQ is one of the most popular message brokers in the market. It is easy to deploy and solves all kinds of messaging requirements at small and large scales. RabbitMQ supports different kinds of messaging protocols. One of them is MQTT.</p>
 <p>I like RabbitMQ. It has always served me well in pub/sub and queueing scenarios. And because it is so popular, chances are you already have an instance running in your stack. RabbitMQ&rsquo;s main protocol AMQP offers more flexibility than standard MQTT to create data pipelines at scale. By Implementing MQTT with RabbitMQ you can crossover to the AMQP world and leverage its features.</p>
-<p>In this article, I will show you how to implement a robust, scalable, and flexible MQTT solution using RabbitMQ as the broker. But first, let&rsquo;s take a look at some of the basic concepts.</p>
-<h2 id="mqtt---the-iot-messaging-protocol">MQTT - The IoT messaging protocol <a href="#mqtt---the-iot-messaging-protocol" class="anchor">🔗</a></h2><p><a href="https://mqtt.org/" target="_blank" rel="noopener">MQTT</a>  — Message Queuing Telemetry Transport — protocol is the favorited publish/subscribe messaging protocol for Internet of Things (IoT) solutions. It is lightweight, with a small code footprint and minimal bandwidth requirements, which makes it ideal for connecting remote small devices. It is designed as publish/subscribe messaging transport with very useful features like topic hierarchies, quality of service, persistent connections, retained messages, and connection&rsquo;s &ldquo;Last Will and Testament&rdquo;, among others.</p>
+<p>While there are all kinds of software products to implement an MQTT broker, in this article, I will show you how to implement a robust, scalable, and flexible MQTT solution using RabbitMQ as the broker. But first, let&rsquo;s take a look at some of the basic concepts.</p>
+<h2 id="mqtt---the-iot-messaging-protocol">MQTT - The IoT messaging protocol <a href="#mqtt---the-iot-messaging-protocol" class="anchor">🔗</a></h2><p><a href="https://mqtt.org/" target="_blank" rel="noopener">MQTT</a>  — Message Queuing Telemetry Transport — protocol is the favorited publish/subscribe messaging protocol for Internet of Things (IoT) solutions. It is designed as publish/subscribe messaging transport with very useful features like topic hierarchies, quality of service, persistent connections, retained messages, and connection&rsquo;s &ldquo;Last Will and Testament&rdquo;, among others.</p>
 <h3 id="publishers-subscribers-messages-and-topics">Publishers, Subscribers, Messages, and Topics <a href="#publishers-subscribers-messages-and-topics" class="anchor">🔗</a></h3><img src="../img/732c22e65c2e46318243149bd01fedc9.png" alt="MQTT Protocol" width="519" height="341">
 <p><strong>MQTT Clients</strong> subscribe to topics to receive messages of interest. The topics are organized in hierarchical paths: <code>a/b/c/d</code>. The subscriptions can be specified using wildcards to tap messages at different levels of the topic hierarchy.</p>
 <p>Some typical examples of topic subscriptions look like these:</p>

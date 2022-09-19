@@ -13,8 +13,8 @@
       <pubDate>Mon, 12 Sep 2022 22:21:32 -0700</pubDate>
       
       <guid>https://carlosolmos.dev/posts/mqtt-with-rabbitmq/</guid>
-      <description>MQTT is a widely used protocol in the IoT world. There are different products to implement an MQTT server. From small standalone applications like mosquitto to large highly available services like HiveMQ, and of course the cloud vendors&#39; IoT products like AWS IoT core and Azure IoT Hub.
-RabbitMQ is one of the most popular message brokers. It is easy to deploy and solves all kinds of messaging requirements at small and large scales.</description>
+      <description>MQTT is a widely used protocol in the IoT world. It is a lightweight pub/sub messaging system, with a small code footprint and minimal bandwidth requirements, which makes it ideal for connecting remote small devices. To implement the MQTT protocol you need a robust broker service to handle the connections and the messages transportation.
+RabbitMQ is one of the most popular message brokers in the market. It is easy to deploy and solves all kinds of messaging requirements at small and large scales.</description>
     </item>
     
   </channel>
