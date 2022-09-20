@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>tales of the SRE on brain dump</title>
+    <link>https://carlosolmos.dev/series/tales-of-the-sre/</link>
+    <description>Recent content in tales of the SRE on brain dump</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 19 Sep 2022 19:11:12 -0700</lastBuildDate><atom:link href="https://carlosolmos.dev/series/tales-of-the-sre/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Title goes here</title>
+      <link>https://carlosolmos.dev/posts/title-goes-here/</link>
+      <pubDate>Mon, 19 Sep 2022 19:11:12 -0700</pubDate>
+      
+      <guid>https://carlosolmos.dev/posts/title-goes-here/</guid>
+      <description>Insert Lead paragraph here.
+New Cool Posts 🔗</description>
+    </item>
+    
+    <item>
+      <title>Title goes here</title>
+      <link>https://carlosolmos.dev/posts/title-goes-here/</link>
+      <pubDate>Mon, 19 Sep 2022 18:53:41 -0700</pubDate>
+      
+      <guid>https://carlosolmos.dev/posts/title-goes-here/</guid>
+      <description>Insert Lead paragraph here.
+New Cool Posts 🔗</description>
+    </item>
+    
+  </channel>
+</rss>

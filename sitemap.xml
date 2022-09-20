@@ -5,16 +5,25 @@
     <loc>https://carlosolmos.dev/</loc>
     <lastmod>2022-09-12T22:21:32-07:00</lastmod>
   </url><url>
-    <loc>https://carlosolmos.dev/tags/guides/</loc>
+    <loc>https://carlosolmos.dev/categories/</loc>
     <lastmod>2022-09-12T22:21:32-07:00</lastmod>
   </url><url>
     <loc>https://carlosolmos.dev/tags/iot/</loc>
+    <lastmod>2022-09-12T22:21:32-07:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.dev/categories/know-how/</loc>
+    <lastmod>2022-09-12T22:21:32-07:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.dev/tags/mqtt/</loc>
     <lastmod>2022-09-12T22:21:32-07:00</lastmod>
   </url><url>
     <loc>https://carlosolmos.dev/posts/mqtt-with-rabbitmq/</loc>
     <lastmod>2022-09-12T22:21:32-07:00</lastmod>
   </url><url>
     <loc>https://carlosolmos.dev/posts/</loc>
+    <lastmod>2022-09-12T22:21:32-07:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.dev/tags/rabbitmq/</loc>
     <lastmod>2022-09-12T22:21:32-07:00</lastmod>
   </url><url>
     <loc>https://carlosolmos.dev/tags/</loc>
@@ -26,7 +35,7 @@
     <loc>https://carlosolmos.dev/posts/ai-colonialism/</loc>
     <lastmod>2022-06-07T21:39:31-07:00</lastmod>
   </url><url>
-    <loc>https://carlosolmos.dev/tags/article/</loc>
+    <loc>https://carlosolmos.dev/categories/articles/</loc>
     <lastmod>2022-06-07T21:39:31-07:00</lastmod>
   </url><url>
     <loc>https://carlosolmos.dev/tags/ethics/</loc>
@@ -35,15 +44,27 @@
     <loc>https://carlosolmos.dev/tags/governance/</loc>
     <lastmod>2022-06-07T21:39:31-07:00</lastmod>
   </url><url>
+    <loc>https://carlosolmos.dev/tags/go/</loc>
+    <lastmod>2022-06-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.dev/tags/hugo/</loc>
+    <lastmod>2022-06-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.dev/tags/til/</loc>
+    <lastmod>2022-06-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.dev/categories/today-i-learned/</loc>
+    <lastmod>2022-06-07T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://carlosolmos.dev/posts/today-i-learned-how-to-make-a-blog-with-hugo/</loc>
     <lastmod>2022-06-07T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://carlosolmos.dev/tags/todayilearned/</loc>
+    <loc>https://carlosolmos.dev/tags/web/</loc>
     <lastmod>2022-06-07T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://carlosolmos.dev/about/</loc>
     <priority>0</priority>
   </url><url>
-    <loc>https://carlosolmos.dev/categories/</loc>
+    <loc>https://carlosolmos.dev/series/</loc>
   </url>
 </urlset>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>mqtt on brain dump</title>
+    <link>https://carlosolmos.dev/tags/mqtt/</link>
+    <description>Recent content in mqtt on brain dump</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 12 Sep 2022 22:21:32 -0700</lastBuildDate><atom:link href="https://carlosolmos.dev/tags/mqtt/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>MQTT with RabbitMQ</title>
+      <link>https://carlosolmos.dev/posts/mqtt-with-rabbitmq/</link>
+      <pubDate>Mon, 12 Sep 2022 22:21:32 -0700</pubDate>
+      
+      <guid>https://carlosolmos.dev/posts/mqtt-with-rabbitmq/</guid>
+      <description>MQTT is a widely used protocol in the IoT world. It is a lightweight pub/sub messaging system, with a small code footprint and minimal bandwidth requirements, which makes it ideal for connecting remote small devices. To implement the MQTT protocol you need a robust broker service to handle the connections and the messages transportation.
+RabbitMQ is one of the most popular message brokers in the market. It is easy to deploy and solves all kinds of messaging requirements at small and large scales.</description>
+    </item>
+    
+  </channel>
+</rss>

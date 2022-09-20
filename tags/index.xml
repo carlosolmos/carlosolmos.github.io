@@ -8,15 +8,6 @@
     <language>en-us</language>
     <lastBuildDate>Mon, 12 Sep 2022 22:21:32 -0700</lastBuildDate><atom:link href="https://carlosolmos.dev/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>guides</title>
-      <link>https://carlosolmos.dev/tags/guides/</link>
-      <pubDate>Mon, 12 Sep 2022 22:21:32 -0700</pubDate>
-      
-      <guid>https://carlosolmos.dev/tags/guides/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>iot</title>
       <link>https://carlosolmos.dev/tags/iot/</link>
       <pubDate>Mon, 12 Sep 2022 22:21:32 -0700</pubDate>
@@ -26,20 +17,29 @@
     </item>
     
     <item>
+      <title>mqtt</title>
+      <link>https://carlosolmos.dev/tags/mqtt/</link>
+      <pubDate>Mon, 12 Sep 2022 22:21:32 -0700</pubDate>
+      
+      <guid>https://carlosolmos.dev/tags/mqtt/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>rabbitmq</title>
+      <link>https://carlosolmos.dev/tags/rabbitmq/</link>
+      <pubDate>Mon, 12 Sep 2022 22:21:32 -0700</pubDate>
+      
+      <guid>https://carlosolmos.dev/tags/rabbitmq/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>ai</title>
       <link>https://carlosolmos.dev/tags/ai/</link>
       <pubDate>Tue, 07 Jun 2022 21:39:31 -0700</pubDate>
       
       <guid>https://carlosolmos.dev/tags/ai/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>article</title>
-      <link>https://carlosolmos.dev/tags/article/</link>
-      <pubDate>Tue, 07 Jun 2022 21:39:31 -0700</pubDate>
-      
-      <guid>https://carlosolmos.dev/tags/article/</guid>
       <description></description>
     </item>
     
@@ -62,11 +62,38 @@
     </item>
     
     <item>
-      <title>TodayILearned</title>
-      <link>https://carlosolmos.dev/tags/todayilearned/</link>
+      <title>go</title>
+      <link>https://carlosolmos.dev/tags/go/</link>
       <pubDate>Tue, 07 Jun 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://carlosolmos.dev/tags/todayilearned/</guid>
+      <guid>https://carlosolmos.dev/tags/go/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>hugo</title>
+      <link>https://carlosolmos.dev/tags/hugo/</link>
+      <pubDate>Tue, 07 Jun 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://carlosolmos.dev/tags/hugo/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>TIL</title>
+      <link>https://carlosolmos.dev/tags/til/</link>
+      <pubDate>Tue, 07 Jun 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://carlosolmos.dev/tags/til/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>web</title>
+      <link>https://carlosolmos.dev/tags/web/</link>
+      <pubDate>Tue, 07 Jun 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://carlosolmos.dev/tags/web/</guid>
       <description></description>
     </item>
     
