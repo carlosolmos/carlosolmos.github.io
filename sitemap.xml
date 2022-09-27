@@ -3,15 +3,39 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://carlosolmos.dev/</loc>
-    <lastmod>2022-09-12T22:21:32-07:00</lastmod>
+    <lastmod>2022-09-24T22:10:52-07:00</lastmod>
   </url><url>
     <loc>https://carlosolmos.dev/categories/</loc>
-    <lastmod>2022-09-12T22:21:32-07:00</lastmod>
+    <lastmod>2022-09-24T22:10:52-07:00</lastmod>
   </url><url>
-    <loc>https://carlosolmos.dev/tags/iot/</loc>
-    <lastmod>2022-09-12T22:21:32-07:00</lastmod>
+    <loc>https://carlosolmos.dev/posts/instrumenting-applications-with-prometheus/</loc>
+    <lastmod>2022-09-24T22:10:52-07:00</lastmod>
   </url><url>
     <loc>https://carlosolmos.dev/categories/know-how/</loc>
+    <lastmod>2022-09-24T22:10:52-07:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.dev/tags/metrics/</loc>
+    <lastmod>2022-09-24T22:10:52-07:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.dev/posts/</loc>
+    <lastmod>2022-09-24T22:10:52-07:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.dev/tags/prometheus/</loc>
+    <lastmod>2022-09-24T22:10:52-07:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.dev/series/</loc>
+    <lastmod>2022-09-24T22:10:52-07:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.dev/tags/sre/</loc>
+    <lastmod>2022-09-24T22:10:52-07:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.dev/tags/</loc>
+    <lastmod>2022-09-24T22:10:52-07:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.dev/series/tales-of-sre/</loc>
+    <lastmod>2022-09-24T22:10:52-07:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.dev/tags/iot/</loc>
     <lastmod>2022-09-12T22:21:32-07:00</lastmod>
   </url><url>
     <loc>https://carlosolmos.dev/tags/mqtt/</loc>
@@ -20,13 +44,7 @@
     <loc>https://carlosolmos.dev/posts/mqtt-with-rabbitmq/</loc>
     <lastmod>2022-09-12T22:21:32-07:00</lastmod>
   </url><url>
-    <loc>https://carlosolmos.dev/posts/</loc>
-    <lastmod>2022-09-12T22:21:32-07:00</lastmod>
-  </url><url>
     <loc>https://carlosolmos.dev/tags/rabbitmq/</loc>
-    <lastmod>2022-09-12T22:21:32-07:00</lastmod>
-  </url><url>
-    <loc>https://carlosolmos.dev/tags/</loc>
     <lastmod>2022-09-12T22:21:32-07:00</lastmod>
   </url><url>
     <loc>https://carlosolmos.dev/tags/ai/</loc>
@@ -64,7 +82,5 @@
   </url><url>
     <loc>https://carlosolmos.dev/about/</loc>
     <priority>0</priority>
-  </url><url>
-    <loc>https://carlosolmos.dev/series/</loc>
   </url>
 </urlset>

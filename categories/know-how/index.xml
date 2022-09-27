@@ -1,12 +1,23 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>know how on brain dump</title>
+    <title>know-how on brain dump</title>
     <link>https://carlosolmos.dev/categories/know-how/</link>
-    <description>Recent content in know how on brain dump</description>
+    <description>Recent content in know-how on brain dump</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 12 Sep 2022 22:21:32 -0700</lastBuildDate><atom:link href="https://carlosolmos.dev/categories/know-how/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 24 Sep 2022 22:10:52 -0700</lastBuildDate><atom:link href="https://carlosolmos.dev/categories/know-how/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Instrumenting applications with Prometheus</title>
+      <link>https://carlosolmos.dev/posts/instrumenting-applications-with-prometheus/</link>
+      <pubDate>Sat, 24 Sep 2022 22:10:52 -0700</pubDate>
+      
+      <guid>https://carlosolmos.dev/posts/instrumenting-applications-with-prometheus/</guid>
+      <description>&amp;ldquo;What is not defined cannot be measured. What is not measured, cannot be improved. What is not improved, is always degraded&amp;rdquo;. William Thomson Kelvin
+ In this article, we will learn how to create custom metrics for a simple web application and use Prometheus to collect and report on them.
+Site Reliability Engineering 🔗This post is part of a series about Site Reliability Engineering (SRE). In the series, we will talk about different concepts, tools, and techniques to keep a large-scale system healthy.</description>
+    </item>
+    
     <item>
       <title>MQTT with RabbitMQ</title>
       <link>https://carlosolmos.dev/posts/mqtt-with-rabbitmq/</link>

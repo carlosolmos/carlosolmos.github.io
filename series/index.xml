@@ -5,6 +5,16 @@
     <link>https://carlosolmos.dev/series/</link>
     <description>Recent content in Series on brain dump</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language><atom:link href="https://carlosolmos.dev/series/index.xml" rel="self" type="application/rss+xml" />
+    <language>en-us</language>
+    <lastBuildDate>Sat, 24 Sep 2022 22:10:52 -0700</lastBuildDate><atom:link href="https://carlosolmos.dev/series/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Tales of SRE</title>
+      <link>https://carlosolmos.dev/series/tales-of-sre/</link>
+      <pubDate>Sat, 24 Sep 2022 22:10:52 -0700</pubDate>
+      
+      <guid>https://carlosolmos.dev/series/tales-of-sre/</guid>
+      <description></description>
+    </item>
+    
   </channel>
 </rss>
