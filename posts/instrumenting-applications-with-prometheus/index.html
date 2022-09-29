@@ -18,7 +18,7 @@
 
   
     
-    <link rel="stylesheet" href="https://carlosolmos.dev/css/custom.css">
+    <link rel="stylesheet" href="http://localhost:8000/css/custom.css">
   
 
 
@@ -62,7 +62,7 @@
           ·
         </span>
         <span>
-          1919 words
+          1974 words
         </span>
         <span class="split">
           ·
@@ -169,12 +169,14 @@ app <span style="color:#666">=</span> Flask(__name__)
     app<span style="color:#666">.</span>run(debug <span style="color:#666">=</span> <span style="color:#a2f;font-weight:bold">True</span>)
 
 </code></pre></div><p>Running the application</p>
-<p><p class="markdown-image">
-  <img src="./img/runSampleApp.png" alt="Start the app"  />
+<p><p class="markdown-image"> 
+  <img class="zoomable" id="Li9pbWcvcnVuU2FtcGxlQXBwLnBuZw==" src="./img/runSampleApp.png" alt="Start the app"  />  
+  <small class="img-note">click image to zoom in</small>
 </p></p>
 <p>Testing the application</p>
-<p><p class="markdown-image">
-  <img src="./img/sampleAppResponse.png" alt="Test the App"  />
+<p><p class="markdown-image"> 
+  <img class="zoomable" id="Li9pbWcvc2FtcGxlQXBwUmVzcG9uc2UucG5n" src="./img/sampleAppResponse.png" alt="Test the App"  />  
+  <small class="img-note">click image to zoom in</small>
 </p></p>
 <h3 id="instrumentation">Instrumentation <a href="#instrumentation" class="anchor">🔗</a></h3><p>Now that we have a working sample application, let&rsquo;s add some instrumentation with Prometheus. As we discussed before, Prometheus offers <a href="https://prometheus.io/docs/instrumenting/clientlibs/" target="_blank" rel="noopener">client libraries</a> for the major programming languages. The Prometheus client for Python can be found here: <a href="https://github.com/prometheus/client_python" target="_blank" rel="noopener">https://github.com/prometheus/client_python</a></p>
 <p>Adding Prometheus takes two steps:</p>
@@ -236,8 +238,9 @@ app<span style="color:#666">.</span>wsgi_app <span style="color:#666">=</span> D
     app<span style="color:#666">.</span>run(debug <span style="color:#666">=</span> <span style="color:#a2f;font-weight:bold">True</span>)
 
 </code></pre></div><p>We can test the new <code>/metrics</code> endpoint and confirm that it is working. Prometheus automatically collects a few metrics about the application run time environment:</p>
-<p><p class="markdown-image">
-  <img src="img/prometheusBaseMetrics.png" alt="prometheus base metrics"  />
+<p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL3Byb21ldGhldXNCYXNlTWV0cmljcy5wbmc=" src="img/prometheusBaseMetrics.png" alt="prometheus base metrics"  />  
+  <small class="img-note">click image to zoom in</small>
 </p></p>
 <h3 id="metrics-1">Metrics <a href="#metrics-1" class="anchor">🔗</a></h3><p>Once we have Prometheus included in our application it is time to add the custom metrics we care about.</p>
 <p>We will add a <strong>Counter</strong> for the number of requests to the application and a <strong>Gauge</strong> to track the time it takes to fetch the remote content.</p>
@@ -317,8 +320,9 @@ app<span style="color:#666">.</span>wsgi_app <span style="color:#666">=</span> D
     app<span style="color:#666">.</span>run(debug <span style="color:#666">=</span> <span style="color:#a2f;font-weight:bold">True</span>)
 
 </code></pre></div><p>Now, when we call our application and query the <code>/metrics</code> endpoint we can see the new indicators:</p>
-<p><p class="markdown-image">
-  <img src="img/newMetrics.png" alt="new metrics"  />
+<p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL25ld01ldHJpY3MucG5n" src="img/newMetrics.png" alt="new metrics"  />  
+  <small class="img-note">click image to zoom in</small>
 </p></p>
 <h3 id="setup-prometheus-service">Setup Prometheus service <a href="#setup-prometheus-service" class="anchor">🔗</a></h3><p>It is time to launch a Prometheus service to collect our metrics.</p>
 <p>There are many ways to <a href="https://prometheus.io/docs/prometheus/latest/installation/" target="_blank" rel="noopener">install Prometheus</a>, we will use Docker for our exercise.</p>
@@ -355,16 +359,19 @@ Because we are running Prometheus inside Docker for macOS, we need to use the ho
 </blockquote>
 <p>For more configuration options read the official documentation: <a href="https://prometheus.io/docs/prometheus/latest/configuration/configuration/" target="_blank" rel="noopener">https://prometheus.io/docs/prometheus/latest/configuration/configuration/</a></p>
 <p>Starting the service with Docker:</p>
-<p><p class="markdown-image">
-  <img src="img/startDockerPrometheus.png" alt="starting docker"  />
+<p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL3N0YXJ0RG9ja2VyUHJvbWV0aGV1cy5wbmc=" src="img/startDockerPrometheus.png" alt="starting docker"  />  
+  <small class="img-note">click image to zoom in</small>
 </p></p>
 <p>Opening the Prometheus Web UI at <code>http://localhost:9090</code></p>
-<p><p class="markdown-image">
-  <img src="img/prometheusGUI.png" alt="open Prometheus UI"  />
+<p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL3Byb21ldGhldXNHVUkucG5n" src="img/prometheusGUI.png" alt="open Prometheus UI"  />  
+  <small class="img-note">click image to zoom in</small>
 </p></p>
 <h3 id="working-with-metrics">Working with Metrics <a href="#working-with-metrics" class="anchor">🔗</a></h3><p>You can explore, calculate, and graph the different metrics through the Prometheus web UI. The UI includes a handy metrics explorer that simplifies working with the directory of available data.
-<p class="markdown-image">
-  <img src="img/metricsExplorer.png" alt="metrics explorer"  />
+<p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL21ldHJpY3NFeHBsb3Jlci5wbmc=" src="img/metricsExplorer.png" alt="metrics explorer"  />  
+  <small class="img-note">click image to zoom in</small>
 </p></p>
 <p>Prometheus offers a rich querying language called PromQL that allows you to work with the metrics in different dimensions.
 You can find detailed documentation on PromQL on the official website: <a href="https://prometheus.io/docs/prometheus/latest/querying/basics/" target="_blank" rel="noopener">https://prometheus.io/docs/prometheus/latest/querying/basics/</a>. Right now we will focus on a couple of basic queries to inspect the state of our application:</p>
@@ -375,25 +382,29 @@ You can find detailed documentation on PromQL on the official website: <a href="
 </code></pre></div><p>Let&rsquo;s look at the metrics from our application:</p>
 <p><em>The time it took to fetch remote content</em></p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">fetch_time_ms{job=&#34;pythonapp&#34;}
-</code></pre></div><p><p class="markdown-image">
-  <img src="img/fetchTimeMs.png" alt="fetch time metric"  />
+</code></pre></div><p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL2ZldGNoVGltZU1zLnBuZw==" src="img/fetchTimeMs.png" alt="fetch time metric"  />  
+  <small class="img-note">click image to zoom in</small>
 </p></p>
 <blockquote>
 <p>Notice the label <code>job</code>, equal to the &ldquo;job_name&rdquo; value we gave to the scrapping target in the configuration file. The second label <code>instance</code> is equal to the source host of the metrics. These labels are automatically assigned by Prometheus.</p>
 </blockquote>
 <p><em>Total Number of Requests</em></p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">requests_total{job=&#34;pythonapp&#34;}
-</code></pre></div><p><p class="markdown-image">
-  <img src="img/requestsTotal.png" alt="requests metric"  />
+</code></pre></div><p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL3JlcXVlc3RzVG90YWwucG5n" src="img/requestsTotal.png" alt="requests metric"  />  
+  <small class="img-note">click image to zoom in</small>
 </p></p>
 <p><em>Rate of Requests (RPS) for a 5m interval</em></p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">rate(requests_total{job=&#34;pythonapp&#34;}[5m])
-</code></pre></div><p><p class="markdown-image">
-  <img src="img/rps.png" alt="rps"  />
+</code></pre></div><p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL3Jwcy5wbmc=" src="img/rps.png" alt="rps"  />  
+  <small class="img-note">click image to zoom in</small>
 </p></p>
 <h3 id="up">Up <a href="#up" class="anchor">🔗</a></h3><p><code>Up</code> is a special metric that Prometheus creates automatically for every target. If it is possible to assume that when the <code>/metrics</code> endpoint is accessible the entire application is running, then you get a free heartbeat signal by plugin Prometheus into it.</p>
-<p><p class="markdown-image">
-  <img src="img/up.png" alt="up"  />
+<p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL3VwLnBuZw==" src="img/up.png" alt="up"  />  
+  <small class="img-note">click image to zoom in</small>
 </p></p>
 <h2 id="where-to-go-from-here">Where to go from here? <a href="#where-to-go-from-here" class="anchor">🔗</a></h2><p>Hopefully, after this exercise, you should be able to instrument your application with basic metrics. The same pattern applies to <a href="https://prometheus.io/docs/instrumenting/clientlibs/" target="_blank" rel="noopener">other languages</a>. Give it a try following the guides from the client repositories.</p>
 <p>We have just scratched the surface of what Prometheus has to offer as a monitoring solution. If you liked what you saw so far, go and take a look at the <a href="https://prometheus.io/docs/introduction/overview/" target="_blank" rel="noopener">official documentation</a> on other components.
@@ -469,7 +480,12 @@ Other posts in this series will touch on other Prometheus features like Exporter
       </div>
     
 </footer>
+<div id="lightbox"></div>
 
+    
+        
+        <script src="http://localhost:8000/js/custom.js"></script>
+    
 
 
   </body>

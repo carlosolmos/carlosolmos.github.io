@@ -5,11 +5,57 @@
 }
 
 p.markdown-image img {
-    border:solid 2px #2a2437;
-    
+    border: solid 2px #2a2437;
+
 }
 
 .post-image {
-    border:solid 2px #41403E;
-  
+    border: solid 2px #41403E;
+
 }
+
+/* (A) LIGHTBOX BACKGROUND */
+#lightbox {
+    /* (A1) COVERS FULLSCREEN */
+    position: fixed; z-index: 999;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+   
+    /* (A2) BACKGROUND */
+    background: rgba(0, 0, 0, 0.5);
+   
+    /* (A3) CENTER IMAGE ON SCREEN */
+    display: flex;
+    align-items: center;
+    align-items: center;
+   
+    /* (A4) HIDDEN BY DEFAULT */
+    visibility: hidden;
+    opacity: 0;
+   
+    /* (A5) SHOW/HIDE ANIMATION */
+    transition: opacity ease 0.4s;
+  }
+   
+  /* (A6) TOGGLE VISIBILITY */
+  #lightbox.show {
+    visibility: visible;
+    opacity: 1;
+  }
+   
+  /* (B) LIGHTBOX IMAGE */
+  #lightbox img {
+    /* (B1) DIMENSIONS */
+    width: 100%;
+    height: auto;
+   
+    /* (B2) IMAGE FIT */
+    /* contain | cover | fill | scale-down */
+    object-fit: cover;
+  }
+   
+  .img-note {
+    margin-top: -1em;
+    float: right;
+    font-style: italic;
+  }
