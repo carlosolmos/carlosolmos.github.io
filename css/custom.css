@@ -59,3 +59,30 @@ p.markdown-image img {
     float: right;
     font-style: italic;
   }
+
+  .note {
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    background-color: #dbebf4;
+    border: solid 1px #3498db;
+    border-radius: 6px;
+    line-height: 18px;
+    overflow:hidden;
+    padding: 12px;
+    color: #404040;
+    line-height: 1.75;
+    letter-spacing: 0.008em;
+  }
+
+  a.download-button {
+    color: #fff;
+    background-color: #0062c7;
+    padding: 16px 10px 8px 10px;
+    border-radius: 4px;
+    text-decoration: none;
+  }
+
+  .githubref_title {
+    line-height: 1.2;
+    font-size: 1.30em;    
+  }

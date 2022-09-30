@@ -18,7 +18,7 @@
 
   
     
-    <link rel="stylesheet" href="https://carlosolmos.dev/css/custom.css">
+    <link rel="stylesheet" href="/css/custom.css">
   
 
 
@@ -62,7 +62,7 @@
           ·
         </span>
         <span>
-          1999 words
+          2002 words
         </span>
         <span class="split">
           ·
@@ -127,7 +127,7 @@
 <li><a href="https://cloud.google.com/sre" target="_blank" rel="noopener">https://cloud.google.com/sre</a></li>
 <li><a href="https://www.ibm.com/cloud/learn/site-reliability-engineering" target="_blank" rel="noopener">https://www.ibm.com/cloud/learn/site-reliability-engineering</a></li>
 </ul>
-<h2 id="prometheus">Prometheus <a href="#prometheus" class="anchor">🔗</a></h2><img src="img/prometheus.gif" width="200px">
+<h2 id="prometheus">Prometheus <a href="#prometheus" class="anchor">🔗</a></h2><img src="img/prometheus.gif" width="200px" style="float:right">
 <p>The <a href="https://prometheus.io" target="_blank" rel="noopener">official website</a> defines Prometheus as &ldquo;an open-source systems monitoring and alerting toolkit originally built at SoundCloud&rdquo;. Prometheus collects metrics as time series data and offers a query language called PromQL to work with the data. The tool is simple and easy to deploy and operate. It can be used for small and for large-scale systems.</p>
 <p>A typical Prometheus solution will include a server that scrapes and stores the data, as well as <a href="https://prometheus.io/docs/instrumenting/clientlibs/" target="_blank" rel="noopener">client libraries</a> —in different programming languages— that produce the metrics within the applications. Optionally, an <a href="https://github.com/prometheus/alertmanager" target="_blank" rel="noopener">alertmanager</a> service can take care of alerts and notifications. When the instrumentation from within the application is not possible —if we don&rsquo;t have access to the source code— Prometheus can use <a href="https://prometheus.io/docs/instrumenting/exporters/" target="_blank" rel="noopener">exporters</a> to collect information.</p>
 <h3 id="metrics">Metrics <a href="#metrics" class="anchor">🔗</a></h3><p>Prometheus stores all data as time series data. Every time series is defined by a metric name, and optionally some labels. The metric name defines a system attribute —total memory used, for example— and the labels are used to define different dimensions: the specific instance or a specific system component, for example.</p>
@@ -143,7 +143,16 @@
 <li>Set up a local Prometheus server to collect the data.</li>
 <li>Use the Prometheus UI to work with the metrics.</li>
 </ul>
-<p>If you are in a hurry, here is github repo with a nice Docker Compose setup and the final code for this exercise <a href="https://github.com/carlosolmos/blogresources" target="_blank" rel="noopener">https://github.com/carlosolmos/blogresources</a></p>
+<div class="note">
+<div class="githubref_title">Source Code</div>
+<p>
+If you are in a hurry, here is github repo with a nice Docker Compose setup and the final code for this exercise
+</p>
+<a class="download-button" href='https://github.com/carlosolmos/blogresources' target="_new">
+    <i data-feather="github"></i> Download Code
+</a>
+    
+</div>
 <h3 id="example-web-application">Example web application <a href="#example-web-application" class="anchor">🔗</a></h3><p>Let&rsquo;s begin our exercise with a very simple HTTP application based on Flask: <code>metrics.py</code>. This application has only one endpoint that fetches some remote content and responds with the time it took to retrieve the data. The application code looks like this:</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#a2f;font-weight:bold">from</span> <span style="color:#00f;font-weight:bold">flask</span> <span style="color:#a2f;font-weight:bold">import</span> Flask, jsonify, request
 <span style="color:#a2f;font-weight:bold">import</span> <span style="color:#00f;font-weight:bold">http.client</span>
@@ -490,6 +499,10 @@ Other posts in this series will touch on other Prometheus features like Exporter
         <script src="https://carlosolmos.dev/js/custom.js"></script>
     
 
-
+<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+<script>
+    
+  feather.replace()
+</script>
   </body>
 </html>
