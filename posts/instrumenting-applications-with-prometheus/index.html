@@ -62,7 +62,7 @@
           ·
         </span>
         <span>
-          1999 words
+          1994 words
         </span>
         <span class="split">
           ·
@@ -127,10 +127,7 @@
 <li><a href="https://cloud.google.com/sre" target="_blank" rel="noopener">https://cloud.google.com/sre</a></li>
 <li><a href="https://www.ibm.com/cloud/learn/site-reliability-engineering" target="_blank" rel="noopener">https://www.ibm.com/cloud/learn/site-reliability-engineering</a></li>
 </ul>
-<h2 id="prometheus">Prometheus <a href="#prometheus" class="anchor">🔗</a></h2><p><p class="markdown-image"> 
-  <img class="zoomable" id="aW1nL3Byb21ldGhldXMuZ2lm" src="img/prometheus.gif" alt="Prometheus"  />  
-  <small class="img-note">click image to zoom in</small>
-</p></p>
+<h2 id="prometheus">Prometheus <a href="#prometheus" class="anchor">🔗</a></h2><img src="img/prometheus.gif" width="200px">
 <p>The <a href="https://prometheus.io" target="_blank" rel="noopener">official website</a> defines Prometheus as &ldquo;an open-source systems monitoring and alerting toolkit originally built at SoundCloud&rdquo;. Prometheus collects metrics as time series data and offers a query language called PromQL to work with the data. The tool is simple and easy to deploy and operate. It can be used for small and for large-scale systems.</p>
 <p>A typical Prometheus solution will include a server that scrapes and stores the data, as well as <a href="https://prometheus.io/docs/instrumenting/clientlibs/" target="_blank" rel="noopener">client libraries</a> —in different programming languages— that produce the metrics within the applications. Optionally, an <a href="https://github.com/prometheus/alertmanager" target="_blank" rel="noopener">alertmanager</a> service can take care of alerts and notifications. When the instrumentation from within the application is not possible —if we don&rsquo;t have access to the source code— Prometheus can use <a href="https://prometheus.io/docs/instrumenting/exporters/" target="_blank" rel="noopener">exporters</a> to collect information.</p>
 <h3 id="metrics">Metrics <a href="#metrics" class="anchor">🔗</a></h3><p>Prometheus stores all data as time series data. Every time series is defined by a metric name, and optionally some labels. The metric name defines a system attribute —total memory used, for example— and the labels are used to define different dimensions: the specific instance or a specific system component, for example.</p>
