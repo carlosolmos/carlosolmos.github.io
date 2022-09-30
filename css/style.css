@@ -4,7 +4,7 @@ html[theme='dark-mode'] {
 
 body {
   line-height: 1;
-  font: normal 15px/1.5em 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font: normal 15px/1.5em muli,avenir,helvetica neue,helvetica,ubuntu,roboto,noto,segoe ui,arial,sans-serif;;
   color: #404040;
   line-height: 1.75;
   letter-spacing: 0.008em;
