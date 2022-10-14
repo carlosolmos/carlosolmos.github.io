@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <title>Everactive Edge API and Pipedream | brain dump</title>
+
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">    
+<meta name="viewport" content="width=device-width,minimum-scale=1">
+<meta name="description" content="In this article, we are going to integrate the Everactive Edge API with a Google Sheet using Pipedream.com.">
+<meta name="generator" content="Hugo 0.92.2" />
+
+
+  <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+  
+    
+    <link rel="stylesheet" href="/css/custom.css">
+  
+
+
+<link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+
+
+
+
+
+
+
+  </head>
+
+  <body>
+    <nav class="navigation">
+	
+		<a href="/"> <span class="arrow">←</span>Home</a>
+	
+	<a href="/posts">Archive</a>
+	<a href="/tags">Tags</a>
+	<a href="/series">Series</a>
+	<a href="/about">About</a>
+
+	
+
+	
+	  <a class="button" href="https://carlosolmos.dev/index.xml">Subscribe</a>
+	
+</nav>
+
+
+    <main class="main">
+      
+
+<section id="single">
+    <h1 class="title">Everactive Edge API and Pipedream</h1>
+
+    <div class="tip">
+        <time datetime="2022-10-09 20:22:46 -0700 PDT">Oct 9, 2022</time>
+        <span class="split">
+          ·
+        </span>
+        <span>
+          1299 words
+        </span>
+        <span class="split">
+          ·
+        </span>
+        <span>
+          7 minute read
+        </span>
+    </div>
+
+    
+    
+        
+  
+    <aside class="toc">
+      <details>
+          <summary>Table of Contents
+          </summary>
+          <div>
+              <nav id="TableOfContents">
+  <ul>
+    <li><a href="#the-plan">The Plan</a></li>
+    <li><a href="#the-data-source">The Data Source</a>
+      <ul>
+        <li><a href="#setting-up-access-to-the-api">Setting up access to the API.</a></li>
+        <li><a href="#testing-the-api">Testing the API</a></li>
+      </ul>
+    </li>
+    <li><a href="#pipedream">Pipedream</a>
+      <ul>
+        <li><a href="#the-workflow">The WorkFlow</a></li>
+      </ul>
+    </li>
+    <li><a href="#ps">PS</a></li>
+  </ul>
+</nav>
+          </div>
+      </details>
+    </aside>
+  
+
+
+    
+
+
+    <div class="content">
+      <p>The <a href="https://everactive.com" target="_blank" rel="noopener">Everactive Edge</a> RESTful API gives you direct programmatic access to the data returned by <a href="https://everactive.com/batteryless-technology/#everactive-solution" target="_blank" rel="noopener">Eversensors</a>. The API provides endpoints to retrieve data based on time ranges, and shortcuts to get the last-available reading from a particular sensor. Typically, applications will poll these endpoints to get the most up-to-date information. In this article, we are going to use <a href="https://pipedream.com" target="_blank" rel="noopener">Pipedream.com</a> as a mechanism to periodically poll the API for new data and log it in a spreadsheet on Google Docs.</p>
+<h2 id="the-plan">The Plan <a href="#the-plan" class="anchor">🔗</a></h2><p>The overall design of the solution we are going to implement looks like this:
+<p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL2V2ZXJhY3RpdmUtYXBpLXBpcGVkcmVhbS1zaGVldC5wbmc=" src="img/everactive-api-pipedream-sheet.png" alt="Everactive API Data Logger"  />  
+  <small class="img-note">click image to zoom in</small>
+</p></p>
+<p>We will use the Pipedream.com service to orchestrate the requests for data to the Everactive Edge API and the insertion to a simple Google Sheet.
+The API will be polled every few minutes for the last reading of a particular sensor. Every response will be appended as a new row in the spreadsheet.</p>
+<h2 id="the-data-source">The Data Source <a href="#the-data-source" class="anchor">🔗</a></h2><p>The data we are looking for is produced by a Machine Vibration Eversensor attached to an industrial machine. <a href="https://everactive.com/#get-started" target="_blank" rel="noopener">Everactive&rsquo;s Internet of Things technology</a> is based on self-powered (no batteries required) sensing devices that can deliver rich data streams. Apart from the Everactive Web Console, the data is made available by the Everactive Edge Platform via different channels like the Restful API, Webhooks, or MQTT Subscriptions.</p>
+<p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL2RhdGEtc3RyZWFtLnBuZw==" src="img/data-stream.png" alt="Everactive Edge Platform"  />  
+  <small class="img-note">click image to zoom in</small>
+</p></p>
+<p>The Everactive Console
+<p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL2V2ZXJzZW5zb3ItZGF0YS1zdHJlYW0ucG5n" src="img/eversensor-data-stream.png" alt="Eversensor Vibration Data"  />  
+  <small class="img-note">click image to zoom in</small>
+</p></p>
+<p>In our exercise, we will be polling data from the API endpoint that retrieves the last-available reading from this sensor. This endpoint is very simple: it acts as a shortcut, so we don&rsquo;t need to specify incremental timestamps. The full API specification can be found here: <a href="https://everactive-ds-docs.readme.io/reference/get-eversensors-macaddress-readings-last" target="_blank" rel="noopener">https://everactive-ds-docs.readme.io/reference/get-eversensors-macaddress-readings-last</a></p>
+<h3 id="setting-up-access-to-the-api">Setting up access to the API. <a href="#setting-up-access-to-the-api" class="anchor">🔗</a></h3><p>Before we can make any request, we have to prepare a set of Keys that will grant us access to the API.</p>
+<p>If you haven&rsquo;t, <a href="https://support.everactive.com/hc/en-us/articles/6279483691159-Creating-Your-First-API-Credential" target="_blank" rel="noopener">use this guide</a> to create your first set of API Credentials. Make sure you have included the privileges for <code>User</code> and <code>Developer</code> in the scope. Retrieve the <strong>Client ID</strong> and the <strong>Client Secret</strong> and keep them handy, we&rsquo;ll need them for our exercise.</p>
+<p>With Insomnia:
+<p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL2FwaS1jcmVkcy1zY29wZS5wbmc=" src="img/api-creds-scope.png" alt="API Credentials Scope"  />  
+  <small class="img-note">click image to zoom in</small>
+</p></p>
+<h3 id="testing-the-api">Testing the API <a href="#testing-the-api" class="anchor">🔗</a></h3><p>Now that we have our API Credentials let&rsquo;s test them against the endpoints we need. You can use any REST Client, like <code>curl</code>, <a href="https://insomnia.rest" target="_blank" rel="noopener">Insomnia</a>, or <a href="https://www.postman.com" target="_blank" rel="noopener">Postman</a>.</p>
+<h4 id="login">Login <a href="#login" class="anchor">🔗</a></h4><p>The first request we have to make is to the authorization endpoint to obtain a valid Token for subsequent requests. We&rsquo;ll use the client id and secret we just created:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">curl --location --request POST <span style="color:#b44">&#39;https://api.data.everactive.com/auth/token&#39;</span> <span style="color:#b62;font-weight:bold">\
+</span><span style="color:#b62;font-weight:bold"></span>--header <span style="color:#b44">&#39;Content-Type: application/json&#39;</span> <span style="color:#b62;font-weight:bold">\
+</span><span style="color:#b62;font-weight:bold"></span>--data-raw <span style="color:#b44">&#39;{
+</span><span style="color:#b44">    &#34;client_id&#34;: &#34;{your client id goes here}&#34;,
+</span><span style="color:#b44">    &#34;client_secret&#34;: &#34;{your secret goes here}&#34;,
+</span><span style="color:#b44">    &#34;grant_type&#34;: &#34;client_credentials&#34;
+</span><span style="color:#b44">}&#39;</span>
+</code></pre></div><p>With Insomnia:
+<p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL2luc29tbmlhLWxvZ2luLnBuZw==" src="img/insomnia-login.png" alt="Insomnia Login"  />  
+  <small class="img-note">click image to zoom in</small>
+</p></p>
+<p>This returns a response with our token:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">{
+    &#34;access_token&#34;: &#34;eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImhDbUlQVDNwWVdiOElOUl9yc0VWXyJ9.eyJodHRwczovL2V2ci5hYy9jbGFpbXMvY3JlZGVudGlhbHMiOnsiY2xpZW50SWQiOiJWb3N4MjRjWTlhQ09PQTEwMHM0Qk14d1c1VUtWYTRiNSIsImNyZWF0ZWRCeVVzZXIiOnsiZW1haWwiOiJjYXJsb3Mub2xtb3NAZXZlcmFjdGl2ZS5jb20iLCJpZCI6IjJjYTNhMjY0LTI2YTgtNGJlMC1hYjgyLWE4ODVmOTg3NTg0ZiJ9LCJjdXN0b21lciI6eyJpZCI6IjRkMzIzNjkwLTZiODEtNDVhMS04ZjQ3LTY5Mjg3YzIxMzFiNCIsIm5hbWUiOiJMaXZpbmcgTGFicyAtIFNhbmRib3gifSwiZWZmZWN0aXZlRW5kVGltZXN0YW1wIjoxNjcyNTIzNTgwLCJlZmZlY3RpdmVTdGFydFRpbWVzdGFtcCI6MTY2NTE3NjA4MywibGFzdExvZ2luVGltZXN0YW1wIjoxNjY1NzIxMjg1LCJuYW1lIjoiQ2FybG9zT2xtb3MtVHV0b3JpYWxzIiwicHJpdmlsZWdlcyI6W3siY3VzdG9tZXIiOnsiZW5hYmxlZFByb2R1Y3RzIjp7ImRhdGFTZXJ2aWNlcyI6dHJ1ZSwibWFjaGluZUhlYWx0aE1vbml0b3IiOmZhbHNlLCJzdGVhbVRyYXBNb25pdG9yIjpmYWxzZX0sImlkIjoiNGQzMjM2OTAtNmI4MS00NWExLThmNDctNjkyODdjMjEzMWI0IiwiaW50ZWdyYXRpb25zIjp7InNhZ2UiOnsiZW5hYmxlZCI6ZmFsc2V9fSwiaXNTYW5kYm94Ijp0cnVlLCJuYW1lIjoiTGl2aW5nIExhYnMgLSBTYW5kYm94In0sImtleSI6ImRldmVsb3BlciJ9LHsiY3VzdG9tZXIiOnsiZW5hYmxlZFByb2R1Y3RzIjp7ImRhdGFTZXJ2aWNlcyI6dHJ1ZSwibWFjaGluZUhlYWx0aE1vbml0b3IiOmZhbHNlLCJzdGVhbVRyYXBNb25pdG9yIjpmYWxzZX0sImlkIjoiNGQzMjM2OTAtNmI4MS00NWExLThmNDctNjkyODdjMjEzMWI0IiwiaW50ZWdyYXRpb25zIjp7InNhZ2UiOnsiZW5hYmxlZCI6ZmFsc2V9fSwiaXNTYW5kYm94Ijp0cnVlLCJuYW1lIjoiTGl2aW5nIExhYnMgLSBTYW5kYm94In0sImtleSI6InVzZXIifV19LCJpc3MiOiJodHRwczovL2F1dGguaW5zaWdodHMuZXZlcmFjdGl2ZS5jb20vIiwic3ViIjoiVm9zeDI0Y1k5YUNPT0ExMDBzNEJNeHdXNVVLVmE0YjVAY2xpZW50cyIsImF1ZCI6Imh0dHBzOi8vZXZlcmFjdGl2ZS9hdWRpZW5jZSIsImlhdCI6MTY2NTcyMTI4NSwiZXhwIjoxNjY1ODA3Njg1LCJhenAiOiJWb3N4MjRjWTlhQ09PQTEwMHM0Qk14d1c1VUtWYTRiNSIsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyJ9.LtIO2IcOKwJY36Nn0ZSwNf_Bs--U9lxQRk2MubCFUwXfqzQZHgreNbW4F-_6QZND66uBiacbOodIebMiqXh5M6CDrYGvdsDSyPDPnDmQ5SYwf7KKzeri5jupuqdB5-lUgWnZ64BI-85FE_3Ou0qt6xWvANCdyPKQrX12Kp7ZtqatHGB7FLbCYoolqPcTsqdZeTNa2QYygH50qUGluNoENE_ZwCOpG7ivL61LX0kBTfLvQ92OOBntqE0GUqZ3bPWSiWL93Jzqb6ykX-umNHxiyEG7If9390LFqNnzPfrHXHysb04VRx_b9LEFpa5ELwZgQAR_LCIqCc6zOXkBpTl6YQ&#34;,
+    &#34;expires_in&#34;: 86400,
+    &#34;token_type&#34;: &#34;Bearer&#34;
+}
+</code></pre></div><blockquote>
+<p>Note the <code>access_token</code> field, that is the value we are looking for.</p>
+</blockquote>
+<h4 id="request-some-data">Request some Data <a href="#request-some-data" class="anchor">🔗</a></h4><p>With our token in hand, we can now request some data. We are going to use the endpoint to fetch the last reading from a sensor using its MAC address (e.g. bc:5e:a1:ff:fe:00:56:fb):</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">curl --location --request GET &#39;https://api.data.everactive.com/ds/v1/eversensors/{sensor mac address}/readings/last&#39; \
+--header &#39;Authorization: Bearer {the token goes here}&#39;
+</code></pre></div><p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL2luc29taW5hLWdldC1kYXRhLnBuZw==" src="img/insomina-get-data.png" alt="Insomnia Get Data"  />  
+  <small class="img-note">click image to zoom in</small>
+</p></p>
+<blockquote>
+<p>Remember to put the token in the header.</p>
+</blockquote>
+<p>This request will return an Eversensor reading by this schema: <a href="https://everactive-ds-docs.readme.io/reference/eversensors-overview#sensor-readings-data-schema" target="_blank" rel="noopener">https://everactive-ds-docs.readme.io/reference/eversensors-overview#sensor-readings-data-schema</a></p>
+<p>For example:
+<p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL2NvZGUucG5n" src="img/code.png" alt="code"  />  
+  <small class="img-note">click image to zoom in</small>
+</p></p>
+<p>Now that we have successfully tested our API Credentials, let&rsquo;s put Pipedream to work for us to fetch and log the data.</p>
+<h2 id="pipedream">Pipedream <a href="#pipedream" class="anchor">🔗</a></h2><p><a href="https://pipedream.com" target="_blank" rel="noopener">Pipedream.com</a> defines itself as &ldquo;the fastest way to automate any process that connects APIs&rdquo;. To us, it has been a good tool to create fast prototypes and scenarios for the usage of our services. Pipedream offers a wide range of service integrations to combine with the Everactive Platform APIs. If you don&rsquo;t have one, go to Pipedream.com and create a free account.</p>
+<blockquote>
+<p>You&rsquo;ll find plenty of documentation for your reference on their website <a href="https://pipedream.com/docs" target="_blank" rel="noopener">https://pipedream.com/docs</a></p>
+</blockquote>
+<h3 id="the-workflow">The WorkFlow <a href="#the-workflow" class="anchor">🔗</a></h3><p>Remember the plan: fetch de data from the Everactive API and log it into a Google Spreadsheet. To accomplish this we need to create a Pipedream Workflow that looks something like this:</p>
+<p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL3dvcmtmbG93LnBuZw==" src="img/workflow.png" alt="Pipedream workflow"  />  
+  <small class="img-note">click image to zoom in</small>
+</p></p>
+<blockquote>
+<p>It should be clear by now, but you will need a Google account to create the spreadsheet, any account, free or enterprise, will work.</p>
+</blockquote>
+<h4 id="start">Start <a href="#start" class="anchor">🔗</a></h4><p>Create a new workflow, let&rsquo;s name it &ldquo;everactive-api-logger&rdquo;</p>
+<img class="zoomable" src="img/p1.png" alt="Test the App" width="400px">
+<h4 id="step-1---trigger">Step 1 - Trigger <a href="#step-1---trigger" class="anchor">🔗</a></h4><p>The first step in our workflow is a Trigger. We will use a &ldquo;Custom Interval&rdquo; timer. Set a reasonable interval, like every 1 or 5 minutes:</p>
+<p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL3AyLnBuZw==" src="img/p2.png" alt="pipedream workflow"  />  
+  <small class="img-note">click image to zoom in</small>
+</p></p>
+<p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL3AzLnBuZw==" src="img/p3.png" alt="pipedream workflow"  />  
+  <small class="img-note">click image to zoom in</small>
+</p></p>
+<h4 id="step-2---api-login">Step 2 - API Login <a href="#step-2---api-login" class="anchor">🔗</a></h4><p>The next step is to get a token from the Everactive API. Just like we did manually, we need to send a login request with our credentials. For this, we will add a step of the type &ldquo;HTTP Request&rdquo;. Enter the target URL and the request body. You can even import the <code>curl</code> request.</p>
+<ul>
+<li>Method: <em>POST</em></li>
+<li>URL: <em><a href="https://api.data.everactive.com/auth/token" target="_blank" rel="noopener">https://api.data.everactive.com/auth/token</a></em></li>
+<li>Body: <em>API Credentials</em></li>
+</ul>
+<p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL3A1LnBuZw==" src="img/p5.png" alt="pipedream workflow"  />  
+  <small class="img-note">click image to zoom in</small>
+</p></p>
+<p>Click on the &ldquo;Test&rdquo; button to get a sample response. You should see a parsed version of the same response we got from our manual test. The <code>access_token</code> should be there already.</p>
+<p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL3A2LnBuZw==" src="img/p6.png" alt="pipedream workflow"  />  
+  <small class="img-note">click image to zoom in</small>
+</p></p>
+<h4 id="step-3-request-the-eversensor-reading">Step 3 Request the Eversensor reading <a href="#step-3-request-the-eversensor-reading" class="anchor">🔗</a></h4><p>Pipedream makes it easy to chain the results of one request into the next steps. Add another step of the same type &ldquo;HTTP Request&rdquo;. This time the request requires authentication information to access the data. The Authentication method is <em>Bearer Token</em> and the token value comes from the previous step.</p>
+<ul>
+<li>Method: <em>GET</em></li>
+<li>URL: <em><a href="https://api.data.everactive.com/ds/v1/eversensors/bc:5e:a1:ff:fe:00:56:fb/readings/last" target="_blank" rel="noopener">https://api.data.everactive.com/ds/v1/eversensors/bc:5e:a1:ff:fe:00:56:fb/readings/last</a></em></li>
+<li>Authentication: <em>Bearer Token</em></li>
+<li>Token Path:  <em>{{steps.custom_request.$return_value.access_token}}</em></li>
+</ul>
+<p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL3A3LnBuZw==" src="img/p7.png" alt="pipedream workflow"  />  
+  <small class="img-note">click image to zoom in</small>
+</p></p>
+<p>Click the &ldquo;Test&rdquo; button on this step and see the Eversensor reading data.</p>
+<p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL3A4LnBuZw==" src="img/p8.png" alt="pipedream workflow"  />  
+  <small class="img-note">click image to zoom in</small>
+</p></p>
+<h4 id="step-4-the-data-log">Step 4 The Data Log <a href="#step-4-the-data-log" class="anchor">🔗</a></h4><p>For this step, we will need a Google Sheet to receive the Eversensor data. Create a simple Sheet called &ldquo;everactive-logger&rdquo; with two columns: &ldquo;Timestamp&rdquo;, and &ldquo;Reading&rdquo;, for example.</p>
+ <img class="zoomable" src="img/p9a.png" alt="pipedream workflow" width="400px">
+<p>Now let&rsquo;s add a step in our workflow to &ldquo;Add Row to Google Sheets&rdquo;. Follow the form to connect your Google Account and find the Sheet we just created. The titled columns will appear as fields in the step configuration form.</p>
+<p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL3A5Yi5wbmc=" src="img/p9b.png" alt="pipedream workflow"  />  
+  <small class="img-note">click image to zoom in</small>
+</p></p>
+<p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL3AxMC5wbmc=" src="img/p10.png" alt="pipedream workflow"  />  
+  <small class="img-note">click image to zoom in</small>
+</p></p>
+<p>We need to map the columns in the Sheet to the fields from our reading response in the previous Step. Pipedream makes it very easy to locate the fields in the parsed response and copy the selection path. Select the &ldquo;Reading Date&rdquo; from the object tree and copy the path to the &ldquo;Timestamp&rdquo; column, then do the same for another part of the object, like the &ldquo;Temperature Measurements&rdquo;, and place the path in the &ldquo;Reading&rdquo; field.</p>
+<p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL3AxMS5wbmc=" src="img/p11.png" alt="pipedream workflow"  />  
+  <small class="img-note">click image to zoom in</small>
+</p></p>
+<p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL3AxMi5wbmc=" src="img/p12.png" alt="pipedream workflow"  />  
+  <small class="img-note">click image to zoom in</small>
+</p></p>
+<p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL3AxMy5wbmc=" src="img/p13.png" alt="pipedream workflow"  />  
+  <small class="img-note">click image to zoom in</small>
+</p></p>
+<p>Test the step and see the data being inserted into the spreadsheet. It&rsquo;s that easy!</p>
+<p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL3AxNC5wbmc=" src="img/p14.png" alt="pipedream workflow"  />  
+  <small class="img-note">click image to zoom in</small>
+</p></p>
+ <img class="zoomable" src="img/p15.png" alt="pipedream workflow" width="400px">
+<h4 id="step-5-ship-it">Step 5 Ship it! <a href="#step-5-ship-it" class="anchor">🔗</a></h4><p>Now that we have our workflow, it is time to save it and put it to work. This is what the full workflow looks like:</p>
+<p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL3AxNy5wbmc=" src="img/p17.png" alt="pipedream workflow"  />  
+  <small class="img-note">click image to zoom in</small>
+</p></p>
+<p>Once it is running, you should see the data come in at every interval into a new row in the spreadsheet.</p>
+<p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL3AxOC5wbmc=" src="img/p18.png" alt="pipedream workflow"  />  
+  <small class="img-note">click image to zoom in</small>
+</p></p>
+<h2 id="ps">PS <a href="#ps" class="anchor">🔗</a></h2><p>This was a very simple example of how to work with the Everactive Edge Platform API, but we hope that it is useful to illustrate the basic concepts of the RESTful API and the structure of the data. In other articles, we will show how to work with other services of the Platform, like the Webhooks subscriptions. We might even use Pipedream again for that, so don&rsquo;t throw away your account just yet ;)</p>
+
+    </div>
+
+    
+        <div class="tags">
+            
+                <a href="https://carlosolmos.dev/tags/everactive">everactive</a>
+            
+                <a href="https://carlosolmos.dev/tags/api">API</a>
+            
+                <a href="https://carlosolmos.dev/tags/data">data</a>
+            
+                <a href="https://carlosolmos.dev/tags/pipedream">Pipedream</a>
+            
+        </div>
+    
+    
+    
+
+</section>
+
+
+    </main>
+    
+    <footer id="footer">
+    
+        <div id="social">
+
+
+    <a class="symbol" href="https://github.com/carlosolmos/" rel="me" target="_blank">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="28"><rect x="0" fill="none" width="24" height="24"/><g><path d="M12 2C6.477 2 2 6.477 2 12c0 4.419 2.865 8.166 6.839 9.489.5.09.682-.218.682-.484 0-.236-.009-.866-.014-1.699-2.782.602-3.369-1.34-3.369-1.34-.455-1.157-1.11-1.465-1.11-1.465-.909-.62.069-.608.069-.608 1.004.071 1.532 1.03 1.532 1.03.891 1.529 2.341 1.089 2.91.833.091-.647.349-1.086.635-1.337-2.22-.251-4.555-1.111-4.555-4.943 0-1.091.39-1.984 1.03-2.682-.103-.254-.447-1.27.097-2.646 0 0 .84-.269 2.75 1.025A9.548 9.548 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.748-1.025 2.748-1.025.546 1.376.202 2.394.1 2.646.64.699 1.026 1.591 1.026 2.682 0 3.841-2.337 4.687-4.565 4.935.359.307.679.917.679 1.852 0 1.335-.012 2.415-.012 2.741 0 .269.18.579.688.481A9.997 9.997 0 0022 12c0-5.523-4.477-10-10-10z" fill="#bbbbbb"/></g></svg>
+    </a>
+
+    <a class="symbol" href="https://www.linkedin.com/in/carlosaolmos" rel="me" target="_blank">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="28"><rect x="0" fill="none" width="24" height="24"/><g><path d="M19.7 3H4.3A1.3 1.3 0 003 4.3v15.4A1.3 1.3 0 004.3 21h15.4a1.3 1.3 0 001.3-1.3V4.3A1.3 1.3 0 0019.7 3zM8.339 18.338H5.667v-8.59h2.672v8.59zM7.004 8.574a1.548 1.548 0 11-.002-3.096 1.548 1.548 0 01.002 3.096zm11.335 9.764H15.67v-4.177c0-.996-.017-2.278-1.387-2.278-1.389 0-1.601 1.086-1.601 2.206v4.249h-2.667v-8.59h2.559v1.174h.037c.356-.675 1.227-1.387 2.526-1.387 2.703 0 3.203 1.779 3.203 4.092v4.711z" fill="#bbbbbb"/></g></svg>
+    </a>
+
+    <a class="symbol" href="https://twitter.com/carlosolmos" rel="me" target="_blank">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="28">
+    <rect x="0" fill="none" width="24" height="24"/>
+    <g>
+        <path d="M19 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2zm-2.534 6.71c.004.099.007.198.007.298 0 3.045-2.318 6.556-6.556 6.556a6.52 6.52 0 01-3.532-1.035 4.626 4.626 0 003.412-.954 2.307 2.307 0 01-2.152-1.6 2.295 2.295 0 001.04-.04 2.306 2.306 0 01-1.848-2.259v-.029c.311.173.666.276 1.044.288a2.303 2.303 0 01-.713-3.076 6.54 6.54 0 004.749 2.407 2.305 2.305 0 013.926-2.101 4.602 4.602 0 001.463-.559 2.31 2.31 0 01-1.013 1.275c.466-.056.91-.18 1.323-.363-.31.461-.7.867-1.15 1.192z" fill="#bbbbbb"/>
+    </g>
+</svg>
+    </a>
+
+
+</div>
+
+    
+
+    <div class="copyright">
+    
+       © Copyright 
+       2022 
+       <span class="split">
+        Made with <svg fill="#bbbbbb" width="15" height="15" version="1.1" id="heart-15" xmlns="http://www.w3.org/2000/svg" width="15px" height="15px" viewBox="0 0 15 15">
+  <path d="M13.91,6.75c-1.17,2.25-4.3,5.31-6.07,6.94c-0.1903,0.1718-0.4797,0.1718-0.67,0C5.39,12.06,2.26,9,1.09,6.75&#xA;&#x9;C-1.48,1.8,5-1.5,7.5,3.45C10-1.5,16.48,1.8,13.91,6.75z"/>
+</svg>
+       </span>
+       by Carlos A Olmos
+    
+    </div>
+
+    
+      <div class="powerby">
+        Powered by <a href='http://www.gohugo.io/'>Hugo</a> Based on Theme mini By <a href='https://github.com/nodejh/hugo-theme-cactus-plus'>nodejh</a>
+      </div>
+    
+</footer>
+<div id="lightbox"></div>
+
+    
+        
+        <script src="https://carlosolmos.dev/js/custom.js"></script>
+    
+
+<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+<script>
+    
+  feather.replace()
+</script>
+  </body>
+</html>

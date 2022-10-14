@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>API on brain dump</title>
+    <link>https://carlosolmos.dev/tags/api/</link>
+    <description>Recent content in API on brain dump</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 09 Oct 2022 20:22:46 -0700</lastBuildDate><atom:link href="https://carlosolmos.dev/tags/api/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Everactive Edge API and Pipedream</title>
+      <link>https://carlosolmos.dev/posts/everactive-edge-api-and-pipedream/</link>
+      <pubDate>Sun, 09 Oct 2022 20:22:46 -0700</pubDate>
+      
+      <guid>https://carlosolmos.dev/posts/everactive-edge-api-and-pipedream/</guid>
+      <description>The Everactive Edge RESTful API gives you direct programmatic access to the data returned by Eversensors. The API provides endpoints to retrieve data based on time ranges, and shortcuts to get the last-available reading from a particular sensor. Typically, applications will poll these endpoints to get the most up-to-date information. In this article, we are going to use Pipedream.com as a mechanism to periodically poll the API for new data and log it in a spreadsheet on Google Docs.</description>
+    </item>
+    
+  </channel>
+</rss>
