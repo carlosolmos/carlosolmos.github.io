@@ -6,7 +6,17 @@
     <description>Recent content in everactive on brain dump</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 09 Oct 2022 20:22:46 -0700</lastBuildDate><atom:link href="https://carlosolmos.dev/tags/everactive/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 01 Nov 2022 20:22:46 -0700</lastBuildDate><atom:link href="https://carlosolmos.dev/tags/everactive/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Everactive Edge Webhooks, Fluentd, and S3</title>
+      <link>https://carlosolmos.dev/posts/everactive-edge-webhooks-fluentd-and-s3/</link>
+      <pubDate>Tue, 01 Nov 2022 20:22:46 -0700</pubDate>
+      
+      <guid>https://carlosolmos.dev/posts/everactive-edge-webhooks-fluentd-and-s3/</guid>
+      <description>From Everactive&amp;rsquo;s Webhook Subscriptions to Fluentd &amp;amp; S3 🔗 Disclaimer: this solution is totally overengineered. Only for learning purposes. You don&amp;rsquo;t want to use this in production, or do you?&amp;hellip;😜
+ Everactive’s Managed Network ensures connectivity, uptime, and reliable &amp;amp; secure data transfer into our Platform. We understand that you need a steady stream of new data to transform into high-value insights to package as innovative, hyper-scale IoT applications to your end users.</description>
+    </item>
+    
     <item>
       <title>Everactive Edge API and Pipedream</title>
       <link>https://carlosolmos.dev/posts/everactive-edge-api-and-pipedream/</link>
