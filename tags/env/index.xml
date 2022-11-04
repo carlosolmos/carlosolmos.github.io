@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>today i learned on brain dump</title>
-    <link>https://carlosolmos.dev/categories/today-i-learned/</link>
-    <description>Recent content in today i learned on brain dump</description>
+    <title>env on brain dump</title>
+    <link>https://carlosolmos.dev/tags/env/</link>
+    <description>Recent content in env on brain dump</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 03 Nov 2022 18:34:24 -0700</lastBuildDate><atom:link href="https://carlosolmos.dev/categories/today-i-learned/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 03 Nov 2022 18:34:24 -0700</lastBuildDate><atom:link href="https://carlosolmos.dev/tags/env/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Load environment variables from a file in the terminal (zsh)</title>
       <link>https://carlosolmos.dev/posts/load-environment-variables-from-a-file-in-the-terminal-zsh/</link>
@@ -17,16 +17,6 @@
 click image to zoom in Add this alias to your .zshrc file
 alias loadEnv=&amp;#39;function _loadEnv() { set -o allexport; source $1; set +o allexport };_loadEnv&amp;#39; click image to zoom in And you&amp;rsquo;ll be able to load environment variables really easy:
 click image to zoom in </description>
-    </item>
-    
-    <item>
-      <title>Today I Learned: How to make a blog with Hugo</title>
-      <link>https://carlosolmos.dev/posts/today-i-learned-how-to-make-a-blog-with-hugo/</link>
-      <pubDate>Tue, 07 Jun 2022 00:00:00 +0000</pubDate>
-      
-      <guid>https://carlosolmos.dev/posts/today-i-learned-how-to-make-a-blog-with-hugo/</guid>
-      <description>Using Hugo to Create a Static Blog 🔗This site was initially created by following this guide:
-Create your own free blog website using Hugo in less than 1 hour</description>
     </item>
     
   </channel>

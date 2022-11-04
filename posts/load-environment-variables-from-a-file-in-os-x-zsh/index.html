@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
-    <title>brain dump</title>
+    <title>Load environment variables from a file in OS X (zsh) | brain dump</title>
 
     <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">    
 <meta name="viewport" content="width=device-width,minimum-scale=1">
-<meta name="description" content="Just another brain dump">
+<meta name="description" content="Many times I need to load environment variables from a simple configuration file. This is a quick and simple ZSH shell alias that helps.">
 <meta name="generator" content="Hugo 0.92.2" />
 
 
@@ -53,73 +53,85 @@
     <main class="main">
       
 
-<div id="page-404">
-  <div class="text">
-      
-          <h1>404 - Page Not Found</h1>
-      
+<section id="single">
+    <h1 class="title">Load environment variables from a file in OS X (zsh)</h1>
 
-      
-          <div>The content you&#39;re looking for doesn&#39;t seem to exist.</div>
-      
+    <div class="tip">
+        <time datetime="2022-11-03 18:34:24 -0700 PDT">Nov 3, 2022</time>
+        <span class="split">
+          ·
+        </span>
+        <span>
+          63 words
+        </span>
+        <span class="split">
+          ·
+        </span>
+        <span>
+          1 minute read
+        </span>
     </div>
 
+    
+    
+        
   
-      <h2 class="read-more">Read more</h2> 
+    <aside class="toc">
+      <details>
+          <summary>Table of Contents
+          </summary>
+          <div>
+              <nav id="TableOfContents">
+  <ul>
+    <li><a href="#load-environment-variables-from-a-file">Load environment variables from a file*</a></li>
+  </ul>
+</nav>
+          </div>
+      </details>
+    </aside>
   
 
-  
-
 
     
+
+
+    <div class="content">
+      <h2 id="load-environment-variables-from-a-file">Load environment variables from a file* <a href="#load-environment-variables-from-a-file" class="anchor">🔗</a></h2><p>To load shell environment variables from a simple KV configuration file like:</p>
+<p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL2NvbmZpZ2ZpbGUucG5n" src="img/configfile.png" alt=""  />  
+  <small class="img-note">click image to zoom in</small>
+</p></p>
+<p>Add this alias to your <code>.zshrc</code> file</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">alias loadEnv=&#39;function _loadEnv()
+{
+set -o allexport; source $1; set +o allexport
+};_loadEnv&#39;
+</code></pre></div><p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL2FsaWFzLnBuZw==" src="img/alias.png" alt=""  />  
+  <small class="img-note">click image to zoom in</small>
+</p></p>
+<p>And you&rsquo;ll be able to load environment variables really easy:</p>
+<p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL2VudnZhcnMucG5n" src="img/envvars.png" alt=""  />  
+  <small class="img-note">click image to zoom in</small>
+</p></p>
+
+    </div>
+
+    
+        <div class="tags">
+            
+                <a href="https://carlosolmos.dev/tags/shell">shell</a>
+            
+                <a href="https://carlosolmos.dev/tags/env">env</a>
+            
+        </div>
     
     
-        
-        
-        <section class="item">
-          <div>
-            <h1 class="title"><a href='/posts/load-environment-variables-from-a-file-in-the-terminal-zsh/'>Load environment variables from a file in the terminal (zsh)</a></h1>   
-            <div class="date">Nov 3, 2022</div>
-          </div>
-        </section>
     
-        
-        
-        <section class="item">
-          <div>
-            <h1 class="title"><a href='/posts/everactive-edge-webhooks-fluentd-and-s3/'>Everactive Edge Webhooks, Fluentd, and S3</a></h1>   
-            <div class="date">Nov 1, 2022</div>
-          </div>
-        </section>
-    
-        
-        
-        <section class="item">
-          <div>
-            <h1 class="title"><a href='/posts/everactive-edge-api-and-pipedream/'>Everactive Edge API and Pipedream</a></h1>   
-            <div class="date">Oct 9, 2022</div>
-          </div>
-        </section>
-    
-        
-        
-        <section class="item">
-          <div>
-            <h1 class="title"><a href='/posts/instrumenting-applications-with-prometheus/'>Instrumenting applications with Prometheus</a></h1>   
-            <div class="date">Sep 24, 2022</div>
-          </div>
-        </section>
-    
-        
-        
-        <section class="item">
-          <div>
-            <h1 class="title"><a href='/posts/mqtt-with-rabbitmq/'>MQTT with RabbitMQ</a></h1>   
-            <div class="date">Sep 12, 2022</div>
-          </div>
-        </section>
-    
-</div>
+
+</section>
+
 
     </main>
     

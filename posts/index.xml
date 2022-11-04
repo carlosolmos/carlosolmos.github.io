@@ -6,7 +6,19 @@
     <description>Recent content in Posts on brain dump</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 01 Nov 2022 20:22:46 -0700</lastBuildDate><atom:link href="https://carlosolmos.dev/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 03 Nov 2022 18:34:24 -0700</lastBuildDate><atom:link href="https://carlosolmos.dev/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Load environment variables from a file in the terminal (zsh)</title>
+      <link>https://carlosolmos.dev/posts/load-environment-variables-from-a-file-in-the-terminal-zsh/</link>
+      <pubDate>Thu, 03 Nov 2022 18:34:24 -0700</pubDate>
+      
+      <guid>https://carlosolmos.dev/posts/load-environment-variables-from-a-file-in-the-terminal-zsh/</guid>
+      <description>Load environment variables from a file* 🔗To load shell environment variables from a simple KV configuration file like:
+click image to zoom in Add this alias to your .zshrc file
+alias loadEnv=&amp;#39;function _loadEnv() { set -o allexport; source $1; set +o allexport };_loadEnv&amp;#39; click image to zoom in And you&amp;rsquo;ll be able to load environment variables really easy:
+click image to zoom in </description>
+    </item>
+    
     <item>
       <title>Everactive Edge Webhooks, Fluentd, and S3</title>
       <link>https://carlosolmos.dev/posts/everactive-edge-webhooks-fluentd-and-s3/</link>
