@@ -8,11 +8,11 @@
     <language>en-us</language>
     <lastBuildDate>Tue, 22 Nov 2022 19:01:59 -0800</lastBuildDate><atom:link href="https://carlosolmos.dev/tags/low-code/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Node-RED and APIs - Part 1</title>
-      <link>https://carlosolmos.dev/posts/node-red-and-apis-part-1/</link>
+      <title>Node-RED and the Everactive API - Part 1</title>
+      <link>https://carlosolmos.dev/posts/node-red-and-the-everactive-api-part-1/</link>
       <pubDate>Tue, 22 Nov 2022 19:01:59 -0800</pubDate>
       
-      <guid>https://carlosolmos.dev/posts/node-red-and-apis-part-1/</guid>
+      <guid>https://carlosolmos.dev/posts/node-red-and-the-everactive-api-part-1/</guid>
       <description>Node-RED is a great tool for low-code IoT programming. Its drag &amp;amp; drop interface allows you to wire hardware and software to get data flowing in no time. It&amp;rsquo;s open source and there is plenty of documentation and helpful resources around. In this article -the first of two parts- we are going to create a very simple workflow to fetch data from the Everactive API, and a public data service, and then apply a very simple thresholding function.</description>
     </item>
     
