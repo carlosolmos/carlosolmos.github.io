@@ -6,7 +6,70 @@
     <description>Recent content in Tags on brain dump</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 03 Nov 2022 18:34:24 -0700</lastBuildDate><atom:link href="https://carlosolmos.dev/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 22 Nov 2022 19:01:59 -0800</lastBuildDate><atom:link href="https://carlosolmos.dev/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>API</title>
+      <link>https://carlosolmos.dev/tags/api/</link>
+      <pubDate>Tue, 22 Nov 2022 19:01:59 -0800</pubDate>
+      
+      <guid>https://carlosolmos.dev/tags/api/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>data</title>
+      <link>https://carlosolmos.dev/tags/data/</link>
+      <pubDate>Tue, 22 Nov 2022 19:01:59 -0800</pubDate>
+      
+      <guid>https://carlosolmos.dev/tags/data/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>everactive</title>
+      <link>https://carlosolmos.dev/tags/everactive/</link>
+      <pubDate>Tue, 22 Nov 2022 19:01:59 -0800</pubDate>
+      
+      <guid>https://carlosolmos.dev/tags/everactive/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>iot</title>
+      <link>https://carlosolmos.dev/tags/iot/</link>
+      <pubDate>Tue, 22 Nov 2022 19:01:59 -0800</pubDate>
+      
+      <guid>https://carlosolmos.dev/tags/iot/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>low-code</title>
+      <link>https://carlosolmos.dev/tags/low-code/</link>
+      <pubDate>Tue, 22 Nov 2022 19:01:59 -0800</pubDate>
+      
+      <guid>https://carlosolmos.dev/tags/low-code/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>nodered</title>
+      <link>https://carlosolmos.dev/tags/nodered/</link>
+      <pubDate>Tue, 22 Nov 2022 19:01:59 -0800</pubDate>
+      
+      <guid>https://carlosolmos.dev/tags/nodered/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>overengineered</title>
+      <link>https://carlosolmos.dev/tags/overengineered/</link>
+      <pubDate>Tue, 22 Nov 2022 19:01:59 -0800</pubDate>
+      
+      <guid>https://carlosolmos.dev/tags/overengineered/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>env</title>
       <link>https://carlosolmos.dev/tags/env/</link>
@@ -26,47 +89,11 @@
     </item>
     
     <item>
-      <title>API</title>
-      <link>https://carlosolmos.dev/tags/api/</link>
-      <pubDate>Tue, 01 Nov 2022 20:22:46 -0700</pubDate>
-      
-      <guid>https://carlosolmos.dev/tags/api/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>data</title>
-      <link>https://carlosolmos.dev/tags/data/</link>
-      <pubDate>Tue, 01 Nov 2022 20:22:46 -0700</pubDate>
-      
-      <guid>https://carlosolmos.dev/tags/data/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>everactive</title>
-      <link>https://carlosolmos.dev/tags/everactive/</link>
-      <pubDate>Tue, 01 Nov 2022 20:22:46 -0700</pubDate>
-      
-      <guid>https://carlosolmos.dev/tags/everactive/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>fluentd</title>
       <link>https://carlosolmos.dev/tags/fluentd/</link>
       <pubDate>Tue, 01 Nov 2022 20:22:46 -0700</pubDate>
       
       <guid>https://carlosolmos.dev/tags/fluentd/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>overengineered</title>
-      <link>https://carlosolmos.dev/tags/overengineered/</link>
-      <pubDate>Tue, 01 Nov 2022 20:22:46 -0700</pubDate>
-      
-      <guid>https://carlosolmos.dev/tags/overengineered/</guid>
       <description></description>
     </item>
     
@@ -112,15 +139,6 @@
       <pubDate>Sat, 24 Sep 2022 22:10:52 -0700</pubDate>
       
       <guid>https://carlosolmos.dev/tags/sre/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>iot</title>
-      <link>https://carlosolmos.dev/tags/iot/</link>
-      <pubDate>Mon, 12 Sep 2022 22:21:32 -0700</pubDate>
-      
-      <guid>https://carlosolmos.dev/tags/iot/</guid>
       <description></description>
     </item>
     

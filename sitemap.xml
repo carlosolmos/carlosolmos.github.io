@@ -2,11 +2,50 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://carlosolmos.dev/tags/api/</loc>
+    <lastmod>2022-11-22T19:01:59-08:00</lastmod>
+  </url><url>
     <loc>https://carlosolmos.dev/</loc>
-    <lastmod>2022-11-03T18:34:24-07:00</lastmod>
+    <lastmod>2022-11-22T19:01:59-08:00</lastmod>
   </url><url>
     <loc>https://carlosolmos.dev/categories/</loc>
-    <lastmod>2022-11-03T18:34:24-07:00</lastmod>
+    <lastmod>2022-11-22T19:01:59-08:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.dev/tags/data/</loc>
+    <lastmod>2022-11-22T19:01:59-08:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.dev/tags/everactive/</loc>
+    <lastmod>2022-11-22T19:01:59-08:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.dev/series/everactive-api/</loc>
+    <lastmod>2022-11-22T19:01:59-08:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.dev/tags/iot/</loc>
+    <lastmod>2022-11-22T19:01:59-08:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.dev/categories/know-how/</loc>
+    <lastmod>2022-11-22T19:01:59-08:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.dev/tags/low-code/</loc>
+    <lastmod>2022-11-22T19:01:59-08:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.dev/posts/node-red-and-apis-part-1/</loc>
+    <lastmod>2022-11-22T19:01:59-08:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.dev/tags/nodered/</loc>
+    <lastmod>2022-11-22T19:01:59-08:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.dev/tags/overengineered/</loc>
+    <lastmod>2022-11-22T19:01:59-08:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.dev/posts/</loc>
+    <lastmod>2022-11-22T19:01:59-08:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.dev/series/</loc>
+    <lastmod>2022-11-22T19:01:59-08:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.dev/tags/</loc>
+    <lastmod>2022-11-22T19:01:59-08:00</lastmod>
   </url><url>
     <loc>https://carlosolmos.dev/tags/env/</loc>
     <lastmod>2022-11-03T18:34:24-07:00</lastmod>
@@ -14,29 +53,11 @@
     <loc>https://carlosolmos.dev/posts/load-environment-variables-from-a-file-in-the-terminal-zsh/</loc>
     <lastmod>2022-11-03T18:34:24-07:00</lastmod>
   </url><url>
-    <loc>https://carlosolmos.dev/posts/</loc>
-    <lastmod>2022-11-03T18:34:24-07:00</lastmod>
-  </url><url>
     <loc>https://carlosolmos.dev/tags/shell/</loc>
-    <lastmod>2022-11-03T18:34:24-07:00</lastmod>
-  </url><url>
-    <loc>https://carlosolmos.dev/tags/</loc>
     <lastmod>2022-11-03T18:34:24-07:00</lastmod>
   </url><url>
     <loc>https://carlosolmos.dev/categories/today-i-learned/</loc>
     <lastmod>2022-11-03T18:34:24-07:00</lastmod>
-  </url><url>
-    <loc>https://carlosolmos.dev/tags/api/</loc>
-    <lastmod>2022-11-01T20:22:46-07:00</lastmod>
-  </url><url>
-    <loc>https://carlosolmos.dev/tags/data/</loc>
-    <lastmod>2022-11-01T20:22:46-07:00</lastmod>
-  </url><url>
-    <loc>https://carlosolmos.dev/tags/everactive/</loc>
-    <lastmod>2022-11-01T20:22:46-07:00</lastmod>
-  </url><url>
-    <loc>https://carlosolmos.dev/series/everactive-api/</loc>
-    <lastmod>2022-11-01T20:22:46-07:00</lastmod>
   </url><url>
     <loc>https://carlosolmos.dev/posts/everactive-edge-webhooks-fluentd-and-s3/</loc>
     <lastmod>2022-11-01T20:22:46-07:00</lastmod>
@@ -44,16 +65,7 @@
     <loc>https://carlosolmos.dev/tags/fluentd/</loc>
     <lastmod>2022-11-01T20:22:46-07:00</lastmod>
   </url><url>
-    <loc>https://carlosolmos.dev/categories/know-how/</loc>
-    <lastmod>2022-11-01T20:22:46-07:00</lastmod>
-  </url><url>
-    <loc>https://carlosolmos.dev/tags/overengineered/</loc>
-    <lastmod>2022-11-01T20:22:46-07:00</lastmod>
-  </url><url>
     <loc>https://carlosolmos.dev/tags/s3/</loc>
-    <lastmod>2022-11-01T20:22:46-07:00</lastmod>
-  </url><url>
-    <loc>https://carlosolmos.dev/series/</loc>
     <lastmod>2022-11-01T20:22:46-07:00</lastmod>
   </url><url>
     <loc>https://carlosolmos.dev/posts/everactive-edge-api-and-pipedream/</loc>
@@ -76,9 +88,6 @@
   </url><url>
     <loc>https://carlosolmos.dev/series/tales-of-sre/</loc>
     <lastmod>2022-09-24T22:10:52-07:00</lastmod>
-  </url><url>
-    <loc>https://carlosolmos.dev/tags/iot/</loc>
-    <lastmod>2022-09-12T22:21:32-07:00</lastmod>
   </url><url>
     <loc>https://carlosolmos.dev/tags/mqtt/</loc>
     <lastmod>2022-09-12T22:21:32-07:00</lastmod>
