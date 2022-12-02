@@ -6,7 +6,7 @@
 
 p.markdown-image img {
     border: solid 2px #2a2437;
-
+    max-width: 50%; 
 }
 
 .post-image {
@@ -46,9 +46,9 @@ p.markdown-image img {
   /* (B) LIGHTBOX IMAGE */
   #lightbox img {
     /* (B1) DIMENSIONS */
-    width: 100%;
+    width: 80%;
     height: auto;
-   
+    margin-left: 2em;
     /* (B2) IMAGE FIT */
     /* contain | cover | fill | scale-down */
     object-fit: cover;
@@ -56,7 +56,7 @@ p.markdown-image img {
    
   .img-note {
     margin-top: -1em;
-    float: right;
+    /*float: right;*/
     font-style: italic;
   }
 

@@ -62,7 +62,7 @@
           ·
         </span>
         <span>
-          1183 words
+          1172 words
         </span>
         <span class="split">
           ·
@@ -113,13 +113,13 @@
 <p>Everactive’s Managed Network ensures <a href="https://everactive.com/" target="_blank" rel="noopener">connectivity, uptime, and reliable &amp; secure data transfer</a> into our Platform. We understand that you need a steady stream of new data to transform into high-value insights to package as innovative, hyper-scale IoT applications to your end users. The <a href="https://everactive.com" target="_blank" rel="noopener">Everactive Edge Platform</a> gives you direct programmatic access to the data returned by the Eversensors. The data is made available via different channels: <strong>RESTful APIs, Webhooks, or MQTT Subscriptions.</strong></p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL2ltYWdlMDAxLnBuZw==" src="img/image001.png" alt=""  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <p>A Webhook is an HTTP callback defined by the user. They are very useful to build pipelines based on events. Typically, when the event is triggered, an HTTP request will be sent to a defined target with the event’s information as the payload. In this article we will leverage the Everactive Edge Platform <strong>Webhooks Subscriptions</strong> to transfer sensor readings to an <a href="https://aws.amazon.com/s3/" target="_blank" rel="noopener">AWS S3</a> bucket using <a href="https://www.fluentd.org/" target="_blank" rel="noopener">Fluentd</a> as the middleware.</p>
 <p>The Webhook will be triggered every time a new sensor reading is received. The request will be sent to a fluentd HTTP input listener. Finally, a fluentd S3 output will upload the files to AWS S3.</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL2ltYWdlMDAyLnBuZw==" src="img/image002.png" alt=""  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <p><strong>Fluentd</strong></p>
 <p>If you are not familiar with Fluentd visit their official website <a href="https://www.fluentd.org/" target="_blank" rel="noopener">https://www.fluentd.org/</a> to learn about the tool. Originally, fluentd was designed to aggregate logs, but it has grown into a more generic data collector and transfer tool. It is light, fast, and simple to use. I’m sure you will find many uses for it.</p>
@@ -137,7 +137,7 @@
 </code></pre></div><p>This will return a response with a valid access_token, you will use this token for the next requests.</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL2ltYWdlMDAzLnBuZw==" src="img/image003.png" alt=""  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <h3 id="3-retrieve-your-list-of-sensors-and-customer-id">3. Retrieve your List of Sensors and Customer ID <a href="#3-retrieve-your-list-of-sensors-and-customer-id" class="anchor">🔗</a></h3><p>Let’s give this access token a try by <a href="https://everactive-ds-docs.readme.io/reference/get-eversensors" target="_blank" rel="noopener">getting the list of active sensors</a> in your account and your own Customer ID — You will need this ID in the next steps.</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">curl --request GET \
@@ -146,7 +146,7 @@
 </code></pre></div><p>The response is an array of Eversensor data that includes, for every sensor, its last reading and the associated customer account. Take note of the <strong>customer id</strong>, (we will use <code>4d323690-6b81-45a1-8000-000000000000</code> for this example) we will use it in our MQTT subscription.</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL2ltYWdlMDA0LnBuZw==" src="img/image004.png" alt=""  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <h3 id="3-prepare-the-fluentd-service">3. Prepare the Fluentd service <a href="#3-prepare-the-fluentd-service" class="anchor">🔗</a></h3><p>For the sake of this exercise we will run fluentd in Docker. We have prepared a github repo with some example code that should speed things up: <a href="https://github.com/everactive/fluentd-s3-docker" target="_blank" rel="noopener">https://github.com/everactive/fluentd-s3-docker</a></p>
 <p>To run the service locally:</p>
@@ -160,12 +160,12 @@
 </code></pre></div><p>The file <code>fluentd-s3-docker/fluentd/flow.conf</code> contains all the configuration for the flow we are building. The flow starts with an <a href="https://docs.fluentd.org/input/http" target="_blank" rel="noopener">HTTP input</a> source on port <code>9880</code>.</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL2ltYWdlMDA1LnBuZw==" src="img/image005.png" alt=""  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <p>Every message is received and sent to an <a href="https://docs.fluentd.org/output/s3" target="_blank" rel="noopener">S3 output plugin</a>. This is a <em>store</em> plugin, designed to aggregate <a href="https://docs.fluentd.org/configuration/buffer-section" target="_blank" rel="noopener">messages in a buffer</a> before sending them to the storage destination. Using a buffer is very important because we don’t want to push to S3 on every single sensor reading - that could be costly- instead, we want to aggregate messages and then push one file with the set. In our example we will push to the S3 bucket <code>data-repository</code> every 60 seconds.</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL2ltYWdlMDA2LnBuZw==" src="img/image006.png" alt=""  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <p>Before starting, make sure to enter your AWS API Keys in the <code>secrets.env</code> file for the S3 plugin.</p>
 <p>After running the docker compose command you should see a message indicating that the service is ready: <code>fluentd worker is now running worker=0</code></p>
@@ -175,7 +175,7 @@
 </code></pre></div><p>ngrok creates a public URL <code>https://1a51-2601-647-4000-3060-cc16-9c62-39a8-8a90.ngrok.io</code> routing traffic to our local service.</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL2ltYWdlMDA3LnBuZw==" src="img/image007.png" alt=""  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <p>At this point we have fluentd listening on port <code>9880</code> for HTTP requests, —ngrok helped us expose the service on the public URL— and we have buffered store ready to send files to S3.</p>
 <h3 id="4-create-the-webhooks-subscription">4. Create the Webhooks Subscription <a href="#4-create-the-webhooks-subscription" class="anchor">🔗</a></h3><p>It’s now time to create the Webhooks subscription using the Everactive Edge Platform API. We can do this by calling the <a href="https://everactive-ds-docs.readme.io/reference/post-webhooks" target="_blank" rel="noopener">Create Webhooks endpoint.</a> The request will return a 201 Created HTTP Status code when succeeds.</p>
@@ -206,21 +206,21 @@
 <h3 id="validate-the-data-flow">Validate the data flow <a href="#validate-the-data-flow" class="anchor">🔗</a></h3><p>You can see the activity from the Eversensor in the sensor details panel of the Developer Console. Here you can see the most recent data that is coming from the sensor.</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL2ltYWdlMDA4LnBuZw==" src="img/image008.png" alt=""  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <p>As the data arrives it should also be published to the Webhook. We can validate this by looking at the ngrok terminal, and the fluentd logs.</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL2ltYWdlMDA5LnBuZw==" src="img/image009.png" alt=""  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL2ltYWdlMDEwLnBuZw==" src="img/image010.png" alt=""  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <p>Finally, after 60 seconds have passed, we should be able to see files in the S3 bucket we setup in fluentd.</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL2ltYWdlMDExLnBuZw==" src="img/image011.png" alt=""  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <h2 id="reference-documentation">Reference Documentation <a href="#reference-documentation" class="anchor">🔗</a></h2><ul>
 <li>Sample Code: <a href="https://github.com/everactive/fluentd-s3-docker" target="_blank" rel="noopener">https://github.com/everactive/fluentd-s3-docker</a></li>

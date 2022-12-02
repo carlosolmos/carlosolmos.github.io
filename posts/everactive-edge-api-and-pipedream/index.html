@@ -62,7 +62,7 @@
           ·
         </span>
         <span>
-          1334 words
+          1312 words
         </span>
         <span class="split">
           ·
@@ -112,19 +112,19 @@
 <h2 id="the-plan">The Plan <a href="#the-plan" class="anchor">🔗</a></h2><p>The overall design of the solution we are going to implement looks like this:
 <p class="markdown-image"> 
   <img class="zoomable" id="aW1nL2V2ZXJhY3RpdmUtYXBpLXBpcGVkcmVhbS1zaGVldC5wbmc=" src="img/everactive-api-pipedream-sheet.png" alt="Everactive API Data Logger"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <p>We will use the Pipedream.com service to orchestrate the requests for data to the Everactive Edge API and the insertion to a simple Google Sheet.
 The API will be polled every few minutes for the last reading of a particular sensor. Every response will be appended as a new row in the spreadsheet.</p>
 <h2 id="the-data-source">The Data Source <a href="#the-data-source" class="anchor">🔗</a></h2><p>The data we are looking for is produced by a Machine Vibration Eversensor attached to an industrial machine. <a href="https://everactive.com/#get-started" target="_blank" rel="noopener">Everactive&rsquo;s Internet of Things technology</a> is based on self-powered (no batteries required) sensing devices that can deliver rich data streams. Apart from the Everactive Web Console, the data is made available by the Everactive Edge Platform via different channels like the Restful API, Webhooks, or MQTT Subscriptions.</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL2RhdGEtc3RyZWFtLnBuZw==" src="img/data-stream.png" alt="Everactive Edge Platform"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <p>The Everactive Console
 <p class="markdown-image"> 
   <img class="zoomable" id="aW1nL2V2ZXJzZW5zb3ItZGF0YS1zdHJlYW0ucG5n" src="img/eversensor-data-stream.png" alt="Eversensor Vibration Data"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <p>In our exercise, we will be polling data from the API endpoint that retrieves the last-available reading from this sensor. This endpoint is very simple: it acts as a shortcut, so we don&rsquo;t need to specify incremental timestamps. The full API specification can be found here: <a href="https://everactive-ds-docs.readme.io/reference/get-eversensors-macaddress-readings-last" target="_blank" rel="noopener">https://everactive-ds-docs.readme.io/reference/get-eversensors-macaddress-readings-last</a></p>
 <h3 id="setting-up-access-to-the-api">Setting up access to the API. <a href="#setting-up-access-to-the-api" class="anchor">🔗</a></h3><p>Before we can make any request, we have to prepare a set of Keys that will grant us access to the API.</p>
@@ -132,7 +132,7 @@ The API will be polled every few minutes for the last reading of a particular se
 <p>With Insomnia:
 <p class="markdown-image"> 
   <img class="zoomable" id="aW1nL2FwaS1jcmVkcy1zY29wZS5wbmc=" src="img/api-creds-scope.png" alt="API Credentials Scope"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <h3 id="testing-the-api">Testing the API <a href="#testing-the-api" class="anchor">🔗</a></h3><p>Now that we have our API Credentials let&rsquo;s test them against the endpoints we need. You can use any REST Client, like <code>curl</code>, <a href="https://insomnia.rest" target="_blank" rel="noopener">Insomnia</a>, or <a href="https://www.postman.com" target="_blank" rel="noopener">Postman</a>.</p>
 <h4 id="login">Login <a href="#login" class="anchor">🔗</a></h4><p>The first request we have to make is to the authorization endpoint to obtain a valid Token for subsequent requests. We&rsquo;ll use the client id and secret we just created:</p>
@@ -146,7 +146,7 @@ The API will be polled every few minutes for the last reading of a particular se
 </code></pre></div><p>With Insomnia:
 <p class="markdown-image"> 
   <img class="zoomable" id="aW1nL2luc29tbmlhLWxvZ2luLnBuZw==" src="img/insomnia-login.png" alt="Insomnia Login"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <p>This returns a response with our token:</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">{
@@ -162,7 +162,7 @@ The API will be polled every few minutes for the last reading of a particular se
 --header &#39;Authorization: Bearer {the token goes here}&#39;
 </code></pre></div><p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL2luc29taW5hLWdldC1kYXRhLnBuZw==" src="img/insomina-get-data.png" alt="Insomnia Get Data"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <blockquote>
 <p>Remember to put the token in the header.</p>
@@ -171,7 +171,7 @@ The API will be polled every few minutes for the last reading of a particular se
 <p>For example:
 <p class="markdown-image"> 
   <img class="zoomable" id="aW1nL2NvZGUucG5n" src="img/code.png" alt="code"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <p>Now that we have successfully tested our API Credentials, let&rsquo;s put Pipedream to work for us to fetch and log the data.</p>
 <h2 id="pipedream">Pipedream <a href="#pipedream" class="anchor">🔗</a></h2><p><a href="https://pipedream.com" target="_blank" rel="noopener">Pipedream.com</a> defines itself as &ldquo;the fastest way to automate any process that connects APIs&rdquo;. To us, it has been a good tool to create fast prototypes and scenarios for the usage of our services. Pipedream offers a wide range of service integrations to combine with the Everactive Platform APIs. If you don&rsquo;t have one, go to Pipedream.com and create a free account.</p>
@@ -181,7 +181,7 @@ The API will be polled every few minutes for the last reading of a particular se
 <h3 id="the-workflow">The WorkFlow <a href="#the-workflow" class="anchor">🔗</a></h3><p>Remember the plan: fetch de data from the Everactive API and log it into a Google Spreadsheet. To accomplish this we need to create a Pipedream Workflow that looks something like this:</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL3dvcmtmbG93LnBuZw==" src="img/workflow.png" alt="Pipedream workflow"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <blockquote>
 <p>It should be clear by now, but you will need a Google account to create the spreadsheet, any account, free or enterprise, will work.</p>
@@ -191,11 +191,11 @@ The API will be polled every few minutes for the last reading of a particular se
 <h4 id="step-1---trigger">Step 1 - Trigger <a href="#step-1---trigger" class="anchor">🔗</a></h4><p>The first step in our workflow is a Trigger. We will use a &ldquo;Custom Interval&rdquo; timer. Set a reasonable interval, like every 1 or 5 minutes:</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL3AyLnBuZw==" src="img/p2.png" alt="pipedream workflow"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL3AzLnBuZw==" src="img/p3.png" alt="pipedream workflow"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <h4 id="step-2---api-login">Step 2 - API Login <a href="#step-2---api-login" class="anchor">🔗</a></h4><p>The next step is to get a token from the Everactive API. Just like we did manually, we need to send a login request with our credentials. For this, we will add a step of the type &ldquo;HTTP Request&rdquo;. Enter the target URL and the request body. You can even import the <code>curl</code> request.</p>
 <ul>
@@ -205,12 +205,12 @@ The API will be polled every few minutes for the last reading of a particular se
 </ul>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL3A1LnBuZw==" src="img/p5.png" alt="pipedream workflow"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <p>Click on the &ldquo;Test&rdquo; button to get a sample response. You should see a parsed version of the same response we got from our manual test. The <code>access_token</code> should be there already.</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL3A2LnBuZw==" src="img/p6.png" alt="pipedream workflow"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <h4 id="step-3-request-the-eversensor-reading">Step 3 Request the Eversensor reading <a href="#step-3-request-the-eversensor-reading" class="anchor">🔗</a></h4><p>Pipedream makes it easy to chain the results of one request into the next steps. Add another step of the same type &ldquo;HTTP Request&rdquo;. This time the request requires authentication information to access the data. The Authentication method is <em>Bearer Token</em> and the token value comes from the previous step.</p>
 <ul>
@@ -221,52 +221,52 @@ The API will be polled every few minutes for the last reading of a particular se
 </ul>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL3A3LnBuZw==" src="img/p7.png" alt="pipedream workflow"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <p>Click the &ldquo;Test&rdquo; button on this step and see the Eversensor reading data.</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL3A4LnBuZw==" src="img/p8.png" alt="pipedream workflow"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <h4 id="step-4-the-data-log">Step 4 The Data Log <a href="#step-4-the-data-log" class="anchor">🔗</a></h4><p>For this step, we will need a Google Sheet to receive the Eversensor data. Create a simple Sheet called &ldquo;everactive-logger&rdquo; with two columns: &ldquo;Timestamp&rdquo;, and &ldquo;Reading&rdquo;, for example.</p>
  <img class="zoomable" src="img/p9a.png" alt="pipedream workflow" width="400px">
 <p>Now let&rsquo;s add a step in our workflow to &ldquo;Add Row to Google Sheets&rdquo;. Follow the form to connect your Google Account and find the Sheet we just created. The titled columns will appear as fields in the step configuration form.</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL3A5Yi5wbmc=" src="img/p9b.png" alt="pipedream workflow"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL3AxMC5wbmc=" src="img/p10.png" alt="pipedream workflow"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <p>We need to map the columns in the Sheet to the fields from our reading response in the previous Step. Pipedream makes it very easy to locate the fields in the parsed response and copy the selection path. Select the &ldquo;Reading Date&rdquo; from the object tree and copy the path to the &ldquo;Timestamp&rdquo; column, then do the same for another part of the object, like the &ldquo;Temperature Measurements&rdquo;, and place the path in the &ldquo;Reading&rdquo; field.</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL3AxMS5wbmc=" src="img/p11.png" alt="pipedream workflow"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL3AxMi5wbmc=" src="img/p12.png" alt="pipedream workflow"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL3AxMy5wbmc=" src="img/p13.png" alt="pipedream workflow"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <p>Test the step and see the data being inserted into the spreadsheet. It&rsquo;s that easy!</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL3AxNC5wbmc=" src="img/p14.png" alt="pipedream workflow"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
  <img class="zoomable" src="img/p15.png" alt="pipedream workflow" width="400px">
 <h4 id="step-5-ship-it">Step 5 Ship it! <a href="#step-5-ship-it" class="anchor">🔗</a></h4><p>Now that we have our workflow, it is time to save it and put it to work. This is what the full workflow looks like:</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL3AxNy5wbmc=" src="img/p17.png" alt="pipedream workflow"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <p>Once it is running, you should see the data come in at every interval into a new row in the spreadsheet.</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL3AxOC5wbmc=" src="img/p18.png" alt="pipedream workflow"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <h2 id="ps">PS <a href="#ps" class="anchor">🔗</a></h2><p>This was a very simple example of how to work with the Everactive Edge Platform API, but we hope that it is useful to illustrate the basic concepts of the RESTful API and the structure of the data. In other articles, we will show how to work with other services of the Platform, like the Webhooks subscriptions. We might even use Pipedream again for that, so don&rsquo;t throw away your account just yet ;)</p>
 <blockquote>

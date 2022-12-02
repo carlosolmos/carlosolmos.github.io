@@ -6,7 +6,52 @@
     <description>Recent content in Tags on brain dump</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 22 Nov 2022 19:01:59 -0800</lastBuildDate><atom:link href="https://carlosolmos.dev/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 30 Nov 2022 15:29:48 -0800</lastBuildDate><atom:link href="https://carlosolmos.dev/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Arduino</title>
+      <link>https://carlosolmos.dev/tags/arduino/</link>
+      <pubDate>Wed, 30 Nov 2022 15:29:48 -0800</pubDate>
+      
+      <guid>https://carlosolmos.dev/tags/arduino/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>everactive</title>
+      <link>https://carlosolmos.dev/tags/everactive/</link>
+      <pubDate>Wed, 30 Nov 2022 15:29:48 -0800</pubDate>
+      
+      <guid>https://carlosolmos.dev/tags/everactive/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>iot</title>
+      <link>https://carlosolmos.dev/tags/iot/</link>
+      <pubDate>Wed, 30 Nov 2022 15:29:48 -0800</pubDate>
+      
+      <guid>https://carlosolmos.dev/tags/iot/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>maker</title>
+      <link>https://carlosolmos.dev/tags/maker/</link>
+      <pubDate>Wed, 30 Nov 2022 15:29:48 -0800</pubDate>
+      
+      <guid>https://carlosolmos.dev/tags/maker/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>overengineered</title>
+      <link>https://carlosolmos.dev/tags/overengineered/</link>
+      <pubDate>Wed, 30 Nov 2022 15:29:48 -0800</pubDate>
+      
+      <guid>https://carlosolmos.dev/tags/overengineered/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>API</title>
       <link>https://carlosolmos.dev/tags/api/</link>
@@ -26,24 +71,6 @@
     </item>
     
     <item>
-      <title>everactive</title>
-      <link>https://carlosolmos.dev/tags/everactive/</link>
-      <pubDate>Tue, 22 Nov 2022 19:01:59 -0800</pubDate>
-      
-      <guid>https://carlosolmos.dev/tags/everactive/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>iot</title>
-      <link>https://carlosolmos.dev/tags/iot/</link>
-      <pubDate>Tue, 22 Nov 2022 19:01:59 -0800</pubDate>
-      
-      <guid>https://carlosolmos.dev/tags/iot/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>low-code</title>
       <link>https://carlosolmos.dev/tags/low-code/</link>
       <pubDate>Tue, 22 Nov 2022 19:01:59 -0800</pubDate>
@@ -58,15 +85,6 @@
       <pubDate>Tue, 22 Nov 2022 19:01:59 -0800</pubDate>
       
       <guid>https://carlosolmos.dev/tags/nodered/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>overengineered</title>
-      <link>https://carlosolmos.dev/tags/overengineered/</link>
-      <pubDate>Tue, 22 Nov 2022 19:01:59 -0800</pubDate>
-      
-      <guid>https://carlosolmos.dev/tags/overengineered/</guid>
       <description></description>
     </item>
     

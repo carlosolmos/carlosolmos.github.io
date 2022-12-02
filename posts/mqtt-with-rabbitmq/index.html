@@ -62,7 +62,7 @@
           ·
         </span>
         <span>
-          2706 words
+          2682 words
         </span>
         <span class="split">
           ·
@@ -160,7 +160,7 @@
 <h3 id="a-little-about-amqp">A little about AMQP <a href="#a-little-about-amqp" class="anchor">🔗</a></h3><p>In AMQP, messages are published to <em>exchanges</em>. Exchanges then route message copies to <em>queues</em> using rules called <em>bindings</em> that use header attributes and routing keys to route messages. Then the broker either delivers messages to consumers subscribed to queues, or consumers fetch/pull messages from queues on demand.</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="Li4vaW1nL2ZmYzIyZDBhNGJhMDQ2OWNhNTI5M2FlMmMzYmJhMDAwLnBuZw==" src="../img/ffc22d0a4ba0469ca5293ae2c3bba000.png" alt="AMQP Protocol"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <p>There are different types of exchanges that support different distribution or routing rules.</p>
 <ul>
@@ -176,7 +176,7 @@
 <p>With RabbitMQ we can have the best of both worlds. We can connect remote MQTT clients to deliver and receive messages efficiently on one end, and we can make use of the different exchange types, routing, and other messaging features with AMQP clients on the other end.  It is easy to deploy scalable, highly available brokers with RabbitMQ.</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="Li4vaW1nLzYwOTFhNGE1MGYzNDQ2YjJiZWMxOWQ3ODA1YTVjZWEwLnBuZw==" src="../img/6091a4a50f3446b2bec19d7805a5cea0.png" alt="MQTT on RabbitMQ"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <h3 id="mqtt-plugin">MQTT Plugin <a href="#mqtt-plugin" class="anchor">🔗</a></h3><p>Support for MQTT in RabbitMQ is provided by a Protocol Plugin: <a href="https://www.rabbitmq.com/mqtt.html" target="_blank" rel="noopener">https://www.rabbitmq.com/mqtt.html</a>. Since RabbitMQ 3.0.0, the plugin implements  MQTT 3.1.1 with QoS0 and QoS1, TLS connections and authentication, durable sessions, last will, and retained messages. Thanks to this plugin the MQTT clients can interoperate with the AMQP protocol.</p>
 <p>To work with MQTT you need to be aware of how the protocol relates to AMQP in RabbitMQ:</p>
@@ -209,7 +209,7 @@ docker <span style="color:#a2f">exec</span> rabbitmqtt rabbitmq-plugins list
 <p>Go to the RabbitMQ Management UI (<code>http://localhost:8888</code> in your container) to verify everything is working fine.</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="Li4vaW1nL2E5N2RmMjRkYzExYzRhNTQ5OThmNjI2MzE0MzQyMDEyLnBuZw==" src="../img/a97df24dc11c4a54998f626314342012.png" alt="RabbitMQ UI"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <blockquote>
 <p>A good guide on the Management UI: <a href="https://www.cloudamqp.com/blog/part3-rabbitmq-for-beginners_the-management-interface.html" target="_blank" rel="noopener">https://www.cloudamqp.com/blog/part3-rabbitmq-for-beginners_the-management-interface.html</a></p>
@@ -230,7 +230,7 @@ mosquitto_sub -h localhost -d -t <span style="color:#b44">&#34;my/topic&#34;</sp
 </code></pre></div><p>For my managed instance, I can use a secure connection parameters:</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="Li4vaW1nLzE5OTg4NTcyZTFmZTRmZmY4ZjJlNDJmMzgxNTdmMGEyLnBuZw==" src="../img/19988572e1fe4fff8f2e42f38157f0a2.png" alt="CloudAMQP"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <blockquote>
 <p>Remember that in RabbitMQ, if you are connecting to a vhost, the username for the MQTT connection is formed by joining the virtual host and the user: <code>vhost:user</code>.</p>
@@ -246,7 +246,7 @@ mosquitto_pub -h localhost -t <span style="color:#b44">&#34;my/topic&#34;</span>
 </code></pre></div><p>You should see the message coming down to the subscriber:</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="Li4vaW1nLzJlYjJmMjgzYjliMzRiZTQ4NGY5ZWRhYjBiZWM3ZjllLnBuZw==" src="../img/2eb2f283b9b34be484f9edab0bec7f9e.png" alt="console"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <blockquote>
 <p>It is very important that the client id for the subscriber and the publisher are different. I cannot tell you how many problems are often caused by duplicated client ids.</p>
@@ -258,7 +258,7 @@ mosquitto_sub -h <span style="color:#b68;font-weight:bold">${</span><span style=
 </code></pre></div><p>A new queue is automatically created with the name pattern <code>mqtt-subscription-{client id}{qos}</code></p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="Li4vaW1nLzY0Yjg1MWY5MmQ5ZTQ4YTI4OGVkOWM0NjExZjdiNmY5LnBuZw==" src="../img/64b851f92d9e48a288ed9c4611f7b6f9.png" alt="queues"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <p>The queue is set with <code>auto-delete:true</code> which means it will be deleted when the client disconnects.</p>
 <img src="../img/5e89ab988a124b43bc1d8f02e08584ce.png" alt="queues" width="342" height="209" class="post-image">
@@ -270,13 +270,13 @@ mosquitto_sub -h <span style="color:#b68;font-weight:bold">${</span><span style=
 mosquitto_sub -h <span style="color:#b68;font-weight:bold">${</span><span style="color:#b8860b">RABBITMQ_HOST</span><span style="color:#b68;font-weight:bold">}</span> -d -t <span style="color:#b44">&#34;#&#34;</span> -u <span style="color:#b68;font-weight:bold">${</span><span style="color:#b8860b">RABBITMQ_USER</span><span style="color:#b68;font-weight:bold">}</span> -P <span style="color:#b68;font-weight:bold">${</span><span style="color:#b8860b">RABBITMQ_PWD</span><span style="color:#b68;font-weight:bold">}</span> -c -i test.sub -p <span style="color:#666">8883</span> -q <span style="color:#666">1</span>
 </code></pre></div><p><p class="markdown-image"> 
   <img class="zoomable" id="Li4vaW1nLzEyNmEzOGRjNzA5MTQ3ODhiYzIyYTc0Y2NlNTY0YmY0LnBuZw==" src="../img/126a38dc70914788bc22a74cce564bf4.png" alt="queues"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <img src="../img/b624feb79b69443e91b4fe1bb80cf61f.png" alt="queues" width="293" height="201" class="post-image">
 <p>This means the queue does not disappear when the client disconnects, but more importantly, it will keep accumulating the messages that are being published, up to the expiration time. When the client reconnects, the pending messages in <em>&ldquo;ready&rdquo;</em> state will be delivered.</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="Li4vaW1nLzhmNWYyMzY2Mjk5NDQxYzM5Y2M0YTg0ZDRiZDBiYWM2LnBuZw==" src="../img/8f5f2366299441c39cc4a84d4bd0bac6.png" alt="Screen Shot"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <blockquote>
 <p>The expiration of messages can be controlled with custom Policies or with the client parameter <code>persistent_client_expiration</code>. See the MQTT documentation for more information.</p>
@@ -290,24 +290,24 @@ mosquitto_sub -h <span style="color:#b68;font-weight:bold">${</span><span style=
 <h3 id="retain-messages-in-a-custom-queue">Retain messages in a custom queue <a href="#retain-messages-in-a-custom-queue" class="anchor">🔗</a></h3><p>Sometimes you want to be able to retain the messages for AMQP clients in a way that doesn&rsquo;t depend on the MQTT connections. For this, you can create a custom queue that pulls the messages directly from the Topic Exchange and applies its own rules.</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="Li4vaW1nL2QxMTBiOWRjYzhmNTRjMDBhYjU1YjljYWZmNDllOTBkLnBuZw==" src="../img/d110b9dcc8f54c00ab55b9caff49e90d.png" alt="Screen Shot"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <p>First, we create a <a href="https://www.rabbitmq.com/quorum-queues.html" target="_blank" rel="noopener">Quorum Queue</a> for high availability:</p>
 <img src="../img/cb6b72d2e77f46c3a8885656bfa34500.png" alt="Screen Shot" width="306" height="148" class="post-image">
 <p>And we add a binding to get a copy of all messages (all topics) from the Topic Exchange (amq.topic) into this queue:</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="Li4vaW1nLzBiYTA3YzAxMWI3ODQ5ZjQ5MmVlNWUwNWQwZmFkMTdlLnBuZw==" src="../img/0ba07c011b7849f492ee5e05d0fad17e.png" alt="Screen Shot"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <p>Now, as the messages come in, a copy of every message will be sent to our new queue <code>messagedepot</code> even if there is no active MQTT subscriptions.</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="Li4vaW1nLzA0MWQ1MWU3NjQ4NjQ1ZmFiYTM5YjZkMzNjMDc3YWZhLnBuZw==" src="../img/041d51e7648645faba39b6d33c077afa.png" alt="Screen Shot"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <p>From this queue you can take the messages with any other supported client protocol like AMQP or Websockets. Here I use the AMQP client <code>raptab</code> to pull the messages from our custom queue:</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="Li4vaW1nLzFjYTRiNTUwN2VjYzQ3OTlhOWY0MTY5OTg4NDBlMThmLnBuZw==" src="../img/1ca4b5507ecc4799a9f416998840e18f.png" alt="Screen Shot"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <blockquote>
 <p>I recommend you take a look at rabtap if you haven&rsquo;t already. It is a very useful RabbitMQ client:  <a href="https://github.com/jandelgado/rabtap/" target="_blank" rel="noopener">https://github.com/jandelgado/rabtap/</a></p>
@@ -319,56 +319,56 @@ mosquitto_sub -h <span style="color:#b68;font-weight:bold">${</span><span style=
 <p>Create a new Shovel to move messages from the Topic Exchange to the Fanout Exchange.</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="Li4vaW1nL2MzNDk1OTM3MjMyNTQyYTk4NTU4NzYxNmQ3OWNhZDk0LnBuZw==" src="../img/c3495937232542a985587616d79cad94.png" alt="Screen Shot"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="Li4vaW1nLzAzMWVhMDAyMjM4NzRlZDlhMWNmZWE0NzA1MDQ1NzA0LnBuZw==" src="../img/031ea00223874ed9a1cfea4705045704.png" alt="Screen Shot"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <p>The shovel creates a dynamic queue (amq.gen-******) that is used to receive the messages from the source exchange and move them to the destination. You don&rsquo;t have to worry about this queue, it is handled automatically by RabbitMQ.</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="Li4vaW1nL2I2MDU1YjUxOTU0MzQzOGY5Zjk0NGQ1NWMzYzEzYTdkLnBuZw==" src="../img/b6055b519543438f9f944d55c3c13a7d.png" alt="Screen Shot"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p>
 <p class="markdown-image"> 
   <img class="zoomable" id="Li4vaW1nL2JjMmI2M2ZkN2NmNjQ4Yzg5OGRkOTBmZDY5NzRiODQ4LnBuZw==" src="../img/bc2b63fd7cf648c898dd90fd6974b848.png" alt="Screen Shot"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <p>Let&rsquo;s create a couple of queues to receive the fanout messages. We will call them fanout01 and fanout02. We will also add a TTL policy to these queues to avoid saturation.</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="Li4vaW1nLzNjN2MyZGNmODAzZTQzNDA5MmIzZjRmNTQ5OWZiNzgyLnBuZw==" src="../img/3c7c2dcf803e434092b3f4f5499fb782.png" alt="Screen Shot"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p>
 <p class="markdown-image"> 
   <img class="zoomable" id="Li4vaW1nL2I3NDUzYmJmYTA2MDQzM2FiYmM1N2IyZWJmZTUyZjUwLnBuZw==" src="../img/b7453bbfa060433abbc57b2ebfe52f50.png" alt="Screen Shot"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <p>Finally, we bind these new queues to the Fanout Exchange to receive the messages. The fanout binding does not require routing keys.</p>
 <img src="../img/43c901b54bce40c58938f42d4afc2ad9.png" alt="Screen Shot " width="370" height="159" class="post-image">
 <p>Now, if we push some messages through or MQTT client we see all the pieces working together:</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="Li4vaW1nLzI3NzgzNzg4MmM1ZTRjNzdiY2Q4MTcxZTNlYjdiMGE1LnBuZw==" src="../img/277837882c5e4c77bcd8171e3eb7b0a5.png" alt="Screen Shot "  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <p>We publish 3 messages to the <code>my/topic</code> topic:</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="Li4vaW1nL2JiYjAzZjVmMDFiYjRjNjY4ZGQ0MDg3NzQ0NjMwODZlLnBuZw==" src="../img/bbb03f5f01bb4c668dd408774463086e.png" alt="Screen Shot"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <p>A regular MQTT client will receive its copy of every message immediately:</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="Li4vaW1nL2U2NGYyNWFjOTFlMDQxYWVhNzNiNjA0OTQwMWEzYzhlLnBuZw==" src="../img/e64f25ac91e041aea73b6049401a3c8e.png" alt="Screen Shot "  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <p>The messages are copied to our custom Quorum queue <code>messagedepot</code> from the Topic Exchange using the queue&rsquo;s binding rule. We can use <code>rabtap</code> to consume those messages later.</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="Li4vaW1nLzdiZjVlM2I4MDIwMDQ5NjQ4ZmIwZjAxOTE2MGYyOGViLnBuZw==" src="../img/7bf5e3b8020049648fb0f019160f28eb.png" alt="Screen Shot"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <p>The messages are also copied to the fanout queues thanks to the shovel we set up. The fanout binding in the destination queues receive a copy of every message automatically. The messages will linger in there until a consumer pulls the data or the TTL is reached.</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="Li4vaW1nLzM2N2I0M2YwZTUzOTRjNTk4OWRlNTFjZTMwMDc3OGM0LnBuZw==" src="../img/367b43f0e5394c5989de51ce300778c4.png" alt="Screen Shot"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <h3 id="publish-with-amqp-and-receive-via-mqtt">Publish with AMQP and receive via MQTT <a href="#publish-with-amqp-and-receive-via-mqtt" class="anchor">🔗</a></h3><p>So far all the examples we have seen start with an MQTT client publishing messages. But everything about MQTT and AMQP is bidirectional. We can use an AMQP client to publish to the Topic Exchange so that the subscribed MQTT clients can receive the messages.</p>
 <p>If we use <code>rabtap</code> to publish directly to the <code>amq.topic</code> exchange with the routing key <code>my.topic</code></p>
@@ -376,7 +376,7 @@ mosquitto_sub -h <span style="color:#b68;font-weight:bold">${</span><span style=
 </code></pre></div><p>We see the MQTT client receiving the messages immediately on the &ldquo;my/topic&rdquo; topic:</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="Li4vaW1nLzhmMmEyNzk1MjVhNjQ4OWE5ZGNlYmUyZTIzZTIxOTI1LnBuZw==" src="../img/8f2a279525a6489a9dcebe2e23e21925.png" alt="Screen Shot"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <h2 id="conclusions">Conclusions <a href="#conclusions" class="anchor">🔗</a></h2><p>MQTT is an excellent protocol for the Internet of Things. It is lightweight, with a small code base and well-suited for low bandwidth or unreliable connections.</p>
 <p>RabbitMQ is one of the most popular messaging brokers in the market. It offers more flexibility with message handling and routing options. It also supports multiple protocols, including MQTT.</p>

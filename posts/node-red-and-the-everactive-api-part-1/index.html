@@ -62,7 +62,7 @@
           ·
         </span>
         <span>
-          732 words
+          717 words
         </span>
         <span class="split">
           ·
@@ -111,14 +111,14 @@
 <h2 id="the-goal-is-it-me-or-is-hot-inside">The goal: is it me, or is hot inside? <a href="#the-goal-is-it-me-or-is-hot-inside" class="anchor">🔗</a></h2><p>The goal of this system is to determine if the temperature in a room where we have a couple of Eversensors is outside the boundaries of the daily weather forecast. In this first post, we are going to fetch the last readings of the Eversensors from the Everactive Edge Platform API, and the current temperature forecast from OpenWeather. Finally, we will report if the room temperature exceeds the forecast maximum or minimum temperatures for the day. We will use this information in a later post to do something fun with other APIs.</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="Li9pbWcvZ29hbC5wbmc=" src="./img/goal.png" alt="The goal"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <h2 id="api-keys">API Keys <a href="#api-keys" class="anchor">🔗</a></h2><p>The first order of business is to prepare the credentials we need to talk to the two APIs: Everactive Edge Platform and OpenWeather.</p>
 <h3 id="everactive-api-keys">Everactive API Keys <a href="#everactive-api-keys" class="anchor">🔗</a></h3><p>If you haven’t already, <a href="https://support.everactive.com/hc/en-us/articles/6279483691159-Creating-Your-First-API-Credential" target="_blank" rel="noopener">use this guide</a> to create your first set of API Credentials. Make sure you have included user and developer privileges in the scope. Retrieve the <strong>Client ID</strong> and the <strong>Client Secret</strong> and keep them handy.</p>
 <h3 id="openweather-api">OpenWeather API <a href="#openweather-api" class="anchor">🔗</a></h3><p>Next, go to OpenWeathermap.org and get yourself a free account. Collect your free API Key from your account. All you need is the default API access.</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="Li9pbWcvaW1hZ2UtMS5wbmc=" src="./img/image-1.png" alt="The API Key"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <blockquote>
 <p>This is a very useful service with over 11,000 repos in Github. Be sure to spend some time looking at the community projects.</p>
@@ -126,12 +126,12 @@
 <p>The <a href="https://openweathermap.org/current" target="_blank" rel="noopener">CurrentWeather API</a> is very intuitive; all you need is the coordinates for the forecast location and the Key. You can get the coordinates from their map application: <a href="https://openweathermap.org/weathermap" target="_blank" rel="noopener">https://openweathermap.org/weathermap</a>.</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="Li9pbWcvaW1hZ2UtMi5wbmc=" src="./img/image-2.png" alt="The API Key"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <p>Let&rsquo;s use <code>curl</code> to test our key. The temperature information is given in Kelvin. This is helpful because the Everactive readings are also in Kelvin.</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="Li9pbWcvaW1hZ2UtMy5wbmc=" src="./img/image-3.png" alt="The API Key"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <p>I&rsquo;m in Santa Clara, CA, and the weather is fantastic today — as usual 😜</p>
 <h2 id="node-red-low-code-flow">Node-RED: low-code flow <a href="#node-red-low-code-flow" class="anchor">🔗</a></h2><p>You can run Node-RED almost anywhere: PCs, Raspberry Pis, Docker, the Cloud, etc. Their <a href="https://nodered.org/docs/getting-started/" target="_blank" rel="noopener">&ldquo;Get started guide&rdquo;</a> has everything you need to get going. Choose your favorite installation and set it up.</p>
@@ -140,58 +140,58 @@
 </blockquote>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="Li9pbWcvaW1hZ2UtNC5wbmc=" src="./img/image-4.png" alt="node-red flow"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <ol>
 <li>The flow starts two parallel paths with an <code>inject</code> node that contains the API credentials.
 <p class="markdown-image"> 
   <img class="zoomable" id="Li9pbWcvaW1hZ2UtNi5wbmc=" src="./img/image-6.png" alt="creds"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></li>
 <li>The first path makes an HTTP GET request to the OpenWeather API to retrieve the current forecast and then stores the result in a variable.
 <p class="markdown-image"> 
   <img class="zoomable" id="Li9pbWcvaW1hZ2UtNy5wbmc=" src="./img/image-7.png" alt="getWeatherData"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></li>
 </ol>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="Li9pbWcvaW1hZ2UtOC5wbmc=" src="./img/image-8.png" alt="storeWeather"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <ol start="3">
 <li>The second path begins by using the Everactive API credentials to authenticate and get a valid Token.
 <p class="markdown-image"> 
   <img class="zoomable" id="Li9pbWcvaW1hZ2UtOS5wbmc=" src="./img/image-9.png" alt="auth"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p>
 <p class="markdown-image"> 
   <img class="zoomable" id="Li9pbWcvaW1hZ2UtMTAucG5n" src="./img/image-10.png" alt="token"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></li>
 <li>With the token we can now fetch the list of Eversensors —I have two in the room—  from the <code>/ds/v1/eversensors</code> endpoint <a href="https://docs.api.everactive.com/reference/get-eversensors" target="_blank" rel="noopener">(API Docs)</a>. The results include the last reading of each sensor.
 <p class="markdown-image"> 
   <img class="zoomable" id="Li9pbWcvaW1hZ2UtMTEucG5n" src="./img/image-11.png" alt="sensors"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></li>
 <li>We parse the data to extract the array of results and loop over the sensor readings.
 <p class="markdown-image"> 
   <img class="zoomable" id="Li9pbWcvaW1hZ2UtMTIucG5n" src="./img/image-12.png" alt="data"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p>
 <p class="markdown-image"> 
   <img class="zoomable" id="Li9pbWcvaW1hZ2UtMTMucG5n" src="./img/image-13.png" alt="foreach"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></li>
 <li>We compare the temperature against the forecast for each sensor and report the results.
 <p class="markdown-image"> 
   <img class="zoomable" id="Li9pbWcvaW1hZ2UtMTQucG5n" src="./img/image-14.png" alt="compareTemps"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></li>
 </ol>
 <p>The execution of the flow results in the report printed inside the debug window.</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="Li9pbWcvaW1hZ2UtNS5wbmc=" src="./img/image-5.png" alt="flow execution results"  />  
-  <small class="img-note">click image to zoom in</small>
+  <small class="img-note">click to zoom in</small>
 </p></p>
 <h2 id="whats-next">What&rsquo;s next? <a href="#whats-next" class="anchor">🔗</a></h2><p>From here the imagination is the limit. We can make use of the many nodes and plugins that Node-RED offers to play with our data. In a future article, we will expand this flow by interacting with some other services for some cool results.</p>
 <blockquote>

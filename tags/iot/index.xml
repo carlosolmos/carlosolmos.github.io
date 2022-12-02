@@ -6,7 +6,17 @@
     <description>Recent content in iot on brain dump</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 22 Nov 2022 19:01:59 -0800</lastBuildDate><atom:link href="https://carlosolmos.dev/tags/iot/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 30 Nov 2022 15:29:48 -0800</lastBuildDate><atom:link href="https://carlosolmos.dev/tags/iot/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Shake It! - Remote sensor activation using the Arduino IoT Cloud</title>
+      <link>https://carlosolmos.dev/posts/shake-it-remote-sensor-activation-using-the-arduino-iot-cloud/</link>
+      <pubDate>Wed, 30 Nov 2022 15:29:48 -0800</pubDate>
+      
+      <guid>https://carlosolmos.dev/posts/shake-it-remote-sensor-activation-using-the-arduino-iot-cloud/</guid>
+      <description>The challenge 🔗While working with the Everactive Development Kit that I keep at home, I often need to interact with the sensors physically —to test our motion sensor, for example. This of course forces me to have the kit close by, which is inconvenient. I would like to be able to activate the sensors remotely when I am working from the office or my favorite coffee shop.
+On the other hand, I have been looking for an excuse to use the Arduino IoT Cloud service.</description>
+    </item>
+    
     <item>
       <title>Node-RED and the Everactive API - Part 1</title>
       <link>https://carlosolmos.dev/posts/node-red-and-the-everactive-api-part-1/</link>
