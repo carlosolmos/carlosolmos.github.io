@@ -129,6 +129,9 @@ p code {
 
 pre code {
   font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, Courier, monospace;
+  max-height: 600px;
+  overflow: auto;
+  display: inline-block;
 }
 
 
