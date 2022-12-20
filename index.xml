@@ -6,7 +6,16 @@
     <description>Recent content on brain dump</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 30 Nov 2022 15:29:48 -0800</lastBuildDate><atom:link href="https://carlosolmos.dev/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 18 Dec 2022 19:10:44 -0800</lastBuildDate><atom:link href="https://carlosolmos.dev/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Abandonware: evaluating the health of the libraries in your project</title>
+      <link>https://carlosolmos.dev/posts/abandonware-evaluating-the-health-of-the-libraries-in-your-project/</link>
+      <pubDate>Sun, 18 Dec 2022 19:10:44 -0800</pubDate>
+      
+      <guid>https://carlosolmos.dev/posts/abandonware-evaluating-the-health-of-the-libraries-in-your-project/</guid>
+      <description>Open Source Dependencies 🔗I find it very interesting how comfortable we, software engineers, have become with the notion of including thousands, and thousands, of lines of code we know nothing about in our projects. I don&amp;rsquo;t think reusing open-source libraries is bad. Quite the opposite; I am convinced that software development based on open-source software (OSS) is what allows us to move ahead in the industry at a fast pace.</description>
+    </item>
+    
     <item>
       <title>Shake It! - Remote sensor activation using the Arduino IoT Cloud</title>
       <link>https://carlosolmos.dev/posts/shake-it-remote-sensor-activation-using-the-arduino-iot-cloud/</link>

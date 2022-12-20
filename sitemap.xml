@@ -2,10 +2,31 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://carlosolmos.dev/tags/arduino/</loc>
-    <lastmod>2022-11-30T15:29:48-08:00</lastmod>
+    <loc>https://carlosolmos.dev/posts/abandonware-evaluating-the-health-of-the-libraries-in-your-project/</loc>
+    <lastmod>2022-12-18T19:10:44-08:00</lastmod>
   </url><url>
     <loc>https://carlosolmos.dev/</loc>
+    <lastmod>2022-12-18T19:10:44-08:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.dev/categories/</loc>
+    <lastmod>2022-12-18T19:10:44-08:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.dev/tags/cybersecurity/</loc>
+    <lastmod>2022-12-18T19:10:44-08:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.dev/categories/know-how/</loc>
+    <lastmod>2022-12-18T19:10:44-08:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.dev/tags/open-source/</loc>
+    <lastmod>2022-12-18T19:10:44-08:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.dev/posts/</loc>
+    <lastmod>2022-12-18T19:10:44-08:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.dev/tags/</loc>
+    <lastmod>2022-12-18T19:10:44-08:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.dev/tags/arduino/</loc>
     <lastmod>2022-11-30T15:29:48-08:00</lastmod>
   </url><url>
     <loc>https://carlosolmos.dev/tags/everactive/</loc>
@@ -20,28 +41,16 @@
     <loc>https://carlosolmos.dev/tags/overengineered/</loc>
     <lastmod>2022-11-30T15:29:48-08:00</lastmod>
   </url><url>
-    <loc>https://carlosolmos.dev/posts/</loc>
-    <lastmod>2022-11-30T15:29:48-08:00</lastmod>
-  </url><url>
     <loc>https://carlosolmos.dev/posts/shake-it-remote-sensor-activation-using-the-arduino-iot-cloud/</loc>
     <lastmod>2022-11-30T15:29:48-08:00</lastmod>
   </url><url>
-    <loc>https://carlosolmos.dev/tags/</loc>
-    <lastmod>2022-11-30T15:29:48-08:00</lastmod>
-  </url><url>
     <loc>https://carlosolmos.dev/tags/api/</loc>
-    <lastmod>2022-11-22T19:01:59-08:00</lastmod>
-  </url><url>
-    <loc>https://carlosolmos.dev/categories/</loc>
     <lastmod>2022-11-22T19:01:59-08:00</lastmod>
   </url><url>
     <loc>https://carlosolmos.dev/tags/data/</loc>
     <lastmod>2022-11-22T19:01:59-08:00</lastmod>
   </url><url>
     <loc>https://carlosolmos.dev/series/everactive-api/</loc>
-    <lastmod>2022-11-22T19:01:59-08:00</lastmod>
-  </url><url>
-    <loc>https://carlosolmos.dev/categories/know-how/</loc>
     <lastmod>2022-11-22T19:01:59-08:00</lastmod>
   </url><url>
     <loc>https://carlosolmos.dev/tags/low-code/</loc>

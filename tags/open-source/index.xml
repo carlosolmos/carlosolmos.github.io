@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>open source on brain dump</title>
+    <link>https://carlosolmos.dev/tags/open-source/</link>
+    <description>Recent content in open source on brain dump</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 18 Dec 2022 19:10:44 -0800</lastBuildDate><atom:link href="https://carlosolmos.dev/tags/open-source/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Abandonware: evaluating the health of the libraries in your project</title>
+      <link>https://carlosolmos.dev/posts/abandonware-evaluating-the-health-of-the-libraries-in-your-project/</link>
+      <pubDate>Sun, 18 Dec 2022 19:10:44 -0800</pubDate>
+      
+      <guid>https://carlosolmos.dev/posts/abandonware-evaluating-the-health-of-the-libraries-in-your-project/</guid>
+      <description>Open Source Dependencies 🔗I find it very interesting how comfortable we, software engineers, have become with the notion of including thousands, and thousands, of lines of code we know nothing about in our projects. I don&amp;rsquo;t think reusing open-source libraries is bad. Quite the opposite; I am convinced that software development based on open-source software (OSS) is what allows us to move ahead in the industry at a fast pace.</description>
+    </item>
+    
+  </channel>
+</rss>
