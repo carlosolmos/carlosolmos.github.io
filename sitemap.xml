@@ -2,10 +2,28 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://carlosolmos.dev/posts/abandonware-evaluating-the-health-of-the-libraries-in-your-project/</loc>
-    <lastmod>2022-12-18T19:10:44-08:00</lastmod>
-  </url><url>
     <loc>https://carlosolmos.dev/</loc>
+    <lastmod>2022-12-26T15:52:52-08:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.dev/tags/circuitpython/</loc>
+    <lastmod>2022-12-26T15:52:52-08:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.dev/tags/maker/</loc>
+    <lastmod>2022-12-26T15:52:52-08:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.dev/tags/overengineered/</loc>
+    <lastmod>2022-12-26T15:52:52-08:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.dev/posts/</loc>
+    <lastmod>2022-12-26T15:52:52-08:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.dev/tags/</loc>
+    <lastmod>2022-12-26T15:52:52-08:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.dev/posts/the-macropad-jukebox/</loc>
+    <lastmod>2022-12-26T15:52:52-08:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.dev/posts/abandonware-evaluating-the-health-of-the-libraries-in-your-project/</loc>
     <lastmod>2022-12-18T19:10:44-08:00</lastmod>
   </url><url>
     <loc>https://carlosolmos.dev/categories/</loc>
@@ -20,12 +38,6 @@
     <loc>https://carlosolmos.dev/tags/open-source/</loc>
     <lastmod>2022-12-18T19:10:44-08:00</lastmod>
   </url><url>
-    <loc>https://carlosolmos.dev/posts/</loc>
-    <lastmod>2022-12-18T19:10:44-08:00</lastmod>
-  </url><url>
-    <loc>https://carlosolmos.dev/tags/</loc>
-    <lastmod>2022-12-18T19:10:44-08:00</lastmod>
-  </url><url>
     <loc>https://carlosolmos.dev/tags/arduino/</loc>
     <lastmod>2022-11-30T15:29:48-08:00</lastmod>
   </url><url>
@@ -33,12 +45,6 @@
     <lastmod>2022-11-30T15:29:48-08:00</lastmod>
   </url><url>
     <loc>https://carlosolmos.dev/tags/iot/</loc>
-    <lastmod>2022-11-30T15:29:48-08:00</lastmod>
-  </url><url>
-    <loc>https://carlosolmos.dev/tags/maker/</loc>
-    <lastmod>2022-11-30T15:29:48-08:00</lastmod>
-  </url><url>
-    <loc>https://carlosolmos.dev/tags/overengineered/</loc>
     <lastmod>2022-11-30T15:29:48-08:00</lastmod>
   </url><url>
     <loc>https://carlosolmos.dev/posts/shake-it-remote-sensor-activation-using-the-arduino-iot-cloud/</loc>

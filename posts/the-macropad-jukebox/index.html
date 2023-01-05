@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <title>The MacroPad Jukebox | brain dump</title>
+
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">    
+<meta name="viewport" content="width=device-width,minimum-scale=1">
+<meta name="description" content="MacroPad RP2040 &#43; Raspberry Pi &#43; some code = Rock and Roll. In this guide, I provide all the code and the instructions to assemble my MacroPad Jukebox: a severely over-engineered gadget to play my music collection.">
+<meta name="generator" content="Hugo 0.92.2" />
+
+
+  <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+  
+    
+    <link rel="stylesheet" href="/css/custom.css">
+  
+
+
+<link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+
+
+
+
+
+
+
+  </head>
+
+  <body>
+    <nav class="navigation">
+	
+		<a href="/"> <span class="arrow">←</span>Home</a>
+	
+	<a href="/posts">Archive</a>
+	<a href="/tags">Tags</a>
+	<a href="/series">Series</a>
+	<a href="/about">About</a>
+
+	
+
+	
+	  <a class="button" href="https://carlosolmos.dev/index.xml">Subscribe</a>
+	
+</nav>
+
+
+    <main class="main">
+      
+
+<section id="single">
+    <h1 class="title">The MacroPad Jukebox</h1>
+
+    <div class="tip">
+        <time datetime="2022-12-26 15:52:52 -0800 PST">Dec 26, 2022</time>
+        <span class="split">
+          ·
+        </span>
+        <span>
+          3732 words
+        </span>
+        <span class="split">
+          ·
+        </span>
+        <span>
+          18 minute read
+        </span>
+    </div>
+
+    
+    
+        
+  
+    <aside class="toc">
+      <details>
+          <summary>Table of Contents
+          </summary>
+          <div>
+              <nav id="TableOfContents">
+  <ul>
+    <li><a href="#the-jukebox">The jukebox</a></li>
+    <li><a href="#bill-of-materials">Bill Of Materials</a></li>
+    <li><a href="#source-code">Source Code</a></li>
+    <li><a href="#wiring">Wiring</a></li>
+    <li><a href="#assembly-and-installation">Assembly and Installation</a>
+      <ul>
+        <li><a href="#1-prepare-the-raspberry-pi">1. Prepare the Raspberry Pi</a></li>
+        <li><a href="#2-get-the-projects-source-code">2. Get the project&rsquo;s source code.</a></li>
+        <li><a href="#3-prepare-the-macropad-rp2040">3. Prepare the Macropad RP2040</a></li>
+        <li><a href="#4-build-and-install-the-jukebox-service">4. Build and install the jukebox service.</a></li>
+        <li><a href="#5-prepare-the-music-collection">5. Prepare the music collection</a></li>
+        <li><a href="#6-test-the-jukebox">6. Test the Jukebox</a></li>
+        <li><a href="#7-prepare-the-service-to-start-at-boot-time">7. Prepare the service to start at boot time</a></li>
+        <li><a href="#rock-on">Rock on!</a></li>
+      </ul>
+    </li>
+    <li><a href="#so-you-want-to-know-how-all-of-this-works">So you want to know how all of this works</a></li>
+    <li><a href="#raspberry-pi-and-vlc">Raspberry Pi and VLC</a>
+      <ul>
+        <li><a href="#vlc-1">VLC</a></li>
+      </ul>
+    </li>
+    <li><a href="#the-jukebox-service-go">The Jukebox Service, Go</a>
+      <ul>
+        <li><a href="#the-configuration-file">The configuration file</a></li>
+        <li><a href="#serial-port-programming-in-go">Serial Port programming in Go</a></li>
+        <li><a href="#vlc-commands">VLC commands</a></li>
+      </ul>
+    </li>
+    <li><a href="#macropad">MacroPad</a>
+      <ul>
+        <li><a href="#data-serial-communications">Data Serial Communications</a></li>
+        <li><a href="#music-playlists">Music playlists</a></li>
+        <li><a href="#keypad-controls">Keypad Controls</a></li>
+      </ul>
+    </li>
+    <li><a href="#whats-next">What&rsquo;s next?</a></li>
+  </ul>
+</nav>
+          </div>
+      </details>
+    </aside>
+  
+
+
+    
+
+
+    <div class="content">
+      <h2 id="the-jukebox">The jukebox <a href="#the-jukebox" class="anchor">🔗</a></h2><p>Lately, I&rsquo;ve been obsessed with the old way of listening to music. You know: from your own collection, in order, one album at a time. No randomness, no infinite playlists, no album of the day, no ads, and no algorithms. When I got my hands on an Adafruit MacroPad RP2040 I knew what I had to do: make my own ugly and overengineered music player. I present to you the &ldquo;MacroPad Jukebox&rdquo;.</p>
+<p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL21hY3JvcGFkLWp1a2Vib3gucG5n" src="img/macropad-jukebox.png" alt=""  />  
+  <small class="img-note">click to zoom in</small>
+</p></p>
+<p>With this gizmo, I can play my offline music collection the way I like it.
+The music collection is loaded onto the Raspberry Pi and arranged in a series of playlists. I use a large sd card for both the OS and the music files, but an external USB drive would also work. As long as the files are accessible to the media player.</p>
+<p>The media player is VLC. This media application has an amazing number of features for customization. One of my favorites is the Remote Control interface that allows me to fully control the application via a TCP socket.</p>
+<p>The MacroPad RP2040 controls the playback of the music collection by sending commands to a small service in the Raspberry Pi. The rotary encoder controls the selection of the album. The keypad has the usual playback controls: play, pause, stop, etc.</p>
+<p>Finally, I can connect the Raspberry Pi audio output to my favorite speaker or headphones. I can even use it in my car!</p>
+<p>In this guide, I provide all the code and the instructions to assemble my MacroPad Jukebox. After that, I explain in more detail how all the pieces work.</p>
+<h2 id="bill-of-materials">Bill Of Materials <a href="#bill-of-materials" class="anchor">🔗</a></h2><ul>
+<li>Raspberry Pi</li>
+<li>Adafruit MacroPad RP2040</li>
+<li>Data Cable USB C to A</li>
+<li>Power Cable micro USB</li>
+<li>Wired headphones or speaker with 3.5mm cable.</li>
+<li>Micro SD Card</li>
+</ul>
+<h2 id="source-code">Source Code <a href="#source-code" class="anchor">🔗</a></h2><p>The project has two programs: a Go service that runs inside the Raspberry Pi, and the Circuit Python code for the MacroPad.</p>
+<p><a href="https://github.com/carlosolmos/macropadjukebox" target="_blank" rel="noopener">https://github.com/carlosolmos/macropadjukebox</a></p>
+<h2 id="wiring">Wiring <a href="#wiring" class="anchor">🔗</a></h2><p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL3dpcmluZy5wbmc=" src="img/wiring.png" alt=""  />  
+  <small class="img-note">click to zoom in</small>
+</p></p>
+<h2 id="assembly-and-installation">Assembly and Installation <a href="#assembly-and-installation" class="anchor">🔗</a></h2><h3 id="1-prepare-the-raspberry-pi">1. Prepare the Raspberry Pi <a href="#1-prepare-the-raspberry-pi" class="anchor">🔗</a></h3><p>Prepare a Raspberry Pi —I used an old model 3B— with the latest version of the Raspberry Pi OS with desktop (11 bullseye) from the <a href="https://www.raspberrypi.com/software/operating-systems" target="_blank" rel="noopener">official website</a>. Go through the WiFi settings, the updates, and the generic desktop configuration.</p>
+<h4 id="vlc">VLC <a href="#vlc" class="anchor">🔗</a></h4><p><p class="markdown-image"> 
+  <img class="zoomable" id="dmxjLXBsYXllci1tZW51LnBuZw==" src="vlc-player-menu.png" alt=""  />  
+  <small class="img-note">click to zoom in</small>
+</p></p>
+<p>Make sure VLC is installed. Download a sample mp3 file and test the player using any audio output —speaker or headphones.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">pi@raspberrypi:~ $ wget https://download.samplelib.com/mp3/sample-6s.mp3
+</code></pre></div><p><p class="markdown-image"> 
+  <img class="zoomable" id="dmxjLXBsYXllci10ZXN0LnBuZw==" src="vlc-player-test.png" alt=""  />  
+  <small class="img-note">click to zoom in</small>
+</p></p>
+<h4 id="go-sdk">Go SDK <a href="#go-sdk" class="anchor">🔗</a></h4><p>I found it easier to build the software inside the RPi to avoid any incompatibilities. Install the golang SDK that is available for the RPi OS via <code>apt</code> packages:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">pi@raspberrypi:~ $ sudo apt install golang
+</code></pre></div><blockquote>
+<p>It is also possible to build the binary for ARM in another computer and upload it to the RPi.</p>
+</blockquote>
+<h3 id="2-get-the-projects-source-code">2. Get the project&rsquo;s source code. <a href="#2-get-the-projects-source-code" class="anchor">🔗</a></h3><p>Clone or download the project&rsquo;s source code repository from GitHub:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">pi@raspberrypi:~ $ git clone https://github.com/carlosolmos/macropadjukebox
+</code></pre></div><h3 id="3-prepare-the-macropad-rp2040">3. Prepare the Macropad RP2040 <a href="#3-prepare-the-macropad-rp2040" class="anchor">🔗</a></h3><p>Prepare the MacroPad RP2040 for CircuitPython programming following this Quickstart guide from Adafruit: <a href="https://learn.adafruit.com/adafruit-macropad-rp2040/circuitpython" target="_blank" rel="noopener">https://learn.adafruit.com/adafruit-macropad-rp2040/circuitpython</a></p>
+<blockquote>
+<p>I used CircuitPython 7.3.3 but newer versions should work.</p>
+</blockquote>
+<p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL2NpcmN1aXRweXRob25zZXR1cC5wbmc=" src="img/circuitpythonsetup.png" alt=""  />  
+  <small class="img-note">click to zoom in</small>
+</p></p>
+<blockquote>
+<p>MacOS Warning: There seems to be a problem with programming the MacroPad firmware in  MacOS Ventura (13.0.1) that I found the hard way. The Finder does not let you move the code files to the device. There is more information <a href="https://osxdaily.com/2022/11/03/workaround-for-operation-cant-be-completed-unexpected-error-100093-macos-ventura-finder-error/" target="_blank" rel="noopener">in this article</a>. Again, I ended up working directly in the RPi and avoided all this trouble.</p>
+</blockquote>
+<h4 id="get-the-macropad-circuitpython-libraries">Get the MacroPad CircuitPython libraries <a href="#get-the-macropad-circuitpython-libraries" class="anchor">🔗</a></h4><p>Now that the MacroPad is ready for CircuitPython code, we need to load the libraries that this project needs. The libraries are available as a bundle in this URL: <a href="https://circuitpython.org/libraries" target="_blank" rel="noopener">https://circuitpython.org/libraries</a>. Download and extract the package for the CircuitPython version that was loaded in the MacroPad.</p>
+<p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL2NpcmN1aXB5dGhvbi1idW5kbGUucG5n" src="img/circuipython-bundle.png" alt=""  />  
+  <small class="img-note">click to zoom in</small>
+</p></p>
+<p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL2NpcmN1aXRweXRob24tbGlicy5wbmc=" src="img/circuitpython-libs.png" alt=""  />  
+  <small class="img-note">click to zoom in</small>
+</p></p>
+<h4 id="load-the-project-python-code-and-the-circuitpython-libraries">Load the project python code and the CircuitPython libraries <a href="#load-the-project-python-code-and-the-circuitpython-libraries" class="anchor">🔗</a></h4><p>Copy the following libraries from the bundle folder to the <code>/lib</code> folder in the MacroPad drive.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">adafruit_bitmap_font
+adafruit_debouncer.mpy
+adafruit_display_shapes
+adafruit_display_text
+adafruit_hid
+adafruit_macropad.mpy
+adafruit_midi
+adafruit_pixelbuf.mpy
+adafruit_simple_text_display.mpy
+adafruit_ticks.mpy
+neopixel.mpy
+</code></pre></div><p>Copy the project python files to the root of the MacroPad drive. Replace any existing files.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">macropadjukebox/macropad/code.py
+macropadjukebox/macropad/boot.py
+</code></pre></div><p>The MacroPad drive should contain these files:</p>
+<p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL21hY3JvcGFkLWNvZGUucG5n" src="img/macropad-code.png" alt=""  />  
+  <small class="img-note">click to zoom in</small>
+</p></p>
+<p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL21hY3JvcGFkLWxpYnMucG5n" src="img/macropad-libs.png" alt=""  />  
+  <small class="img-note">click to zoom in</small>
+</p></p>
+<p>Power cycle the MacroPad for the new code to load. After booting up, the display should show the playback controls.</p>
+<p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL21hY3JvcGFkLWRpc3BsYXkucG5n" src="img/macropad-display.png" alt=""  />  
+  <small class="img-note">click to zoom in</small>
+</p></p>
+<p>It is possible to inspect the running code in the MacroPad. I recommend using the <a href="https://codewith.mu/en/howto/1.0/install_raspberry_pi" target="_blank" rel="noopener">Mu Editor</a> in CircuitPython mode and its serial console. Push some keys and watch the messages.</p>
+<p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL211ZWRpdG9yLXNlcmlhbC5wbmc=" src="img/mueditor-serial.png" alt=""  />  
+  <small class="img-note">click to zoom in</small>
+</p></p>
+<h3 id="4-build-and-install-the-jukebox-service">4. Build and install the jukebox service. <a href="#4-build-and-install-the-jukebox-service" class="anchor">🔗</a></h3><h4 id="build-the-go-service">Build the Go service <a href="#build-the-go-service" class="anchor">🔗</a></h4><p>Use the <code>go build</code> command to create the executable for the service:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">pi@raspberrypi:~ $ cd macropadjukebox/
+pi@raspberrypi:~/macropadjukebox $ go build -o jukebox main.go
+</code></pre></div><p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL2dvLWJ1aWxkLnBuZw==" src="img/go-build.png" alt=""  />  
+  <small class="img-note">click to zoom in</small>
+</p></p>
+<p>Copy the binary to the home directory —optional, but recommended.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">pi@raspberrypi:~/macropadjukebox $ cp jukebox /home/pi
+</code></pre></div><h3 id="5-prepare-the-music-collection">5. Prepare the music collection <a href="#5-prepare-the-music-collection" class="anchor">🔗</a></h3><p>In the root folder of the repo, there is a sample configuration file <code>config-example.json</code>. Make a copy in the home directory. Name it <code>config.json</code>.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">pi@raspberrypi:~/macropadjukebox $ cp config-example.json /home/pi/config.json
+</code></pre></div><p>Copy some files from your music collection to the Raspberry Pi —VLC can play just about any audio format. I like to use the <code>/home/pi/Music</code> folder but any other path should be okay.</p>
+<p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL211c2ljY29sbGVjdGlvbi5wbmc=" src="img/musiccollection.png" alt=""  />  
+  <small class="img-note">click to zoom in</small>
+</p></p>
+<p>Create a separate playlist file <code>{playlist_name}.m3u</code>, with the paths to your songs, for each collection or album you want to load in the Jukebox MacroPad.</p>
+<p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL3BsYXlsaXN0cy5wbmc=" src="img/playlists.png" alt=""  />  
+  <small class="img-note">click to zoom in</small>
+</p></p>
+<p>Adjust the <code>config.json</code> file with the playlists you created. Leave the <code>_collections_</code> entry as <code>00</code> —this entry is necessary for the MacroPad code.</p>
+<p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL2NvbmZpZy5wbmc=" src="img/config.png" alt=""  />  
+  <small class="img-note">click to zoom in</small>
+</p></p>
+<h3 id="6-test-the-jukebox">6. Test the Jukebox <a href="#6-test-the-jukebox" class="anchor">🔗</a></h3><p>Connect the MacroPad to the RPi, and the headphones or speakers.</p>
+<p>Start VLC with RC from a terminal</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">pi@raspberrypi:~ $ vlc --extraintf rc --rc-host localhost:8888
+</code></pre></div><p>Run the <code>jukebox</code> service from another terminal.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">pi@raspberrypi:~ $ ./jukebox 
+</code></pre></div><p>The Playlists should be loaded to the MacroPad. Use the rotary encoder to select an album and push it to play it.</p>
+<p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL21hY3JvcGFkLWxvYWRlZC5wbmc=" src="img/macropad-loaded.png" alt=""  />  
+  <small class="img-note">click to zoom in</small>
+</p></p>
+<p>See the <code>jukebox</code> service log messages to verify the commands received from the MacroPad.</p>
+<p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL2p1a2Vib3gtc2VydmljZS1sb2dzLnBuZw==" src="img/jukebox-service-logs.png" alt=""  />  
+  <small class="img-note">click to zoom in</small>
+</p></p>
+<p>Now play around with the MacroPad keypad to control the playback: pause, play, volume up, volume down, etc.</p>
+<p>If you&rsquo;ve been using the MU serial console you should see the log messages from the MacroPad.</p>
+<p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL21hY3JvcGFkLWxvZ3MucG5n" src="img/macropad-logs.png" alt=""  />  
+  <small class="img-note">click to zoom in</small>
+</p></p>
+<h3 id="7-prepare-the-service-to-start-at-boot-time">7. Prepare the service to start at boot time <a href="#7-prepare-the-service-to-start-at-boot-time" class="anchor">🔗</a></h3><p>The jukebox should start automatically when powered on. Use <code>crontab</code> in the Raspberry Pi to launch the service at boot time.</p>
+<p>The project code has a bash script named <code>runboot.sh</code>. I prepared this file to start VLC in headless RC mode, and the <code>jukebox</code> service. I added a few pauses to account for the serial port initialization.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#080">#!/bin/bash
+</span><span style="color:#080"></span><span style="color:#a2f">set</span> -x
+<span style="color:#a2f">set</span> -e
+
+sleep <span style="color:#666">5</span>
+<span style="color:#a2f">cd</span> /home/pi
+cvlc --rc-host <span style="color:#b44">&#34;localhost:8888&#34;</span> -I rc &gt; /dev/null 2&gt;&amp;<span style="color:#666">1</span> &amp;
+sleep <span style="color:#666">5</span>
+./jukebox &gt; /home/pi/jukebox.log 2&gt;&amp;<span style="color:#666">1</span> &amp;
+</code></pre></div><p>Copy the script to the home folder and make sure it is executable.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">pi@raspberrypi:~ $ cp macropadjukebox/runboot.sh ./runboot.sh
+pi@raspberrypi:~ $ chmod +x runboot.sh
+</code></pre></div><p>Create an entry in the <code>crontab</code> to execute the script at boot time.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">pi@raspberrypi:~ $ crontab -e
+</code></pre></div><div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">@reboot cd /home/pi &amp;&amp; ./runboot.sh &amp;
+</code></pre></div><p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL2Nyb250YWItZW50cnkucG5n" src="img/crontab-entry.png" alt=""  />  
+  <small class="img-note">click to zoom in</small>
+</p></p>
+<h3 id="rock-on">Rock on! <a href="#rock-on" class="anchor">🔗</a></h3><p>This is it. Disconnect any monitor, keyboard, and mouse from the RPi. Reboot and test the Jukebox. Wait about 15 seconds for everything to start. I know that is terrible, but practice your patience, or go to the end of this post for a list of possible improvements.</p>
+<p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL3Rlc3RpbmcucG5n" src="img/testing.png" alt=""  />  
+  <small class="img-note">click to zoom in</small>
+</p></p>
+<h2 id="so-you-want-to-know-how-all-of-this-works">So you want to know how all of this works <a href="#so-you-want-to-know-how-all-of-this-works" class="anchor">🔗</a></h2><p>Here is the long version of how this project works. Please remember this is a scrappy project, so don&rsquo;t expect efficiency, beautiful code, or clever ideas. The ultimate goal here is to learn new things by tinkering with these devices.</p>
+<h2 id="raspberry-pi-and-vlc">Raspberry Pi and VLC <a href="#raspberry-pi-and-vlc" class="anchor">🔗</a></h2><p>The Raspberry Pi is the brain of the jukebox. I used an old RPi 3-B since the device requires little processing power. I loaded the latest version of the Raspberry Pi OS with Desktop (bullseye) on the SD card and set up the usual work environment. After completing the project I realized that desktop graphics are not necessary. In the next iteration, I might try the Lite (console-only) version to free up more resources and speed up the start-up.</p>
+<h3 id="vlc-1">VLC <a href="#vlc-1" class="anchor">🔗</a></h3><p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL3ZsYy5wbmc=" src="img/vlc.png" alt=""  />  
+  <small class="img-note">click to zoom in</small>
+</p></p>
+<p>VLC has an amazing amount of features. It supports different user interfaces. Apart from the standard desktop GUI, VLC can be used via a web UI, the console, and a remote control interface. The remote control (RC) interface can be accessed via a TCP socket (with telnet or NC) and it presents a command shell for user interaction. More on that here: <a href="https://wiki.videolan.org/Documentation:Advanced_Use_of_VLC/#RC_and_RTCI" target="_blank" rel="noopener">https://wiki.videolan.org/Documentation:Advanced_Use_of_VLC/#RC_and_RTCI</a></p>
+<p>The RC interface has to be enabled when launched, for example:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">$ vlc --extraintf rc --rc-host localhost:8888
+</code></pre></div><p>Once VLC is running with RC, we can send commands via a socket or enter into an interactive shell with Telnet.</p>
+<p>Example: add a playlist and commence playback automatically:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">$ echo &#34;add Music/ElephantGym-Dreams.m3u&#34; | nc -q 1 localhost 8888
+</code></pre></div><p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL3JjLWNvbW1hbmQucG5n" src="img/rc-command.png" alt=""  />  
+  <small class="img-note">click to zoom in</small>
+</p></p>
+<p>To clear the playlist and stop playback we can use:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">$ echo &#34;clear&#34; | nc -q 1 localhost 8888
+</code></pre></div><p>We don&rsquo;t need to use the graphical interface at all. We can instead use <code>cvlc</code> for a CLI or headless interface. The flag <code>-I rc</code> makes RC the main interface.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">cvlc -I rc --rc-host localhost:8888
+</code></pre></div><p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL3ZsYy1oZWFkbGVzcy5wbmc=" src="img/vlc-headless.png" alt=""  />  
+  <small class="img-note">click to zoom in</small>
+</p></p>
+<p>I figured it should be easy to create a service to control VLC from the MacroPad by leveraging the RC interface.</p>
+<h2 id="the-jukebox-service-go">The Jukebox Service, Go <a href="#the-jukebox-service-go" class="anchor">🔗</a></h2><p>We need a small service to translate the signals coming from the MacroPad serial port into VLC RC commands. We also need a way to send the list of available music to the MacroPad. This service will run inside the Raspberry Pi.</p>
+<p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL3NlcnZpY2UtY29tcG9uZW50cy5wbmc=" src="img/service-components.png" alt=""  />  
+  <small class="img-note">click to zoom in</small>
+</p></p>
+<p>I decided to use &ldquo;Go&rdquo; to build this service solely because I&rsquo;ve never written a &ldquo;Go&rdquo; program that interacts with serial ports and sockets at the same time. The general functionality of the service is:</p>
+<ol>
+<li>Load a configuration file with details about the ports, the VLC host, and more importantly, the music collection.</li>
+<li>Open the serial port that communicates the MacroPad with the Raspberry Pi.</li>
+<li>Send the music collection configuration (playlists) to the MacroPad via the serial port.</li>
+<li>Start an infinite loop reading from the serial port any input from the MacroPad</li>
+<li>Process the MacroPad commands and send them to the VLC player via a single-use TCP socket to the RC interface.</li>
+</ol>
+<p>I decided not to keep the socket connection to VLC open because the commands should come only sporadically, and I don&rsquo;t want to worry about accidental disconnections. Nothing like a stateless protocol!</p>
+<h3 id="the-configuration-file">The configuration file <a href="#the-configuration-file" class="anchor">🔗</a></h3><p>The configuration file is a JSON document containing the information about the VLC RC interface (host and port), the serial device name where the MacroPad is connected, and the music collection —playlists. The playlists field is a dictionary of unique indexes (I use a numeric sequence) mapped to the playlist name and file path.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
+  <span style="color:#008000;font-weight:bold">&#34;vlcHost&#34;</span>: <span style="color:#b44">&#34;localhost:8888&#34;</span>,
+  <span style="color:#008000;font-weight:bold">&#34;serialPort&#34;</span>: <span style="color:#b44">&#34;/dev/ttyACM1&#34;</span>,
+  <span style="color:#008000;font-weight:bold">&#34;playlists&#34;</span>: {
+    <span style="color:#008000;font-weight:bold">&#34;00&#34;</span>: {
+      <span style="color:#008000;font-weight:bold">&#34;name&#34;</span>: <span style="color:#b44">&#34;_collections_&#34;</span>
+    },
+    <span style="color:#008000;font-weight:bold">&#34;01&#34;</span>: {
+      <span style="color:#008000;font-weight:bold">&#34;name&#34;</span>: <span style="color:#b44">&#34;Death Cab For Cutie - Transatlanticism&#34;</span>,
+      <span style="color:#008000;font-weight:bold">&#34;file&#34;</span>: <span style="color:#b44">&#34;/home/pi/Music/DeathCabForCutie-Transatlanticism.m3u&#34;</span>
+    },
+    <span style="color:#008000;font-weight:bold">&#34;02&#34;</span>: {
+      <span style="color:#008000;font-weight:bold">&#34;name&#34;</span>: <span style="color:#b44">&#34;Metallica - Metallica&#34;</span>,
+      <span style="color:#008000;font-weight:bold">&#34;file&#34;</span>: <span style="color:#b44">&#34;/home/pi/Music/Metallica-Metallica.m3u&#34;</span>
+    }
+   }
+}
+</code></pre></div><p>The first entry in the playlists dictionary is a special entry (00) that helps the MacroPad read and organize the collection.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="color:#b44">&#34;00&#34;</span><span style="">:</span> {
+	<span style="color:#008000;font-weight:bold">&#34;name&#34;</span>: <span style="color:#b44">&#34;_collections_&#34;</span>
+}<span style="">,</span>
+<span style="">...</span>
+</code></pre></div><p>The m3u files are simply plain text with a list of song files.</p>
+<h3 id="serial-port-programming-in-go">Serial Port programming in Go <a href="#serial-port-programming-in-go" class="anchor">🔗</a></h3><p>I found a few different Go libraries for serial programming. Most of them were very old and abandoned. Finally, I found <code>https://github.com/bugst/go-serial</code>. What I like about this library —apart from the fact that is actively developed— is that I don&rsquo;t have to worry about the underlying operating system. It also has nice helper functions for operations like listing the available serial ports.</p>
+<p>The serial port we intend to use is pre-defined in the configuration file. However, we have to account for the fact that the MacroPad and the Raspberry Pi are separate devices and the serial port might not be ready when the service starts. The service should wait for the port to become available. We can do this in a waiting loop where we list the ports looking for the right name.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">found <span style="color:#666">:=</span> <span style="color:#a2f;font-weight:bold">false</span>
+	<span style="color:#a2f;font-weight:bold">for</span> {
+		log.<span style="color:#00a000">Println</span>(<span style="color:#b44">&#34;list serial ports&#34;</span>)
+		ports, err <span style="color:#666">:=</span> serial.<span style="color:#00a000">GetPortsList</span>()
+		<span style="color:#a2f;font-weight:bold">if</span> err <span style="color:#666">!=</span> <span style="color:#a2f;font-weight:bold">nil</span> {
+			log.<span style="color:#00a000">Fatal</span>(err)
+		}
+		<span style="color:#a2f;font-weight:bold">if</span> <span style="color:#a2f">len</span>(ports) <span style="color:#666">==</span> <span style="color:#666">0</span> {
+			log.<span style="color:#00a000">Fatal</span>(<span style="color:#b44">&#34;No serial ports found!&#34;</span>)
+		}
+		<span style="color:#a2f;font-weight:bold">for</span> _, portName <span style="color:#666">:=</span> <span style="color:#a2f;font-weight:bold">range</span> ports {
+			log.<span style="color:#00a000">Printf</span>(<span style="color:#b44">&#34;Port: %v\n&#34;</span>, portName)
+			<span style="color:#a2f;font-weight:bold">if</span> portName <span style="color:#666">==</span> sc.config.SerialPort {
+				found = <span style="color:#a2f;font-weight:bold">true</span>
+				<span style="color:#a2f;font-weight:bold">break</span>
+			}
+		}
+		<span style="color:#a2f;font-weight:bold">if</span> found {
+			<span style="color:#a2f;font-weight:bold">break</span>
+		}
+		time.<span style="color:#00a000">Sleep</span>(<span style="color:#666">3</span> <span style="color:#666">*</span> time.Second)
+	}
+</code></pre></div><p>Once the port is found, we can open it and set it up for communications. The read timeout has to be disabled because there will be long periods of time without any transmission. Since this is the main function of the program we can afford to lock waiting for something new to transmit.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">mode <span style="color:#666">:=</span> <span style="color:#666">&amp;</span>serial.Mode{
+		BaudRate: <span style="color:#666">9600</span>,
+		Parity:   serial.NoParity,
+		StopBits: serial.OneStopBit,
+		DataBits: <span style="color:#666">8</span>,
+	}
+<span style="color:#a2f;font-weight:bold">var</span> err <span style="color:#0b0;font-weight:bold">error</span>
+sc.port, err = serial.<span style="color:#00a000">Open</span>(sc.config.SerialPort, mode)
+<span style="color:#a2f;font-weight:bold">if</span> err <span style="color:#666">!=</span> <span style="color:#a2f;font-weight:bold">nil</span> {
+	log.<span style="color:#00a000">Fatal</span>(err)
+}
+<span style="color:#a2f;font-weight:bold">defer</span> sc.port.<span style="color:#00a000">Close</span>()
+err = sc.port.<span style="color:#00a000">SetReadTimeout</span>(serial.NoTimeout)
+<span style="color:#a2f;font-weight:bold">if</span> err <span style="color:#666">!=</span> <span style="color:#a2f;font-weight:bold">nil</span> {
+	log.<span style="color:#00a000">Fatal</span>(err)
+}
+</code></pre></div><p>The first transmission after the port is ready will be to send the information of the music collection -playlists- to the MacroPad. We use a reduced version (without file paths) of the playlist JSON dictionary. Ultimately, the JSON string is written to the serial port as an array of bytes. On the MacroPad side, the code is expecting a return character <code>\r</code> as the End-Of-Line marker.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#a2f;font-weight:bold">func</span> (sc <span style="color:#666">*</span>SerialComms) <span style="color:#00a000">sendData</span>(data []<span style="color:#0b0;font-weight:bold">byte</span>) <span style="color:#0b0;font-weight:bold">error</span> {
+	_, err <span style="color:#666">:=</span> sc.port.<span style="color:#00a000">Write</span>([]<span style="color:#a2f">byte</span>(fmt.<span style="color:#00a000">Sprintf</span>(<span style="color:#b44">&#34;%s\r&#34;</span>, data)))
+	<span style="color:#a2f;font-weight:bold">if</span> err <span style="color:#666">!=</span> <span style="color:#a2f;font-weight:bold">nil</span> {
+		<span style="color:#a2f;font-weight:bold">return</span> err
+	}
+	<span style="color:#a2f;font-weight:bold">return</span> <span style="color:#a2f;font-weight:bold">nil</span>
+}
+</code></pre></div><p>Finally, we run on an infinite loop waiting for messages from the serial line. When a new message arrives, it is processed with one of two functions. One function works with the playlist selections (prefixed <code>pl|</code>), and the other function responds to the playback commands (prefix <code>cmd|</code>).</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">buff <span style="color:#666">:=</span> <span style="color:#a2f">make</span>([]<span style="color:#0b0;font-weight:bold">byte</span>, <span style="color:#666">256</span>)
+<span style="color:#a2f;font-weight:bold">for</span> {
+	<span style="color:#080;font-style:italic">// Reads bytes
+</span><span style="color:#080;font-style:italic"></span>	n, err <span style="color:#666">:=</span> sc.port.<span style="color:#00a000">Read</span>(buff)
+	<span style="color:#a2f;font-weight:bold">if</span> err <span style="color:#666">!=</span> <span style="color:#a2f;font-weight:bold">nil</span> {
+		<span style="color:#080;font-style:italic">//zero tolerance for errors in the serial line.
+</span><span style="color:#080;font-style:italic"></span>		log.<span style="color:#00a000">Fatal</span>(err) 
+	}
+	<span style="color:#a2f;font-weight:bold">if</span> n <span style="color:#666">==</span> <span style="color:#666">0</span> {
+		<span style="color:#a2f;font-weight:bold">continue</span>
+	}
+	input <span style="color:#666">:=</span> <span style="color:#a2f">string</span>(buff[:n])
+	<span style="color:#a2f;font-weight:bold">if</span> strings.<span style="color:#00a000">LastIndex</span>(strings.<span style="color:#00a000">ToLower</span>(input), <span style="color:#b44">&#34;cmd|&#34;</span>) <span style="color:#666">==</span> <span style="color:#666">0</span> {
+		sc.<span style="color:#00a000">processKeyCommand</span>(input)
+	} <span style="color:#a2f;font-weight:bold">else</span> <span style="color:#a2f;font-weight:bold">if</span> strings.<span style="color:#00a000">LastIndex</span>(strings.<span style="color:#00a000">ToLower</span>(input), <span style="color:#b44">&#34;pl|&#34;</span>) <span style="color:#666">==</span> <span style="color:#666">0</span> {
+		sc.<span style="color:#00a000">processPlaylistSelection</span>(input)
+	}
+}
+</code></pre></div><h3 id="vlc-commands">VLC commands <a href="#vlc-commands" class="anchor">🔗</a></h3><p>The VLC RC interface responds to a specific list of command messages. I compiled a <a href="https://github.com/carlosolmos/macropadjukebox/blob/main/vlc.md" target="_blank" rel="noopener">list from the cvlc command documentation</a>. The service has a series of helper functions to send the appropriate command strings to the VLC RC interface. Every helper function prepares one or more command strings to be sent to VLC via a single-use TCP socket connection using the method <code>VLCsendCommand</code>.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">func VLCsendCommand(cmdList []string, waitForResponse bool) (string, error) {
+	log.Printf(&#34;sending commands %s\n&#34;, cmdList)
+	//return &#34;&#34;, nil
+	vlcsocket, err := net.Dial(&#34;tcp&#34;, VlcHost)
+	if err != nil {
+		log.Println(&#34;Connection to socket failed:&#34;, err)
+		return &#34;&#34;, err
+	}
+	// wait for the VLC prompt to respond.
+	time.Sleep(1 * time.Second)
+	// read prompt out of the way
+	recvBuf := make([]byte, 1024)
+	n, err := vlcsocket.Read(recvBuf[:])
+
+	// send commands
+	res := &#34;&#34;
+	for _, cmd := range cmdList {
+		cmdString := fmt.Sprintf(&#34;%s\n&#34;, cmd)
+		_, err = vlcsocket.Write([]byte(cmdString))
+		if err != nil {
+			log.Println(&#34;Write to socket failed:&#34;, err)
+			return &#34;&#34;, err
+		}
+		// read command response
+		if waitForResponse {
+			err = vlcsocket.SetReadDeadline(time.Now().Add(3 * time.Second))
+			if err != nil {
+				log.Println(&#34;SetReadDeadline failed:&#34;, err)
+				// do something else, for example create new conn
+				return &#34;&#34;, err
+			}
+			// try 3 times
+			for i := 0; i &lt; 3; i++ {
+				recvBuf := make([]byte, 1024)
+				n, err = vlcsocket.Read(recvBuf[:]) // recv data
+				if err != nil {
+					if netErr, ok := err.(net.Error); ok &amp;&amp; netErr.Timeout() {
+						//timeout
+						break
+					} else {
+						// some error else, do something else, for example create new conn
+						log.Println(&#34;Read from socket error:&#34;, err)
+						return res, nil
+					}
+				}
+				if n == 0 {
+					break
+				}
+				res = res + string(recvBuf)
+			}
+		}
+	}
+	// close the connection gracefully
+	_, err = vlcsocket.Write([]byte(&#34;quit\n&#34;))
+	if err != nil {
+		return res, err
+	}
+	_ = vlcsocket.Close()
+	return res, nil
+}
+</code></pre></div><p>As I said, two types of messages come from the MacroPad: playlist selection and playback commands. The playback commands are defined by the prefix <code>cmd|</code> and the name of the function to execute.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">cmd|play
+cmd|stop
+cmd|next
+</code></pre></div><p>We keep a map of these names and their corresponding helper functions in the <a href="https://github.com/carlosolmos/macropadjukebox/blob/main/services/configuration.go#L37" target="_blank" rel="noopener">configuration.go file</a>. For example, the command <code>cmd|play</code> will trigger the function <code>VLC_Play()</code> and the command <code>cmd|clear</code> will do <code>VLC_Clear()</code>. I found this to be a good way to avoid a long <code>if-else-if</code> abomination:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">var KeyFunctionsMap = map[string]func(){
+	&#34;play&#34;: func() {
+		fmt.Println(&#34;play&#34;)
+		err := VLC_Play()
+		if err != nil {
+			log.Printf(&#34;error: %s\n&#34;, err.Error())
+		}
+	},
+	...
+	&#34;clear&#34;: func() {
+		fmt.Println(&#34;clear&#34;)
+		err = VLC_Clear()
+		if err != nil {
+			log.Printf(&#34;error: %s\n&#34;, err.Error())
+		}
+	},
+</code></pre></div><p>Each helper prepares the command strings to send to VLC:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#a2f;font-weight:bold">func</span> <span style="color:#00a000">VLC_Play</span>() <span style="color:#0b0;font-weight:bold">error</span> {
+	_, err <span style="color:#666">:=</span> <span style="color:#00a000">VLCsendCommand</span>([]<span style="color:#0b0;font-weight:bold">string</span>{<span style="color:#b44">&#34;play&#34;</span>}, <span style="color:#a2f;font-weight:bold">false</span>)
+	<span style="color:#a2f;font-weight:bold">if</span> err <span style="color:#666">!=</span> <span style="color:#a2f;font-weight:bold">nil</span> {
+		<span style="color:#a2f;font-weight:bold">return</span> err
+	}
+	<span style="color:#a2f;font-weight:bold">return</span> <span style="color:#a2f;font-weight:bold">nil</span>
+}
+</code></pre></div><p>The execution of the command function takes on a generic form:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">	 // playback command
+	  cmdToks := strings.Split(command, &#34;|&#34;)
+	  ...
+		cmdFun, ok := KeyFunctionsMap[cmdToks[1]]
+		if ok {
+			cmdFun()
+		} else {
+			log.Println(&#34; command not found&#34;)
+		}
+		...
+</code></pre></div><p>The playlist selection command works a little differently. The message contains the prefix <code>pl|</code> followed by the playlist index —as defined in the configuration file.</p>
+<p>Playlist selection command:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">pl|{index}
+e.g.  pl|01
+</code></pre></div><p>The service finds the playlist file (m3u) associated with the index in the configuration map and sends to VLC the commands to reset the playlist (<code>clear</code>) and begin playing the new one (<code>add {filename}</code>).</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">func VLC_StartPlaylist(playlist string) error {
+	cmdList := []string{
+		&#34;clear&#34;,
+		fmt.Sprintf(&#34;add %s&#34;, playlist),
+	}
+	_, err := VLCsendCommand(cmdList, false)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+</code></pre></div><p>All these helper functions are defined in the file <a href="https://github.com/carlosolmos/macropadjukebox/blob/main/services/vlc.go" target="_blank" rel="noopener">https://github.com/carlosolmos/macropadjukebox/blob/main/services/vlc.go</a>.</p>
+<h2 id="macropad">MacroPad <a href="#macropad" class="anchor">🔗</a></h2><p>The Arduino MacroPad RP2040 is a great gadget. It packs a 3x4 keyboard with neopixels, an OLED display, a speaker, and a decent microcontroller compatible with CircuitPython and Arduino.</p>
+<p><a href="https://learn.adafruit.com/adafruit-macropad-rp2040" target="_blank" rel="noopener">https://learn.adafruit.com/adafruit-macropad-rp2040</a></p>
+<p>I set up the MacroPad as the controller of the Jukebox.</p>
+<p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL01hY3JvUGFkLWZ1bmN0aW9ucy5wbmc=" src="img/MacroPad-functions.png" alt=""  />  
+  <small class="img-note">click to zoom in</small>
+</p></p>
+<p>The code running inside receives the music playlist map from the Raspberry Pi via the serial line and stores it in local memory. Each key is mapped to a VLC command sent back to the RPi via the serial line.</p>
+<p>The Main Loop of the MacroPad program is:</p>
+<ul>
+<li>Read any keypad events (keystrokes) and send the appropriate command via serial line</li>
+<li>Read changes in the rotary encoder and update the playlist in the display</li>
+<li>Read rotary switch event (push) and send playlist command via serial line</li>
+<li>Read input from the serial line and update configuration if necessary</li>
+</ul>
+<h3 id="data-serial-communications">Data Serial Communications <a href="#data-serial-communications" class="anchor">🔗</a></h3><p>The communication between the MacroPad and the <code>jukebox</code> service happens over a serial data line via the USB cable. We will be sending ASCII strings (JSON messages, commands, etc) over this line, in both directions. Ideally, we can maintain this line free of any other data that is not relevant to our service.</p>
+<p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL3NlcmlhbC1jb21tcy5wbmc=" src="img/serial-comms.png" alt=""  />  
+  <small class="img-note">click to zoom in</small>
+</p></p>
+<p>CircuitPython (the <code>usb_cdc</code> module) enables by default a &ldquo;Communications Device Class&rdquo; serial device that can be used to interact with a <a href="https://learn.adafruit.com/welcome-to-circuitpython/kattni-connecting-to-the-serial-console" target="_blank" rel="noopener">console</a> and a <a href="https://learn.adafruit.com/welcome-to-circuitpython/the-repl" target="_blank" rel="noopener">REPL</a> interface. None of these are helpful for exchanging data over the serial line. Luckily, the <code>usb_cdc</code> module can enable a second serial device just for data exchange. This serial data device is enumerated separately.</p>
+<p>To enable this device we have to create a file called <code>boot.py</code>, and put it in the root directory of the MacroPad drive, with the following code:</p>
+<p><code>boot.py</code></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">import usb_cdc
+try:
+	  # enable console AND data serial devices
+    usb_cdc.enable(console=True, data=True)    
+except Exception as e:
+    print(e)
+</code></pre></div><p>After rebooting the MacroPad you&rsquo;ll see a second serial device in your computer or raspberry pi:</p>
+<p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL0NEQy1zZXJpYWwtZGV2aWNlcy5wbmc=" src="img/CDC-serial-devices.png" alt=""  />  
+  <small class="img-note">click to zoom in</small>
+</p></p>
+<p><p class="markdown-image"> 
+  <img class="zoomable" id="aW1nL3NlcmlhbC1kZXZpY2UtZGF0YS5wbmc=" src="img/serial-device-data.png" alt=""  />  
+  <small class="img-note">click to zoom in</small>
+</p></p>
+<p>More info about the CDC devices in CircuitPython: <a href="https://learn.adafruit.com/customizing-usb-devices-in-circuitpython/circuitpy-midi-serial" target="_blank" rel="noopener">https://learn.adafruit.com/customizing-usb-devices-in-circuitpython/circuitpy-midi-serial</a></p>
+<h3 id="music-playlists">Music playlists <a href="#music-playlists" class="anchor">🔗</a></h3><p>The playlist configuration is received as a JSON document from the jukebox service via the serial data line. The playlist names and indices are stored in circular arrays that are iterated over by the rotary encoder. The MacroPad library for the rotary encoder keeps a sequence that increments (clockwise) or decrements (counterclockwise) indefinitely. With a module operation, we translate the encoder position to a circular array index.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">position <span style="color:#666">=</span> macropad<span style="color:#666">.</span>encoder
+<span style="color:#a2f;font-weight:bold">if</span> position <span style="color:#666">!=</span> encoder_last_position:
+    <span style="color:#a2f;font-weight:bold">if</span> <span style="color:#a2f">len</span>(playlistIndexes)<span style="color:#666">&gt;</span><span style="color:#666">0</span>:
+        plPos <span style="color:#666">=</span> position <span style="color:#666">%</span> <span style="color:#a2f">len</span>(playlistIndexes)
+        pl_index<span style="color:#666">=</span>playlistIndexes[plPos]
+        playlistName <span style="color:#666">=</span> playlists[pl_index]<span style="color:#666">.</span>strip()
+        group[<span style="color:#666">13</span>]<span style="color:#666">.</span>text <span style="color:#666">=</span> <span style="color:#b44">&#34;</span><span style="color:#b68;font-weight:bold">{}</span><span style="color:#b44">&#34;</span><span style="color:#666">.</span>format(playlistName[:<span style="color:#666">24</span>])
+    encoder_last_position <span style="color:#666">=</span> position
+</code></pre></div><p>When the rotary encoder switch is pressed, the command <code>pl|{playlist index}</code> is sent via the serial data line to the jukebox service.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#080;font-style:italic"># encoder push switch</span>
+macropad<span style="color:#666">.</span>encoder_switch_debounced<span style="color:#666">.</span>update()
+<span style="color:#a2f;font-weight:bold">if</span> macropad<span style="color:#666">.</span>encoder_switch_debounced<span style="color:#666">.</span>pressed:
+    group[<span style="color:#666">9</span>]<span style="color:#666">.</span>text <span style="color:#666">=</span> <span style="color:#b44">&#34;PL: </span><span style="color:#b68;font-weight:bold">{}</span><span style="color:#b44">&#34;</span><span style="color:#666">.</span> <span style="color:#a2f">format</span>(pl_index)
+    <span style="color:#080;font-style:italic"># send playlist change</span>
+    sendData(<span style="color:#b44">&#39;pl|</span><span style="color:#b68;font-weight:bold">{}</span><span style="color:#b44">&#39;</span><span style="color:#666">.</span>format(pl_index))
+<span style="color:#a2f;font-weight:bold">else</span>:
+    group[<span style="color:#666">9</span>]<span style="color:#666">.</span>text <span style="color:#666">=</span> controlKeys[<span style="color:#666">9</span>][<span style="color:#666">0</span>]
+</code></pre></div><h3 id="keypad-controls">Keypad Controls <a href="#keypad-controls" class="anchor">🔗</a></h3><p>The playback controls are mapped to the MacroPad keypad in this way.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">Keypad Controls
+Play: 		Key 0
+Pause:		Key 1
+Stop:		  Key 2
+Prev:		  Key 3
+Next:		  Key 5
+Vol Dwn:	Key 6
+Vol Up:		Key 8
+Clear:	  Key 9
+Reset:	  Key 11
+
+</code></pre></div><p>We use a list of <code>{Name, command}</code> tuples to hold the map. The entries are arranged in the corresponding key index. The empty slots represent keys that are not used.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">controlKeys <span style="color:#666">=</span> [
+    (<span style="color:#b44">&#39;Play&#39;</span>, <span style="color:#b44">&#39;cmd|play&#39;</span>),
+    (<span style="color:#b44">&#39;Pause&#39;</span>, <span style="color:#b44">&#39;cmd|pause&#39;</span>),
+    (<span style="color:#b44">&#39;Stop&#39;</span>, <span style="color:#b44">&#39;cmd|stop&#39;</span>),
+    (<span style="color:#b44">&#39;Prev&#39;</span>, <span style="color:#b44">&#39;cmd|prev&#39;</span>),
+    (<span style="color:#b44">&#39;&#39;</span>, <span style="color:#b44">&#39;&#39;</span>),
+    (<span style="color:#b44">&#39;Next&#39;</span>, <span style="color:#b44">&#39;cmd|next&#39;</span>),
+    (<span style="color:#b44">&#39;Vol Dn&#39;</span>, <span style="color:#b44">&#39;cmd|voldown&#39;</span>),
+    (<span style="color:#b44">&#39;&#39;</span>, <span style="color:#b44">&#39;&#39;</span>),
+    (<span style="color:#b44">&#39;Vol Up&#39;</span>,<span style="color:#b44">&#39;cmd|volup&#39;</span>),
+    (<span style="color:#b44">&#39;Clear&#39;</span>, <span style="color:#b44">&#39;cmd|clear&#39;</span>),
+    (<span style="color:#b44">&#39;&#39;</span>, <span style="color:#b44">&#39;&#39;</span>),
+    (<span style="color:#b44">&#39;Reset&#39;</span>, <span style="color:#b44">&#39;cmd|reset&#39;</span>),
+]
+</code></pre></div><p>When a key is pressed, we send the corresponding command from the <code>controlKeys</code> array to the serial data line.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">key_event <span style="color:#666">=</span> macropad<span style="color:#666">.</span>keys<span style="color:#666">.</span>events<span style="color:#666">.</span>get()
+<span style="color:#a2f;font-weight:bold">if</span> key_event:
+    <span style="color:#a2f;font-weight:bold">if</span> key_event<span style="color:#666">.</span>key_number <span style="color:#666">&lt;</span> <span style="color:#666">12</span>:
+        <span style="color:#a2f;font-weight:bold">if</span> key_event<span style="color:#666">.</span>pressed:
+            macropad<span style="color:#666">.</span>pixels[key_event<span style="color:#666">.</span>key_number] <span style="color:#666">=</span> <span style="color:#666">0x002EB8</span>
+            <span style="color:#080;font-style:italic"># send command</span>
+            sendData(controlKeys[key_event<span style="color:#666">.</span>key_number][<span style="color:#666">1</span>])
+            group[<span style="color:#666">9</span>]<span style="color:#666">.</span>text <span style="color:#666">=</span> <span style="color:#b44">&#34;Key: </span><span style="color:#b68;font-weight:bold">{}</span><span style="color:#b44">&#34;</span><span style="color:#666">.</span>format(key_event<span style="color:#666">.</span>key_number)
+        <span style="color:#a2f;font-weight:bold">else</span>:
+            macropad<span style="color:#666">.</span>pixels[key_event<span style="color:#666">.</span>key_number] <span style="color:#666">=</span> <span style="color:#666">0</span>
+            group[<span style="color:#666">9</span>]<span style="color:#666">.</span>text <span style="color:#666">=</span> controlKeys[<span style="color:#666">9</span>][<span style="color:#666">0</span>]
+
+</code></pre></div><h2 id="whats-next">What&rsquo;s next? <a href="#whats-next" class="anchor">🔗</a></h2><p>After completing the project I realized there is a number of things I could do to improve this project:</p>
+<ul>
+<li>A better mechanism to load new music without editing the config file.</li>
+<li>More media actions: random, fast-forward, rewind, etc.</li>
+<li>Show the playing song title, maybe even the track progress in the MacroPad display.</li>
+<li>Try the RPi OS Lite (no graphics) version</li>
+<li>Dynamically find the serial port from the MacroPad</li>
+<li>Flash some LEDs or play a sound when the Jukebox is ready to rock.</li>
+</ul>
+<blockquote>
+<p>All songs used during the making of this project have been acquired legally and are meant for personal use. No pirates here.</p>
+</blockquote>
+
+    </div>
+
+    
+        <div class="tags">
+            
+                <a href="https://carlosolmos.dev/tags/overengineered">overengineered</a>
+            
+                <a href="https://carlosolmos.dev/tags/maker">maker</a>
+            
+                <a href="https://carlosolmos.dev/tags/circuitpython">circuitpython</a>
+            
+        </div>
+    
+    
+    
+
+</section>
+
+
+    </main>
+    
+    <footer id="footer">
+    
+        <div id="social">
+
+
+    <a class="symbol" href="https://github.com/carlosolmos/" rel="me" target="_blank">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="28"><rect x="0" fill="none" width="24" height="24"/><g><path d="M12 2C6.477 2 2 6.477 2 12c0 4.419 2.865 8.166 6.839 9.489.5.09.682-.218.682-.484 0-.236-.009-.866-.014-1.699-2.782.602-3.369-1.34-3.369-1.34-.455-1.157-1.11-1.465-1.11-1.465-.909-.62.069-.608.069-.608 1.004.071 1.532 1.03 1.532 1.03.891 1.529 2.341 1.089 2.91.833.091-.647.349-1.086.635-1.337-2.22-.251-4.555-1.111-4.555-4.943 0-1.091.39-1.984 1.03-2.682-.103-.254-.447-1.27.097-2.646 0 0 .84-.269 2.75 1.025A9.548 9.548 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.748-1.025 2.748-1.025.546 1.376.202 2.394.1 2.646.64.699 1.026 1.591 1.026 2.682 0 3.841-2.337 4.687-4.565 4.935.359.307.679.917.679 1.852 0 1.335-.012 2.415-.012 2.741 0 .269.18.579.688.481A9.997 9.997 0 0022 12c0-5.523-4.477-10-10-10z" fill="#bbbbbb"/></g></svg>
+    </a>
+
+    <a class="symbol" href="https://www.linkedin.com/in/carlosaolmos" rel="me" target="_blank">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="28"><rect x="0" fill="none" width="24" height="24"/><g><path d="M19.7 3H4.3A1.3 1.3 0 003 4.3v15.4A1.3 1.3 0 004.3 21h15.4a1.3 1.3 0 001.3-1.3V4.3A1.3 1.3 0 0019.7 3zM8.339 18.338H5.667v-8.59h2.672v8.59zM7.004 8.574a1.548 1.548 0 11-.002-3.096 1.548 1.548 0 01.002 3.096zm11.335 9.764H15.67v-4.177c0-.996-.017-2.278-1.387-2.278-1.389 0-1.601 1.086-1.601 2.206v4.249h-2.667v-8.59h2.559v1.174h.037c.356-.675 1.227-1.387 2.526-1.387 2.703 0 3.203 1.779 3.203 4.092v4.711z" fill="#bbbbbb"/></g></svg>
+    </a>
+
+
+</div>
+
+    
+
+    <div class="copyright">
+    
+       © Copyright 
+       2023 
+       <span class="split">
+        Made with <svg fill="#bbbbbb" width="15" height="15" version="1.1" id="heart-15" xmlns="http://www.w3.org/2000/svg" width="15px" height="15px" viewBox="0 0 15 15">
+  <path d="M13.91,6.75c-1.17,2.25-4.3,5.31-6.07,6.94c-0.1903,0.1718-0.4797,0.1718-0.67,0C5.39,12.06,2.26,9,1.09,6.75&#xA;&#x9;C-1.48,1.8,5-1.5,7.5,3.45C10-1.5,16.48,1.8,13.91,6.75z"/>
+</svg>
+       </span>
+       by Carlos A Olmos
+    
+    </div>
+
+    
+      <div class="powerby">
+        Powered by <a href='http://www.gohugo.io/'>Hugo</a> Based on Theme mini By <a href='https://github.com/nodejh/hugo-theme-cactus-plus'>nodejh</a>
+      </div>
+    
+</footer>
+<div id="lightbox"></div>
+
+    
+        
+        <script src="https://carlosolmos.dev/js/custom.js"></script>
+    
+
+<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+<script>
+    
+  feather.replace()
+</script>
+  </body>
+</html>

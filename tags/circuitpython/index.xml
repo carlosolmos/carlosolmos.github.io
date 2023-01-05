@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>circuitpython on brain dump</title>
+    <link>https://carlosolmos.dev/tags/circuitpython/</link>
+    <description>Recent content in circuitpython on brain dump</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 26 Dec 2022 15:52:52 -0800</lastBuildDate><atom:link href="https://carlosolmos.dev/tags/circuitpython/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>The MacroPad Jukebox</title>
+      <link>https://carlosolmos.dev/posts/the-macropad-jukebox/</link>
+      <pubDate>Mon, 26 Dec 2022 15:52:52 -0800</pubDate>
+      
+      <guid>https://carlosolmos.dev/posts/the-macropad-jukebox/</guid>
+      <description>The jukebox 🔗Lately, I&amp;rsquo;ve been obsessed with the old way of listening to music. You know: from your own collection, in order, one album at a time. No randomness, no infinite playlists, no album of the day, no ads, and no algorithms. When I got my hands on an Adafruit MacroPad RP2040 I knew what I had to do: make my own ugly and overengineered music player. I present to you the &amp;ldquo;MacroPad Jukebox&amp;rdquo;.</description>
+    </item>
+    
+  </channel>
+</rss>
