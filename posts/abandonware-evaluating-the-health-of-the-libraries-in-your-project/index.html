@@ -7,7 +7,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">    
 <meta name="viewport" content="width=device-width,minimum-scale=1">
 <meta name="description" content="Do you know how many libraries your project depends on? How old is the code you are importing? In this post, I encorage you to consider the quantity, and quality of the libraries you include (directly or indirectly) in your code base, and show you how to evaluate the health of the dependencies in a sample Go project.">
-<meta name="generator" content="Hugo 0.92.2" />
+<meta name="generator" content="Hugo 0.103.1" />
 
 
   <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
@@ -29,6 +29,7 @@
 
 
 
+<script data-goatcounter="https://iotitlan.goatcounter.com/count"  async src="//gc.zgo.at/count.js"></script>
 
   </head>
 
@@ -128,33 +129,33 @@
 <h3 id="but-what-about-the-projects-health">But what about the project&rsquo;s health? <a href="#but-what-about-the-projects-health" class="anchor">🔗</a></h3><p>The state of the dependencies maintenance -commonly known as project health- is often not considered. This is especially the case for the free or community versions of these tools. It is surprisingly easy, however, to get good information about the health of OSS libraries from code repositories like GitHub.</p>
 <h2 id="evaluating-the-health-of-the-oss-supply-chain-an-example">Evaluating the health of the OSS supply chain: an example <a href="#evaluating-the-health-of-the-oss-supply-chain-an-example" class="anchor">🔗</a></h2><p>Let us consider a simple <a href="https://go.dev/" target="_blank" rel="noopener">Golang</a> program I wrote earlier this year.</p>
 <p>The project dependencies are listed in the <code>go.mod</code> file. We must also consider that each one of these dependencies is a project with its own dependencies.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">module github.com/carlosolmos/myproject
-
-go 1.16
-
-require (
-	github.com/armon/consul-api v0.0.0-20180202201655-eb2c6b5be1b6 // indirect
-	github.com/coreos/etcd v3.3.10+incompatible // indirect
-	github.com/coreos/go-etcd v2.0.0+incompatible // indirect
-	github.com/go-sql-driver/mysql v1.6.0 // indirect
-	github.com/google/uuid v1.3.0
-	github.com/gorilla/mux v1.8.0
-	github.com/sirupsen/logrus v1.8.1
-	github.com/spf13/viper v1.9.0 // indirect
-	github.com/stretchr/testify v1.7.0
-	github.com/ugorji/go/codec v0.0.0-20181204163529-d75b2dcb6bc8 // indirect
-	github.com/xordataexchange/crypt v0.0.3-0.20170626215501-b2862e3d0a77 // indirect
-	golang.org/x/text v0.3.7
-)
-</code></pre></div><p>What I want is to be able to:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-v" data-lang="v"><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">module</span> <span style="color:#b8860b">github</span>.<span style="color:#b8860b">com</span><span style="color:#666">/</span><span style="color:#b8860b">carlosolmos</span><span style="color:#666">/</span><span style="color:#b8860b">myproject</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">go</span> <span style="color:#666">1.16</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#b8860b">require</span> (
+</span></span><span style="display:flex;"><span>	<span style="color:#b8860b">github</span>.<span style="color:#b8860b">com</span><span style="color:#666">/</span><span style="color:#b8860b">armon</span><span style="color:#666">/</span><span style="color:#b8860b">consul</span><span style="color:#666">-</span><span style="color:#b8860b">api</span> <span style="color:#b8860b">v0</span><span style="color:#666">.0.0</span><span style="color:#666">-</span><span style="color:#666">20180202201655</span><span style="color:#666">-</span><span style="color:#b8860b">eb2c6b5be1b6</span> <span style="color:#080;font-style:italic">// indirect
+</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"></span>	<span style="color:#b8860b">github</span>.<span style="color:#b8860b">com</span><span style="color:#666">/</span><span style="color:#b8860b">coreos</span><span style="color:#666">/</span><span style="color:#b8860b">etcd</span> <span style="color:#b8860b">v3</span><span style="color:#666">.3.10</span><span style="color:#666">+</span><span style="color:#b8860b">incompatible</span> <span style="color:#080;font-style:italic">// indirect
+</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"></span>	<span style="color:#b8860b">github</span>.<span style="color:#b8860b">com</span><span style="color:#666">/</span><span style="color:#b8860b">coreos</span><span style="color:#666">/</span><span style="color:#a2f;font-weight:bold">go</span><span style="color:#666">-</span><span style="color:#b8860b">etcd</span> <span style="color:#b8860b">v2</span><span style="color:#666">.0.0</span><span style="color:#666">+</span><span style="color:#b8860b">incompatible</span> <span style="color:#080;font-style:italic">// indirect
+</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"></span>	<span style="color:#b8860b">github</span>.<span style="color:#b8860b">com</span><span style="color:#666">/</span><span style="color:#a2f;font-weight:bold">go</span><span style="color:#666">-</span><span style="color:#b8860b">sql</span><span style="color:#666">-</span><span style="color:#b8860b">driver</span><span style="color:#666">/</span><span style="color:#b8860b">mysql</span> <span style="color:#b8860b">v1</span><span style="color:#666">.6.0</span> <span style="color:#080;font-style:italic">// indirect
+</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"></span>	<span style="color:#b8860b">github</span>.<span style="color:#b8860b">com</span><span style="color:#666">/</span><span style="color:#b8860b">google</span><span style="color:#666">/</span><span style="color:#b8860b">uuid</span> <span style="color:#b8860b">v1</span><span style="color:#666">.3.0</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#b8860b">github</span>.<span style="color:#b8860b">com</span><span style="color:#666">/</span><span style="color:#b8860b">gorilla</span><span style="color:#666">/</span><span style="color:#b8860b">mux</span> <span style="color:#b8860b">v1</span><span style="color:#666">.8.0</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#b8860b">github</span>.<span style="color:#b8860b">com</span><span style="color:#666">/</span><span style="color:#b8860b">sirupsen</span><span style="color:#666">/</span><span style="color:#b8860b">logrus</span> <span style="color:#b8860b">v1</span><span style="color:#666">.8.1</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#b8860b">github</span>.<span style="color:#b8860b">com</span><span style="color:#666">/</span><span style="color:#b8860b">spf13</span><span style="color:#666">/</span><span style="color:#b8860b">viper</span> <span style="color:#b8860b">v1</span><span style="color:#666">.9.0</span> <span style="color:#080;font-style:italic">// indirect
+</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"></span>	<span style="color:#b8860b">github</span>.<span style="color:#b8860b">com</span><span style="color:#666">/</span><span style="color:#b8860b">stretchr</span><span style="color:#666">/</span><span style="color:#b8860b">testify</span> <span style="color:#b8860b">v1</span><span style="color:#666">.7.0</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#b8860b">github</span>.<span style="color:#b8860b">com</span><span style="color:#666">/</span><span style="color:#b8860b">ugorji</span><span style="color:#666">/</span><span style="color:#a2f;font-weight:bold">go</span><span style="color:#666">/</span><span style="color:#b8860b">codec</span> <span style="color:#b8860b">v0</span><span style="color:#666">.0.0</span><span style="color:#666">-</span><span style="color:#666">20181204163529</span><span style="color:#666">-</span><span style="color:#b8860b">d75b2dcb6bc8</span> <span style="color:#080;font-style:italic">// indirect
+</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"></span>	<span style="color:#b8860b">github</span>.<span style="color:#b8860b">com</span><span style="color:#666">/</span><span style="color:#b8860b">xordataexchange</span><span style="color:#666">/</span><span style="color:#b8860b">crypt</span> <span style="color:#b8860b">v0</span><span style="color:#666">.0.3</span><span style="color:#666">-</span><span style="color:#666">0.20170626215501</span><span style="color:#666">-</span><span style="color:#b8860b">b2862e3d0a77</span> <span style="color:#080;font-style:italic">// indirect
+</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"></span>	<span style="color:#b8860b">golang</span>.<span style="color:#b8860b">org</span><span style="color:#666">/</span><span style="color:#b8860b">x</span><span style="color:#666">/</span><span style="color:#b8860b">text</span> <span style="color:#b8860b">v0</span><span style="color:#666">.3.7</span>
+</span></span><span style="display:flex;"><span>)
+</span></span></code></pre></div><p>What I want is to be able to:</p>
 <ul>
 <li>Scan the OSS dependencies that are included in my projects, recursively.</li>
 <li>Give me a sense (maybe a score) of the health of every library based on its activity.</li>
 </ul>
 <h3 id="bom">BOM <a href="#bom" class="anchor">🔗</a></h3><p>First, we get a more complete list of dependencies (the Bill of Materials or BOM) for this project.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">~/lab/go/src/github.com/carlosolmos/myproject
-❯ go list -json -deps &gt; myproject-dependencies.txt
-</code></pre></div><p>This command creates a deeper list of dependencies (the file has over 17,000 lines) for every OSS artifact referenced in the project. <a href="img/myproject-deps-full.txt">Here is the file I got for my project.</a></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>~/lab/go/src/github.com/carlosolmos/myproject
+</span></span><span style="display:flex;"><span>❯ go list -json -deps &gt; myproject-dependencies.txt
+</span></span></code></pre></div><p>This command creates a deeper list of dependencies (the file has over 17,000 lines) for every OSS artifact referenced in the project. <a href="img/myproject-deps-full.txt">Here is the file I got for my project.</a></p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL1NjcmVlbnNob3QlMjAyMDIyLTEyLTE5JTIwYXQlMjA4LjEzLjEyJTIwUE0ucG5n" src="img/Screenshot%202022-12-19%20at%208.13.12%20PM.png" alt=""  />  
   <small class="img-note">click to zoom in</small>
@@ -171,10 +172,10 @@ require (
 <p>This trove of activity information is also available via the GitHub API. The <a href="https://docs.github.com/en/rest/metrics/statistics?apiVersion=2022-11-28" target="_blank" rel="noopener">Repository Statistics API</a> provides endpoints for the different categories of data. And we can use it for free!</p>
 <p>I am interested in two endpoints:</p>
 <p>The repository description:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">https://api.github.com/repos/OWNER/REPOSITORY&#34;
-</code></pre></div><p>and the repository weekly commit count:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">&#34;https://api.github.com/repos/OWNER/REPOSITORY/stats/participation&#34;
-</code></pre></div><p>I plan to evaluate the health of the project based on its count of recent activity.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>https://api.github.com/repos/OWNER/REPOSITORY&#34;
+</span></span></code></pre></div><p>and the repository weekly commit count:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>&#34;https://api.github.com/repos/OWNER/REPOSITORY/stats/participation&#34;
+</span></span></code></pre></div><p>I plan to evaluate the health of the project based on its count of recent activity.</p>
 <h4 id="the-personal-token">The Personal Token <a href="#the-personal-token" class="anchor">🔗</a></h4><p>The one thing I need to use the GitHub public API is an Access Token, particularly a Personal Access Token (classic) with enough privileges to access public repositories and to read the project information (there is no need for any write privileges, keep the scope short). The guide to creating one of these tokens can be found in the <a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token#creating-a-personal-access-token-classic" target="_blank" rel="noopener">official documentation</a>.</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL1NjcmVlbnNob3QlMjAyMDIyLTEyLTE5JTIwYXQlMjA4LjMxLjE4JTIwUE0ucG5n" src="img/Screenshot%202022-12-19%20at%208.31.18%20PM.png" alt=""  />  
@@ -188,106 +189,104 @@ require (
 <p>Warning! This code is ugly, and messy, and should not be used in production. Treat it as toxic. 💀</p>
 </blockquote>
 <p>The general idea of the program is simple: read each line of the BOM file and extract the GitHub URLs. Retrieve and parse the GitHub information for the repository, and keep it in a dictionary to avoid duplication (we want to query each repo only once). Finally, print the parsed information to the standard output.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">report<span style="color:#666">=</span>{}
-file1 <span style="color:#666">=</span> <span style="color:#a2f">open</span>(<span style="color:#b44">&#39;myproject-deps.json&#39;</span>, <span style="color:#b44">&#39;r&#39;</span>)
-lines <span style="color:#666">=</span> file1<span style="color:#666">.</span>readlines()
-<span style="color:#a2f;font-weight:bold">for</span> line <span style="color:#a2f;font-weight:bold">in</span> lines:
-    line <span style="color:#666">=</span> clean(line)
-    <span style="color:#a2f;font-weight:bold">if</span> line<span style="color:#666">.</span>find(<span style="color:#b44">&#34;github.com&#34;</span>) <span style="color:#666">==</span> <span style="color:#666">0</span>:
-        <span style="color:#a2f">print</span>(<span style="color:#b44">&#34;Repo: </span><span style="color:#b68;font-weight:bold">{}</span><span style="color:#b44">&#34;</span><span style="color:#666">.</span>format(line))
-        toks<span style="color:#666">=</span>line<span style="color:#666">.</span>split(<span style="color:#b44">&#34;/&#34;</span>)
-        <span style="color:#a2f;font-weight:bold">if</span> <span style="color:#a2f">len</span>(toks) <span style="color:#666">&gt;</span> <span style="color:#666">2</span>:
-            owner <span style="color:#666">=</span> toks[<span style="color:#666">1</span>]
-            project <span style="color:#666">=</span> toks[<span style="color:#666">2</span>]
-            key <span style="color:#666">=</span> <span style="color:#b44">&#34;github.com/</span><span style="color:#b68;font-weight:bold">{}</span><span style="color:#b44">/</span><span style="color:#b68;font-weight:bold">{}</span><span style="color:#b44">&#34;</span><span style="color:#666">.</span>format(owner, project)
-            <span style="color:#a2f;font-weight:bold">if</span> key <span style="color:#a2f;font-weight:bold">not</span> <span style="color:#a2f;font-weight:bold">in</span> report:
-                info <span style="color:#666">=</span> getGithubInfo(owner, project)
-                <span style="color:#a2f;font-weight:bold">if</span> info:
-                    <span style="color:#a2f">print</span>(info)
-                    report[key]<span style="color:#666">=</span>info[<span style="color:#b44">&#39;score&#39;</span>]
-                time<span style="color:#666">.</span>sleep(<span style="color:#666">0.5</span>)
-
-</code></pre></div><blockquote>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>report<span style="color:#666">=</span>{}
+</span></span><span style="display:flex;"><span>file1 <span style="color:#666">=</span> <span style="color:#a2f">open</span>(<span style="color:#b44">&#39;myproject-deps.json&#39;</span>, <span style="color:#b44">&#39;r&#39;</span>)
+</span></span><span style="display:flex;"><span>lines <span style="color:#666">=</span> file1<span style="color:#666">.</span>readlines()
+</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">for</span> line <span style="color:#a2f;font-weight:bold">in</span> lines:
+</span></span><span style="display:flex;"><span>    line <span style="color:#666">=</span> clean(line)
+</span></span><span style="display:flex;"><span>    <span style="color:#a2f;font-weight:bold">if</span> line<span style="color:#666">.</span>find(<span style="color:#b44">&#34;github.com&#34;</span>) <span style="color:#666">==</span> <span style="color:#666">0</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#a2f">print</span>(<span style="color:#b44">&#34;Repo: </span><span style="color:#b68;font-weight:bold">{}</span><span style="color:#b44">&#34;</span><span style="color:#666">.</span>format(line))
+</span></span><span style="display:flex;"><span>        toks<span style="color:#666">=</span>line<span style="color:#666">.</span>split(<span style="color:#b44">&#34;/&#34;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#a2f;font-weight:bold">if</span> <span style="color:#a2f">len</span>(toks) <span style="color:#666">&gt;</span> <span style="color:#666">2</span>:
+</span></span><span style="display:flex;"><span>            owner <span style="color:#666">=</span> toks[<span style="color:#666">1</span>]
+</span></span><span style="display:flex;"><span>            project <span style="color:#666">=</span> toks[<span style="color:#666">2</span>]
+</span></span><span style="display:flex;"><span>            key <span style="color:#666">=</span> <span style="color:#b44">&#34;github.com/</span><span style="color:#b68;font-weight:bold">{}</span><span style="color:#b44">/</span><span style="color:#b68;font-weight:bold">{}</span><span style="color:#b44">&#34;</span><span style="color:#666">.</span>format(owner, project)
+</span></span><span style="display:flex;"><span>            <span style="color:#a2f;font-weight:bold">if</span> key <span style="color:#a2f;font-weight:bold">not</span> <span style="color:#a2f;font-weight:bold">in</span> report:
+</span></span><span style="display:flex;"><span>                info <span style="color:#666">=</span> getGithubInfo(owner, project)
+</span></span><span style="display:flex;"><span>                <span style="color:#a2f;font-weight:bold">if</span> info:
+</span></span><span style="display:flex;"><span>                    <span style="color:#a2f">print</span>(info)
+</span></span><span style="display:flex;"><span>                    report[key]<span style="color:#666">=</span>info[<span style="color:#b44">&#39;score&#39;</span>]
+</span></span><span style="display:flex;"><span>                time<span style="color:#666">.</span>sleep(<span style="color:#666">0.5</span>)
+</span></span></code></pre></div><blockquote>
 <p>Notice the pause between API calls. This is just me being civilized and avoiding rate limits from the GitHub servers.</p>
 </blockquote>
 <p>The interesting part of the script is the function <code>getGithubInfo(owner, project)</code> where I fetch and extract the information that I want. The function makes two API calls. The first is to retrieve the repository general information.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">response <span style="color:#666">=</span> requests<span style="color:#666">.</span>get(
-    <span style="color:#b44">&#34;https://api.github.com/repos/</span><span style="color:#b68;font-weight:bold">{}</span><span style="color:#b44">/</span><span style="color:#b68;font-weight:bold">{}</span><span style="color:#b44">&#34;</span><span style="color:#666">.</span>format(owner, project),    
-    headers<span style="color:#666">=</span>{<span style="color:#b44">&#39;Accept&#39;</span>: <span style="color:#b44">&#39;application/vnd.github+json&#39;</span>,
-    <span style="color:#b44">&#39;Authorization&#39;</span>:<span style="color:#b44">&#34;Bearer </span><span style="color:#b68;font-weight:bold">{}</span><span style="color:#b44">&#34;</span><span style="color:#666">.</span>format(TOKEN),
-    <span style="color:#b44">&#39;X-GitHub-Api-Version&#39;</span>: <span style="color:#b44">&#39;2022-11-28&#39;</span>},
-)
-<span style="color:#a2f;font-weight:bold">if</span>(response<span style="color:#666">.</span>status_code <span style="color:#666">!=</span> <span style="color:#666">200</span>):
-    <span style="color:#a2f;font-weight:bold">return</span> <span style="color:#a2f;font-weight:bold">None</span>
-
-json_response <span style="color:#666">=</span> response<span style="color:#666">.</span>json()
-info[<span style="color:#b44">&#39;url&#39;</span>] <span style="color:#666">=</span> json_response[<span style="color:#b44">&#39;url&#39;</span>]
-info[<span style="color:#b44">&#39;full_name&#39;</span>] <span style="color:#666">=</span> json_response[<span style="color:#b44">&#39;full_name&#39;</span>]
-info[<span style="color:#b44">&#39;created_at&#39;</span>] <span style="color:#666">=</span> json_response[<span style="color:#b44">&#39;created_at&#39;</span>]
-info[<span style="color:#b44">&#39;last_push&#39;</span>] <span style="color:#666">=</span> json_response[<span style="color:#b44">&#39;pushed_at&#39;</span>]
-</code></pre></div><p>The second call is to retrieve the weekly commit count. The API returns the count for the last 52 weeks. I care about the recent history so I do some aggregation for the last 4, 12, and 24 weeks, and the grand total for the year.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">response <span style="color:#666">=</span> requests<span style="color:#666">.</span>get(
-        <span style="color:#b44">&#34;https://api.github.com/repos/</span><span style="color:#b68;font-weight:bold">{}</span><span style="color:#b44">/</span><span style="color:#b68;font-weight:bold">{}</span><span style="color:#b44">/stats/participation&#34;</span><span style="color:#666">.</span>format(owner, project),    
-        headers<span style="color:#666">=</span>{<span style="color:#b44">&#39;Accept&#39;</span>: <span style="color:#b44">&#39;application/vnd.github+json&#39;</span>,
-        <span style="color:#b44">&#39;Authorization&#39;</span>:<span style="color:#b44">&#34;Bearer </span><span style="color:#b68;font-weight:bold">{}</span><span style="color:#b44">&#34;</span><span style="color:#666">.</span>format(TOKEN),
-        <span style="color:#b44">&#39;X-GitHub-Api-Version&#39;</span>: <span style="color:#b44">&#39;2022-11-28&#39;</span>},
-    )
-<span style="color:#a2f;font-weight:bold">if</span>(response<span style="color:#666">.</span>status_code <span style="color:#666">!=</span> <span style="color:#666">200</span>):
-    <span style="color:#a2f;font-weight:bold">return</span> <span style="color:#a2f;font-weight:bold">None</span>
-    
-info[<span style="color:#b44">&#39;last_year_commit_count&#39;</span>] <span style="color:#666">=</span> <span style="color:#666">0</span>
-info[<span style="color:#b44">&#39;last_24_weeks_commit_count&#39;</span>] <span style="color:#666">=</span> <span style="color:#666">0</span>    
-info[<span style="color:#b44">&#39;last_12_weeks_commit_count&#39;</span>] <span style="color:#666">=</span> <span style="color:#666">0</span>
-info[<span style="color:#b44">&#39;last_4_weeks_commit_count&#39;</span>] <span style="color:#666">=</span> <span style="color:#666">0</span>    
-
-json_response <span style="color:#666">=</span> response<span style="color:#666">.</span>json()
-allContribs <span style="color:#666">=</span> json_response[<span style="color:#b44">&#39;all&#39;</span>]
-
-<span style="color:#a2f;font-weight:bold">if</span> allContribs <span style="color:#a2f;font-weight:bold">and</span> <span style="color:#a2f">len</span>(allContribs) <span style="color:#666">==</span> <span style="color:#666">52</span>:
-    <span style="color:#a2f;font-weight:bold">for</span> i <span style="color:#a2f;font-weight:bold">in</span> <span style="color:#a2f">range</span>(<span style="color:#666">52</span>):
-        week <span style="color:#666">=</span>  allContribs[<span style="color:#666">51</span><span style="color:#666">-</span>i]
-        info[<span style="color:#b44">&#39;last_year_commit_count&#39;</span>] <span style="color:#666">+=</span> week
-        <span style="color:#a2f;font-weight:bold">if</span> i<span style="color:#666">&lt;</span><span style="color:#666">24</span>:
-            info[<span style="color:#b44">&#39;last_24_weeks_commit_count&#39;</span>] <span style="color:#666">+=</span> week
-            <span style="color:#a2f;font-weight:bold">if</span> i<span style="color:#666">&lt;</span><span style="color:#666">12</span>:
-                info[<span style="color:#b44">&#39;last_12_weeks_commit_count&#39;</span>] <span style="color:#666">+=</span> week
-                <span style="color:#a2f;font-weight:bold">if</span> i<span style="color:#666">&lt;</span><span style="color:#666">4</span>:
-                    info[<span style="color:#b44">&#39;last_4_weeks_commit_count&#39;</span>] <span style="color:#666">+=</span> week    
-</code></pre></div><p>Finally, I want to calculate a score based on the activity frequency. I came up with a very lazy algorithm, but it gives me an idea of how active the project is. I am positive that there are much better ways to calculate this score.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#b44">&#34;&#34;&#34;
-</span><span style="color:#b44">Every commit in a year = 1 pts
-</span><span style="color:#b44">Every commit in the last 6 months +1pts
-</span><span style="color:#b44">Every commit in the last 12 weeks +10pts
-</span><span style="color:#b44">Every commit in the last 4 weeks +100 pts
-</span><span style="color:#b44">&#34;&#34;&#34;</span>
-info[<span style="color:#b44">&#39;score&#39;</span>] <span style="color:#666">=</span> (info[<span style="color:#b44">&#39;last_year_commit_count&#39;</span>]) <span style="color:#666">+</span> \
-                (info[<span style="color:#b44">&#39;last_24_weeks_commit_count&#39;</span>]) <span style="color:#666">+</span> \
-                (info[<span style="color:#b44">&#39;last_12_weeks_commit_count&#39;</span>]<span style="color:#666">*</span><span style="color:#666">10</span>) <span style="color:#666">+</span> \
-                (info[<span style="color:#b44">&#39;last_4_weeks_commit_count&#39;</span>]<span style="color:#666">*</span><span style="color:#666">100</span>)   
-</code></pre></div><blockquote>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>response <span style="color:#666">=</span> requests<span style="color:#666">.</span>get(
+</span></span><span style="display:flex;"><span>    <span style="color:#b44">&#34;https://api.github.com/repos/</span><span style="color:#b68;font-weight:bold">{}</span><span style="color:#b44">/</span><span style="color:#b68;font-weight:bold">{}</span><span style="color:#b44">&#34;</span><span style="color:#666">.</span>format(owner, project),    
+</span></span><span style="display:flex;"><span>    headers<span style="color:#666">=</span>{<span style="color:#b44">&#39;Accept&#39;</span>: <span style="color:#b44">&#39;application/vnd.github+json&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#b44">&#39;Authorization&#39;</span>:<span style="color:#b44">&#34;Bearer </span><span style="color:#b68;font-weight:bold">{}</span><span style="color:#b44">&#34;</span><span style="color:#666">.</span>format(TOKEN),
+</span></span><span style="display:flex;"><span>    <span style="color:#b44">&#39;X-GitHub-Api-Version&#39;</span>: <span style="color:#b44">&#39;2022-11-28&#39;</span>},
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">if</span>(response<span style="color:#666">.</span>status_code <span style="color:#666">!=</span> <span style="color:#666">200</span>):
+</span></span><span style="display:flex;"><span>    <span style="color:#a2f;font-weight:bold">return</span> <span style="color:#a2f;font-weight:bold">None</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>json_response <span style="color:#666">=</span> response<span style="color:#666">.</span>json()
+</span></span><span style="display:flex;"><span>info[<span style="color:#b44">&#39;url&#39;</span>] <span style="color:#666">=</span> json_response[<span style="color:#b44">&#39;url&#39;</span>]
+</span></span><span style="display:flex;"><span>info[<span style="color:#b44">&#39;full_name&#39;</span>] <span style="color:#666">=</span> json_response[<span style="color:#b44">&#39;full_name&#39;</span>]
+</span></span><span style="display:flex;"><span>info[<span style="color:#b44">&#39;created_at&#39;</span>] <span style="color:#666">=</span> json_response[<span style="color:#b44">&#39;created_at&#39;</span>]
+</span></span><span style="display:flex;"><span>info[<span style="color:#b44">&#39;last_push&#39;</span>] <span style="color:#666">=</span> json_response[<span style="color:#b44">&#39;pushed_at&#39;</span>]
+</span></span></code></pre></div><p>The second call is to retrieve the weekly commit count. The API returns the count for the last 52 weeks. I care about the recent history so I do some aggregation for the last 4, 12, and 24 weeks, and the grand total for the year.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>response <span style="color:#666">=</span> requests<span style="color:#666">.</span>get(
+</span></span><span style="display:flex;"><span>        <span style="color:#b44">&#34;https://api.github.com/repos/</span><span style="color:#b68;font-weight:bold">{}</span><span style="color:#b44">/</span><span style="color:#b68;font-weight:bold">{}</span><span style="color:#b44">/stats/participation&#34;</span><span style="color:#666">.</span>format(owner, project),    
+</span></span><span style="display:flex;"><span>        headers<span style="color:#666">=</span>{<span style="color:#b44">&#39;Accept&#39;</span>: <span style="color:#b44">&#39;application/vnd.github+json&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#b44">&#39;Authorization&#39;</span>:<span style="color:#b44">&#34;Bearer </span><span style="color:#b68;font-weight:bold">{}</span><span style="color:#b44">&#34;</span><span style="color:#666">.</span>format(TOKEN),
+</span></span><span style="display:flex;"><span>        <span style="color:#b44">&#39;X-GitHub-Api-Version&#39;</span>: <span style="color:#b44">&#39;2022-11-28&#39;</span>},
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">if</span>(response<span style="color:#666">.</span>status_code <span style="color:#666">!=</span> <span style="color:#666">200</span>):
+</span></span><span style="display:flex;"><span>    <span style="color:#a2f;font-weight:bold">return</span> <span style="color:#a2f;font-weight:bold">None</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>info[<span style="color:#b44">&#39;last_year_commit_count&#39;</span>] <span style="color:#666">=</span> <span style="color:#666">0</span>
+</span></span><span style="display:flex;"><span>info[<span style="color:#b44">&#39;last_24_weeks_commit_count&#39;</span>] <span style="color:#666">=</span> <span style="color:#666">0</span>    
+</span></span><span style="display:flex;"><span>info[<span style="color:#b44">&#39;last_12_weeks_commit_count&#39;</span>] <span style="color:#666">=</span> <span style="color:#666">0</span>
+</span></span><span style="display:flex;"><span>info[<span style="color:#b44">&#39;last_4_weeks_commit_count&#39;</span>] <span style="color:#666">=</span> <span style="color:#666">0</span>    
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>json_response <span style="color:#666">=</span> response<span style="color:#666">.</span>json()
+</span></span><span style="display:flex;"><span>allContribs <span style="color:#666">=</span> json_response[<span style="color:#b44">&#39;all&#39;</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">if</span> allContribs <span style="color:#a2f;font-weight:bold">and</span> <span style="color:#a2f">len</span>(allContribs) <span style="color:#666">==</span> <span style="color:#666">52</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#a2f;font-weight:bold">for</span> i <span style="color:#a2f;font-weight:bold">in</span> <span style="color:#a2f">range</span>(<span style="color:#666">52</span>):
+</span></span><span style="display:flex;"><span>        week <span style="color:#666">=</span>  allContribs[<span style="color:#666">51</span><span style="color:#666">-</span>i]
+</span></span><span style="display:flex;"><span>        info[<span style="color:#b44">&#39;last_year_commit_count&#39;</span>] <span style="color:#666">+=</span> week
+</span></span><span style="display:flex;"><span>        <span style="color:#a2f;font-weight:bold">if</span> i<span style="color:#666">&lt;</span><span style="color:#666">24</span>:
+</span></span><span style="display:flex;"><span>            info[<span style="color:#b44">&#39;last_24_weeks_commit_count&#39;</span>] <span style="color:#666">+=</span> week
+</span></span><span style="display:flex;"><span>            <span style="color:#a2f;font-weight:bold">if</span> i<span style="color:#666">&lt;</span><span style="color:#666">12</span>:
+</span></span><span style="display:flex;"><span>                info[<span style="color:#b44">&#39;last_12_weeks_commit_count&#39;</span>] <span style="color:#666">+=</span> week
+</span></span><span style="display:flex;"><span>                <span style="color:#a2f;font-weight:bold">if</span> i<span style="color:#666">&lt;</span><span style="color:#666">4</span>:
+</span></span><span style="display:flex;"><span>                    info[<span style="color:#b44">&#39;last_4_weeks_commit_count&#39;</span>] <span style="color:#666">+=</span> week    
+</span></span></code></pre></div><p>Finally, I want to calculate a score based on the activity frequency. I came up with a very lazy algorithm, but it gives me an idea of how active the project is. I am positive that there are much better ways to calculate this score.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#b44">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#b44">Every commit in a year = 1 pts
+</span></span></span><span style="display:flex;"><span><span style="color:#b44">Every commit in the last 6 months +1pts
+</span></span></span><span style="display:flex;"><span><span style="color:#b44">Every commit in the last 12 weeks +10pts
+</span></span></span><span style="display:flex;"><span><span style="color:#b44">Every commit in the last 4 weeks +100 pts
+</span></span></span><span style="display:flex;"><span><span style="color:#b44">&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>info[<span style="color:#b44">&#39;score&#39;</span>] <span style="color:#666">=</span> (info[<span style="color:#b44">&#39;last_year_commit_count&#39;</span>]) <span style="color:#666">+</span> \
+</span></span><span style="display:flex;"><span>                (info[<span style="color:#b44">&#39;last_24_weeks_commit_count&#39;</span>]) <span style="color:#666">+</span> \
+</span></span><span style="display:flex;"><span>                (info[<span style="color:#b44">&#39;last_12_weeks_commit_count&#39;</span>]<span style="color:#666">*</span><span style="color:#666">10</span>) <span style="color:#666">+</span> \
+</span></span><span style="display:flex;"><span>                (info[<span style="color:#b44">&#39;last_4_weeks_commit_count&#39;</span>]<span style="color:#666">*</span><span style="color:#666">100</span>)   
+</span></span></code></pre></div><blockquote>
 <p>The entire code can be found here: <a href="https://github.com/carlosolmos/blogresources/blob/main/cybersecurity/supplychain/areyouthere.py" target="_blank" rel="noopener">https://github.com/carlosolmos/blogresources</a></p>
 </blockquote>
 <p>When I run the script against the BOM of my project, I get this report:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">==REPOSITORIES REPORT==
-github.com/stretchr/testify	52
-github.com/sirupsen/logrus	10
-github.com/magiconair/properties	1025
-github.com/spf13/afero	49
-github.com/spf13/pflag	0
-github.com/hashicorp/hcl	270
-github.com/davecgh/go-spew	0
-github.com/pelletier/go-toml	246
-github.com/subosito/gotenv	14
-github.com/fsnotify/fsnotify	609
-github.com/mitchellh/mapstructure	36
-github.com/spf13/cast	4
-github.com/spf13/jwalterweatherman	0
-github.com/spf13/viper	446
-github.com/go-sql-driver/mysql	383
-github.com/gorilla/mux	227
-github.com/google/uuid	0
-
-</code></pre></div><h2 id="analyzing-the-score">Analyzing the score <a href="#analyzing-the-score" class="anchor">🔗</a></h2><p>My cheap lazy formula returns some interesting results. I found a few libraries that make me a little nervous because they haven&rsquo;t been active in a long time. Maybe that is okay. Maybe there is nothing more to do there but still is worth investigating.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>==REPOSITORIES REPORT==
+</span></span><span style="display:flex;"><span>github.com/stretchr/testify	52
+</span></span><span style="display:flex;"><span>github.com/sirupsen/logrus	10
+</span></span><span style="display:flex;"><span>github.com/magiconair/properties	1025
+</span></span><span style="display:flex;"><span>github.com/spf13/afero	49
+</span></span><span style="display:flex;"><span>github.com/spf13/pflag	0
+</span></span><span style="display:flex;"><span>github.com/hashicorp/hcl	270
+</span></span><span style="display:flex;"><span>github.com/davecgh/go-spew	0
+</span></span><span style="display:flex;"><span>github.com/pelletier/go-toml	246
+</span></span><span style="display:flex;"><span>github.com/subosito/gotenv	14
+</span></span><span style="display:flex;"><span>github.com/fsnotify/fsnotify	609
+</span></span><span style="display:flex;"><span>github.com/mitchellh/mapstructure	36
+</span></span><span style="display:flex;"><span>github.com/spf13/cast	4
+</span></span><span style="display:flex;"><span>github.com/spf13/jwalterweatherman	0
+</span></span><span style="display:flex;"><span>github.com/spf13/viper	446
+</span></span><span style="display:flex;"><span>github.com/go-sql-driver/mysql	383
+</span></span><span style="display:flex;"><span>github.com/gorilla/mux	227
+</span></span><span style="display:flex;"><span>github.com/google/uuid	0
+</span></span></code></pre></div><h2 id="analyzing-the-score">Analyzing the score <a href="#analyzing-the-score" class="anchor">🔗</a></h2><p>My cheap lazy formula returns some interesting results. I found a few libraries that make me a little nervous because they haven&rsquo;t been active in a long time. Maybe that is okay. Maybe there is nothing more to do there but still is worth investigating.</p>
 <p>First, let&rsquo;s review <code>github.com/google/uuid</code>. A library to create UUIDs. According to the report, the repo hasn&rsquo;t had commits all year.</p>
 <p>The GitHub page marks the last commit in July, 2021.</p>
 <p><p class="markdown-image"> 
@@ -300,7 +299,7 @@ github.com/google/uuid	0
   <small class="img-note">click to zoom in</small>
 </p></p>
 <p>This is a very popular Go library created by Google (over 4,000 stars on GitHub, and included in over 24,000 projects at this time). There are no known vulnerabilities in the CVE databases at this time. I suppose we can give it the benefit of the doubt.</p>
-<p>Now let&rsquo;s review <code>github.com/spf13/jwalterweatherman</code>. I did not include this library myself. It is included in one of the libraries I use in my program. The GitHub page explains its purpose as <em>&ldquo;Seamless printing to the terminal (stdout) and logging to a io.Writer (file) that’s as easy to use as fmt.Println.&quot;</em></p>
+<p>Now let&rsquo;s review <code>github.com/spf13/jwalterweatherman</code>. I did not include this library myself. It is included in one of the libraries I use in my program. The GitHub page explains its purpose as <em>&ldquo;Seamless printing to the terminal (stdout) and logging to a io.Writer (file) that’s as easy to use as fmt.Println.&rdquo;</em></p>
 <p>The last commit was 2 years ago, but most files haven&rsquo;t been touched in over 4 years. The last release was created in 2019.</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL1NjcmVlbnNob3QlMjAyMDIyLTEyLTE5JTIwYXQlMjA5LjE0LjE2JTIwUE0ucG5n" src="img/Screenshot%202022-12-19%20at%209.14.16%20PM.png" alt=""  />  

@@ -7,7 +7,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">    
 <meta name="viewport" content="width=device-width,minimum-scale=1">
 <meta name="description" content="How to send data from the Everactive Edge Platform to S3 using Fluentd and webhooks. This solution is totally overengineered and meant for learning purposes. You don&#39;t want to use this in production, or do you?... ;)">
-<meta name="generator" content="Hugo 0.92.2" />
+<meta name="generator" content="Hugo 0.103.1" />
 
 
   <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
@@ -29,6 +29,7 @@
 
 
 
+<script data-goatcounter="https://iotitlan.goatcounter.com/count"  async src="//gc.zgo.at/count.js"></script>
 
   </head>
 
@@ -125,25 +126,25 @@
 <p>If you are not familiar with Fluentd visit their official website <a href="https://www.fluentd.org/" target="_blank" rel="noopener">https://www.fluentd.org/</a> to learn about the tool. Originally, fluentd was designed to aggregate logs, but it has grown into a more generic data collector and transfer tool. It is light, fast, and simple to use. I’m sure you will find many uses for it.</p>
 <h2 id="implementing-the-data-flow">Implementing the data Flow <a href="#implementing-the-data-flow" class="anchor">🔗</a></h2><h3 id="1-create-api-keys">1. Create API Keys <a href="#1-create-api-keys" class="anchor">🔗</a></h3><p>All Data Subscriptions are created via the Everactive Platform API. Before we can make any request, we have to prepare a set of Keys that will grant us access to the API. If you haven’t already, <a href="https://support.everactive.com/hc/en-us/articles/6279483691159-Creating-Your-First-API-Credential" target="_blank" rel="noopener">use this guide</a> to create your first set of API Credentials. Make sure you have included the privileges for User and Developer in the scope. Retrieve the <strong>Client ID</strong> and the <strong>Client Secret</strong> and keep them handy, we’ll need them for our exercise.</p>
 <h3 id="2-authenticate-to-get-an-access-token">2. Authenticate to get an Access Token <a href="#2-authenticate-to-get-an-access-token" class="anchor">🔗</a></h3><p>Everactive API follows the OAuth2 security flow. To test your credentials you need to make an <a href="https://everactive-ds-docs.readme.io/reference/data-services-api-overview" target="_blank" rel="noopener">authentication request</a> using the Client ID and Secret you just created:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">curl --request POST \
-  --url https://api.data.everactive.com/auth/token \
-  --header &#39;Content-Type: application/json&#39; \
-  --data &#39;{  
-	&#34;client_id&#34;: &#34;{your API client id}&#34;,
-    &#34;client_secret&#34;: &#34;{your API secret }&#34;,
-    &#34;grant_type&#34;: &#34;client_credentials&#34;
-}
-&#39;
-</code></pre></div><p>This will return a response with a valid access_token, you will use this token for the next requests.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>curl --request POST \
+</span></span><span style="display:flex;"><span>  --url https://api.data.everactive.com/auth/token \
+</span></span><span style="display:flex;"><span>  --header &#39;Content-Type: application/json&#39; \
+</span></span><span style="display:flex;"><span>  --data &#39;{  
+</span></span><span style="display:flex;"><span>	&#34;client_id&#34;: &#34;{your API client id}&#34;,
+</span></span><span style="display:flex;"><span>    &#34;client_secret&#34;: &#34;{your API secret }&#34;,
+</span></span><span style="display:flex;"><span>    &#34;grant_type&#34;: &#34;client_credentials&#34;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>&#39;
+</span></span></code></pre></div><p>This will return a response with a valid access_token, you will use this token for the next requests.</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL2ltYWdlMDAzLnBuZw==" src="img/image003.png" alt=""  />  
   <small class="img-note">click to zoom in</small>
 </p></p>
 <h3 id="3-retrieve-your-list-of-sensors-and-customer-id">3. Retrieve your List of Sensors and Customer ID <a href="#3-retrieve-your-list-of-sensors-and-customer-id" class="anchor">🔗</a></h3><p>Let’s give this access token a try by <a href="https://everactive-ds-docs.readme.io/reference/get-eversensors" target="_blank" rel="noopener">getting the list of active sensors</a> in your account and your own Customer ID — You will need this ID in the next steps.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">curl --request GET \
-  --url &#39;https://api.data.everactive.com/ds/v1/eversensors?page=1&#39; \
-  --header &#39;Authorization: Bearer {the token goes here}&#39;
-</code></pre></div><p>The response is an array of Eversensor data that includes, for every sensor, its last reading and the associated customer account. Take note of the <strong>customer id</strong>, (we will use <code>4d323690-6b81-45a1-8000-000000000000</code> for this example) we will use it in our MQTT subscription.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>curl --request GET \
+</span></span><span style="display:flex;"><span>  --url &#39;https://api.data.everactive.com/ds/v1/eversensors?page=1&#39; \
+</span></span><span style="display:flex;"><span>  --header &#39;Authorization: Bearer {the token goes here}&#39;
+</span></span></code></pre></div><p>The response is an array of Eversensor data that includes, for every sensor, its last reading and the associated customer account. Take note of the <strong>customer id</strong>, (we will use <code>4d323690-6b81-45a1-8000-000000000000</code> for this example) we will use it in our MQTT subscription.</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL2ltYWdlMDA0LnBuZw==" src="img/image004.png" alt=""  />  
   <small class="img-note">click to zoom in</small>
@@ -156,8 +157,8 @@
 <li>Create the file <code>secrets.env</code> (example provided) with your AWS Keys</li>
 <li>Build and Run the container using docker compose:</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">$ docker compose up --build
-</code></pre></div><p>The file <code>fluentd-s3-docker/fluentd/flow.conf</code> contains all the configuration for the flow we are building. The flow starts with an <a href="https://docs.fluentd.org/input/http" target="_blank" rel="noopener">HTTP input</a> source on port <code>9880</code>.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>$ docker compose up --build
+</span></span></code></pre></div><p>The file <code>fluentd-s3-docker/fluentd/flow.conf</code> contains all the configuration for the flow we are building. The flow starts with an <a href="https://docs.fluentd.org/input/http" target="_blank" rel="noopener">HTTP input</a> source on port <code>9880</code>.</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL2ltYWdlMDA1LnBuZw==" src="img/image005.png" alt=""  />  
   <small class="img-note">click to zoom in</small>
@@ -171,32 +172,32 @@
 <p>After running the docker compose command you should see a message indicating that the service is ready: <code>fluentd worker is now running worker=0</code></p>
 <h3 id="ngrok">ngrok <a href="#ngrok" class="anchor">🔗</a></h3><p>You can deploy the container anywhere you want to make it accessible by the Webhook Subscriptions. Here, to avoid the complication of deploying the service to the cloud, we will use <a href="https://ngrok.com/" target="_blank" rel="noopener">ngrok</a> to expose the local fluentd container to the internet in a secure way.</p>
 <p>After <a href="https://ngrok.com/docs/getting-started" target="_blank" rel="noopener">installing</a>, open a terminal and initiate a ngrok session with the same port as the fluentd service</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">$ ngrok http 9880
-</code></pre></div><p>ngrok creates a public URL <code>https://1a51-2601-647-4000-3060-cc16-9c62-39a8-8a90.ngrok.io</code> routing traffic to our local service.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>$ ngrok http 9880
+</span></span></code></pre></div><p>ngrok creates a public URL <code>https://1a51-2601-647-4000-3060-cc16-9c62-39a8-8a90.ngrok.io</code> routing traffic to our local service.</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL2ltYWdlMDA3LnBuZw==" src="img/image007.png" alt=""  />  
   <small class="img-note">click to zoom in</small>
 </p></p>
 <p>At this point we have fluentd listening on port <code>9880</code> for HTTP requests, —ngrok helped us expose the service on the public URL— and we have buffered store ready to send files to S3.</p>
 <h3 id="4-create-the-webhooks-subscription">4. Create the Webhooks Subscription <a href="#4-create-the-webhooks-subscription" class="anchor">🔗</a></h3><p>It’s now time to create the Webhooks subscription using the Everactive Edge Platform API. We can do this by calling the <a href="https://everactive-ds-docs.readme.io/reference/post-webhooks" target="_blank" rel="noopener">Create Webhooks endpoint.</a> The request will return a 201 Created HTTP Status code when succeeds.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">curl --request POST 
-  --url https://dev-api.data.everactive.com/ds/v1/webhooks \
-  --header &#39;Authorization: Bearer {your access token goes here}&#39; \
-  --header &#39;Content-Type: application/json&#39; \
-  --data &#39;{
-  &#34;callbackUrl&#34;: &#34;https://1a51-2601-647-4000-3060-cc16-9c62-39a8-8a90.ngrok.io&#34;,
-  &#34;eventType&#34;: &#34;sensor_reading&#34;,
-  &#34;enabled&#34;: true,
-  &#34;customerId&#34;: &#34;4d323690-6b81-45a1-8000-000000000000&#34;,
-  &#34;headers&#34;: [],
-  &#34;errorHandling&#34;: {
-    &#34;retryDelay&#34;: 3000,
-    &#34;retryBackoff&#34;: 10000,
-    &#34;maxRetries&#34;: 3,
-    &#34;requestTimeout&#34;: 30000
-  }
-}&#39;
-</code></pre></div><p>Let’s take a closer look at the request body:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>curl --request POST 
+</span></span><span style="display:flex;"><span>  --url https://dev-api.data.everactive.com/ds/v1/webhooks \
+</span></span><span style="display:flex;"><span>  --header &#39;Authorization: Bearer {your access token goes here}&#39; \
+</span></span><span style="display:flex;"><span>  --header &#39;Content-Type: application/json&#39; \
+</span></span><span style="display:flex;"><span>  --data &#39;{
+</span></span><span style="display:flex;"><span>  &#34;callbackUrl&#34;: &#34;https://1a51-2601-647-4000-3060-cc16-9c62-39a8-8a90.ngrok.io&#34;,
+</span></span><span style="display:flex;"><span>  &#34;eventType&#34;: &#34;sensor_reading&#34;,
+</span></span><span style="display:flex;"><span>  &#34;enabled&#34;: true,
+</span></span><span style="display:flex;"><span>  &#34;customerId&#34;: &#34;4d323690-6b81-45a1-8000-000000000000&#34;,
+</span></span><span style="display:flex;"><span>  &#34;headers&#34;: [],
+</span></span><span style="display:flex;"><span>  &#34;errorHandling&#34;: {
+</span></span><span style="display:flex;"><span>    &#34;retryDelay&#34;: 3000,
+</span></span><span style="display:flex;"><span>    &#34;retryBackoff&#34;: 10000,
+</span></span><span style="display:flex;"><span>    &#34;maxRetries&#34;: 3,
+</span></span><span style="display:flex;"><span>    &#34;requestTimeout&#34;: 30000
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}&#39;
+</span></span></code></pre></div><p>Let’s take a closer look at the request body:</p>
 <ul>
 <li><code>&quot;enabled&quot;: true</code> so that the Webhook starts the connection immediately.</li>
 <li><code>&quot;customerId&quot;: &quot;4d323690-6b81-45a1-8000-000000000000&quot;</code>, This is our Customer ID</li>

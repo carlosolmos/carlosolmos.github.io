@@ -7,7 +7,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">    
 <meta name="viewport" content="width=device-width,minimum-scale=1">
 <meta name="description" content="Many times I need to load environment variables from a simple configuration file. This is a quick and simple ZSH shell alias that helps.">
-<meta name="generator" content="Hugo 0.92.2" />
+<meta name="generator" content="Hugo 0.103.1" />
 
 
   <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
@@ -29,6 +29,7 @@
 
 
 
+<script data-goatcounter="https://iotitlan.goatcounter.com/count"  async src="//gc.zgo.at/count.js"></script>
 
   </head>
 
@@ -102,11 +103,11 @@
   <small class="img-note">click to zoom in</small>
 </p></p>
 <p>Add this alias to your <code>.zshrc</code> file</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">alias loadEnv=&#39;function _loadEnv()
-{
-set -o allexport; source $1; set +o allexport
-};_loadEnv&#39;
-</code></pre></div><p><p class="markdown-image"> 
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>alias loadEnv=&#39;function _loadEnv()
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>set -o allexport; source $1; set +o allexport
+</span></span><span style="display:flex;"><span>};_loadEnv&#39;
+</span></span></code></pre></div><p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL2FsaWFzLnBuZw==" src="img/alias.png" alt=""  />  
   <small class="img-note">click to zoom in</small>
 </p></p>

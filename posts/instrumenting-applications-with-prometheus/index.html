@@ -7,7 +7,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">    
 <meta name="viewport" content="width=device-width,minimum-scale=1">
 <meta name="description" content="Instrumenting applications with Prometheus. In this article, we will learn how to create custom metrics for a simple web application and use Prometheus to collect and report on them">
-<meta name="generator" content="Hugo 0.92.2" />
+<meta name="generator" content="Hugo 0.103.1" />
 
 
   <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
@@ -29,6 +29,7 @@
 
 
 
+<script data-goatcounter="https://iotitlan.goatcounter.com/count"  async src="//gc.zgo.at/count.js"></script>
 
   </head>
 
@@ -62,7 +63,7 @@
           ·
         </span>
         <span>
-          1991 words
+          1998 words
         </span>
         <span class="split">
           ·
@@ -154,36 +155,35 @@ If you are in a hurry, here is github repo with a nice Docker Compose setup and 
     
 </div>
 <h3 id="example-web-application">Example web application <a href="#example-web-application" class="anchor">🔗</a></h3><p>Let&rsquo;s begin our exercise with a very simple HTTP application based on Flask: <code>metrics.py</code>. This application has only one endpoint that fetches some remote content and responds with the time it took to retrieve the data. The application code looks like this:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#a2f;font-weight:bold">from</span> <span style="color:#00f;font-weight:bold">flask</span> <span style="color:#a2f;font-weight:bold">import</span> Flask, jsonify, request
-<span style="color:#a2f;font-weight:bold">import</span> <span style="color:#00f;font-weight:bold">http.client</span>
-<span style="color:#a2f;font-weight:bold">import</span> <span style="color:#00f;font-weight:bold">time</span>
-
-app <span style="color:#666">=</span> Flask(__name__)
-
-<span style="color:#a2f;font-weight:bold">def</span> <span style="color:#00a000">fetchSomething</span>():
-    connection <span style="color:#666">=</span> http<span style="color:#666">.</span>client<span style="color:#666">.</span>HTTPSConnection(<span style="color:#b44">&#34;httpbin.org&#34;</span>)
-    connection<span style="color:#666">.</span>request(<span style="color:#b44">&#34;GET&#34;</span>, <span style="color:#b44">&#34;/anything&#34;</span>)
-    response <span style="color:#666">=</span> connection<span style="color:#666">.</span>getresponse()
-    <span style="color:#a2f">print</span>(<span style="color:#b44">&#34;Status: </span><span style="color:#b68;font-weight:bold">{}</span><span style="color:#b44"> and reason: </span><span style="color:#b68;font-weight:bold">{}</span><span style="color:#b44">&#34;</span><span style="color:#666">.</span>format(response<span style="color:#666">.</span>status, response<span style="color:#666">.</span>reason))
-    connection<span style="color:#666">.</span>close()
-
-<span style="color:#a2f">@app</span><span style="color:#666">.</span>route(<span style="color:#b44">&#39;/&#39;</span>, methods <span style="color:#666">=</span> [<span style="color:#b44">&#39;GET&#39;</span>])
-<span style="color:#a2f;font-weight:bold">def</span> <span style="color:#00a000">home</span>():
-    <span style="color:#a2f;font-weight:bold">if</span>(request<span style="color:#666">.</span>method <span style="color:#666">==</span> <span style="color:#b44">&#39;GET&#39;</span>):  
-        <span style="color:#080;font-style:italic"># do something and record time</span>
-        start <span style="color:#666">=</span> time<span style="color:#666">.</span>time()
-        fetchSomething()
-        end <span style="color:#666">=</span> time<span style="color:#666">.</span>time()
-        t <span style="color:#666">=</span> (end <span style="color:#666">-</span> start)<span style="color:#666">*</span><span style="color:#666">1000</span>
-        data <span style="color:#666">=</span> <span style="color:#b44">f</span><span style="color:#b44">&#34;fetch took </span><span style="color:#b68;font-weight:bold">{</span>t<span style="color:#b68;font-weight:bold">}</span><span style="color:#b44"> ms&#34;</span> 
-        <span style="color:#a2f;font-weight:bold">return</span> jsonify({<span style="color:#b44">&#39;msg&#39;</span>: data})
-  
-  
-<span style="color:#080;font-style:italic"># run</span>
-<span style="color:#a2f;font-weight:bold">if</span> __name__ <span style="color:#666">==</span> <span style="color:#b44">&#39;__main__&#39;</span>:  
-    app<span style="color:#666">.</span>run(debug <span style="color:#666">=</span> <span style="color:#a2f;font-weight:bold">True</span>)
-
-</code></pre></div><p>Running the application</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">from</span> <span style="color:#00f;font-weight:bold">flask</span> <span style="color:#a2f;font-weight:bold">import</span> Flask, jsonify, request
+</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">import</span> <span style="color:#00f;font-weight:bold">http.client</span>
+</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">import</span> <span style="color:#00f;font-weight:bold">time</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>app <span style="color:#666">=</span> Flask(__name__)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">def</span> <span style="color:#00a000">fetchSomething</span>():
+</span></span><span style="display:flex;"><span>    connection <span style="color:#666">=</span> http<span style="color:#666">.</span>client<span style="color:#666">.</span>HTTPSConnection(<span style="color:#b44">&#34;httpbin.org&#34;</span>)
+</span></span><span style="display:flex;"><span>    connection<span style="color:#666">.</span>request(<span style="color:#b44">&#34;GET&#34;</span>, <span style="color:#b44">&#34;/anything&#34;</span>)
+</span></span><span style="display:flex;"><span>    response <span style="color:#666">=</span> connection<span style="color:#666">.</span>getresponse()
+</span></span><span style="display:flex;"><span>    <span style="color:#a2f">print</span>(<span style="color:#b44">&#34;Status: </span><span style="color:#b68;font-weight:bold">{}</span><span style="color:#b44"> and reason: </span><span style="color:#b68;font-weight:bold">{}</span><span style="color:#b44">&#34;</span><span style="color:#666">.</span>format(response<span style="color:#666">.</span>status, response<span style="color:#666">.</span>reason))
+</span></span><span style="display:flex;"><span>    connection<span style="color:#666">.</span>close()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a2f">@app</span><span style="color:#666">.</span>route(<span style="color:#b44">&#39;/&#39;</span>, methods <span style="color:#666">=</span> [<span style="color:#b44">&#39;GET&#39;</span>])
+</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">def</span> <span style="color:#00a000">home</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#a2f;font-weight:bold">if</span>(request<span style="color:#666">.</span>method <span style="color:#666">==</span> <span style="color:#b44">&#39;GET&#39;</span>):  
+</span></span><span style="display:flex;"><span>        <span style="color:#080;font-style:italic"># do something and record time</span>
+</span></span><span style="display:flex;"><span>        start <span style="color:#666">=</span> time<span style="color:#666">.</span>time()
+</span></span><span style="display:flex;"><span>        fetchSomething()
+</span></span><span style="display:flex;"><span>        end <span style="color:#666">=</span> time<span style="color:#666">.</span>time()
+</span></span><span style="display:flex;"><span>        t <span style="color:#666">=</span> (end <span style="color:#666">-</span> start)<span style="color:#666">*</span><span style="color:#666">1000</span>
+</span></span><span style="display:flex;"><span>        data <span style="color:#666">=</span> <span style="color:#b44">f</span><span style="color:#b44">&#34;fetch took </span><span style="color:#b68;font-weight:bold">{</span>t<span style="color:#b68;font-weight:bold">}</span><span style="color:#b44"> ms&#34;</span> 
+</span></span><span style="display:flex;"><span>        <span style="color:#a2f;font-weight:bold">return</span> jsonify({<span style="color:#b44">&#39;msg&#39;</span>: data})
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"># run</span>
+</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">if</span> __name__ <span style="color:#666">==</span> <span style="color:#b44">&#39;__main__&#39;</span>:  
+</span></span><span style="display:flex;"><span>    app<span style="color:#666">.</span>run(debug <span style="color:#666">=</span> <span style="color:#a2f;font-weight:bold">True</span>)
+</span></span></code></pre></div><p>Running the application</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="Li9pbWcvcnVuU2FtcGxlQXBwLnBuZw==" src="./img/runSampleApp.png" alt="Start the app"  />  
   <small class="img-note">click to zoom in</small>
@@ -197,175 +197,172 @@ app <span style="color:#666">=</span> Flask(__name__)
 <li>Expose the <code>/metrics</code> HTTP endpoint for the Prometheus scraper</li>
 </ol>
 <p>Install the Prometheus Client Library:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">    pip3 install prometheus-client
-</code></pre></div><p>Also, install a helper library (<a href="https://pypi.org/project/Werkzeug/" target="_blank" rel="noopener">Werkzeug</a>) to expose the <code>/metrics</code> endpoint through Flask:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">    pip3 install Werkzeug
-</code></pre></div><p>Now we can add the code to enable Prometheus in our application:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#080;font-style:italic"># Import the Prometheus client library and flask helper.</span>
-<span style="color:#a2f;font-weight:bold">from</span> <span style="color:#00f;font-weight:bold">prometheus_client</span> <span style="color:#a2f;font-weight:bold">import</span> make_wsgi_app
-<span style="color:#a2f;font-weight:bold">from</span> <span style="color:#00f;font-weight:bold">werkzeug.middleware.dispatcher</span> <span style="color:#a2f;font-weight:bold">import</span> DispatcherMiddleware
-
-<span style="color:#080;font-style:italic"># Add Prometheus WSGI middleware to route /metrics requests</span>
-app<span style="color:#666">.</span>wsgi_app <span style="color:#666">=</span> DispatcherMiddleware(app<span style="color:#666">.</span>wsgi_app, {
-    <span style="color:#b44">&#39;/metrics&#39;</span>: make_wsgi_app()
-})
-</code></pre></div><p>The complete code now looks like this:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#a2f;font-weight:bold">from</span> <span style="color:#00f;font-weight:bold">flask</span> <span style="color:#a2f;font-weight:bold">import</span> Flask, jsonify, request
-<span style="color:#a2f;font-weight:bold">import</span> <span style="color:#00f;font-weight:bold">http.client</span>
-<span style="color:#a2f;font-weight:bold">import</span> <span style="color:#00f;font-weight:bold">time</span>
-<span style="color:#080;font-style:italic"># Import the Prometheus client library and flask helper.</span>
-<span style="color:#a2f;font-weight:bold">from</span> <span style="color:#00f;font-weight:bold">prometheus_client</span> <span style="color:#a2f;font-weight:bold">import</span> make_wsgi_app
-<span style="color:#a2f;font-weight:bold">from</span> <span style="color:#00f;font-weight:bold">werkzeug.middleware.dispatcher</span> <span style="color:#a2f;font-weight:bold">import</span> DispatcherMiddleware
-
-
-app <span style="color:#666">=</span> Flask(__name__)
-
-<span style="color:#080;font-style:italic"># Add Prometheus WSGI middleware to route /metrics requests</span>
-app<span style="color:#666">.</span>wsgi_app <span style="color:#666">=</span> DispatcherMiddleware(app<span style="color:#666">.</span>wsgi_app, {
-    <span style="color:#b44">&#39;/metrics&#39;</span>: make_wsgi_app()
-})
-
-<span style="color:#a2f;font-weight:bold">def</span> <span style="color:#00a000">fetchSomething</span>():
-    connection <span style="color:#666">=</span> http<span style="color:#666">.</span>client<span style="color:#666">.</span>HTTPSConnection(<span style="color:#b44">&#34;httpbin.org&#34;</span>)
-    connection<span style="color:#666">.</span>request(<span style="color:#b44">&#34;GET&#34;</span>, <span style="color:#b44">&#34;/anything&#34;</span>)
-    response <span style="color:#666">=</span> connection<span style="color:#666">.</span>getresponse()
-    <span style="color:#a2f">print</span>(<span style="color:#b44">&#34;Status: </span><span style="color:#b68;font-weight:bold">{}</span><span style="color:#b44"> and reason: </span><span style="color:#b68;font-weight:bold">{}</span><span style="color:#b44">&#34;</span><span style="color:#666">.</span>format(response<span style="color:#666">.</span>status, response<span style="color:#666">.</span>reason))
-    connection<span style="color:#666">.</span>close()
-
-<span style="color:#a2f">@app</span><span style="color:#666">.</span>route(<span style="color:#b44">&#39;/&#39;</span>, methods <span style="color:#666">=</span> [<span style="color:#b44">&#39;GET&#39;</span>])
-<span style="color:#a2f;font-weight:bold">def</span> <span style="color:#00a000">home</span>():
-    <span style="color:#a2f;font-weight:bold">if</span>(request<span style="color:#666">.</span>method <span style="color:#666">==</span> <span style="color:#b44">&#39;GET&#39;</span>):  
-        <span style="color:#080;font-style:italic"># do something and record time</span>
-        start <span style="color:#666">=</span> time<span style="color:#666">.</span>time()
-        fetchSomething()
-        end <span style="color:#666">=</span> time<span style="color:#666">.</span>time()
-        t <span style="color:#666">=</span> (end <span style="color:#666">-</span> start)<span style="color:#666">*</span><span style="color:#666">1000</span>
-        data <span style="color:#666">=</span> <span style="color:#b44">f</span><span style="color:#b44">&#34;fetch took </span><span style="color:#b68;font-weight:bold">{</span>t<span style="color:#b68;font-weight:bold">}</span><span style="color:#b44"> ms&#34;</span> 
-        <span style="color:#a2f;font-weight:bold">return</span> jsonify({<span style="color:#b44">&#39;msg&#39;</span>: data})
-  
-  
-<span style="color:#080;font-style:italic"># driver function</span>
-<span style="color:#a2f;font-weight:bold">if</span> __name__ <span style="color:#666">==</span> <span style="color:#b44">&#39;__main__&#39;</span>:
-  
-    app<span style="color:#666">.</span>run(debug <span style="color:#666">=</span> <span style="color:#a2f;font-weight:bold">True</span>)
-
-</code></pre></div><p>We can test the new <code>/metrics</code> endpoint and confirm that it is working. Prometheus automatically collects a few metrics about the application run time environment:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>    pip3 install prometheus-client
+</span></span></code></pre></div><p>Also, install a helper library (<a href="https://pypi.org/project/Werkzeug/" target="_blank" rel="noopener">Werkzeug</a>) to expose the <code>/metrics</code> endpoint through Flask:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>    pip3 install Werkzeug
+</span></span></code></pre></div><p>Now we can add the code to enable Prometheus in our application:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#080;font-style:italic"># Import the Prometheus client library and flask helper.</span>
+</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">from</span> <span style="color:#00f;font-weight:bold">prometheus_client</span> <span style="color:#a2f;font-weight:bold">import</span> make_wsgi_app
+</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">from</span> <span style="color:#00f;font-weight:bold">werkzeug.middleware.dispatcher</span> <span style="color:#a2f;font-weight:bold">import</span> DispatcherMiddleware
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"># Add Prometheus WSGI middleware to route /metrics requests</span>
+</span></span><span style="display:flex;"><span>app<span style="color:#666">.</span>wsgi_app <span style="color:#666">=</span> DispatcherMiddleware(app<span style="color:#666">.</span>wsgi_app, {
+</span></span><span style="display:flex;"><span>    <span style="color:#b44">&#39;/metrics&#39;</span>: make_wsgi_app()
+</span></span><span style="display:flex;"><span>})
+</span></span></code></pre></div><p>The complete code now looks like this:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">from</span> <span style="color:#00f;font-weight:bold">flask</span> <span style="color:#a2f;font-weight:bold">import</span> Flask, jsonify, request
+</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">import</span> <span style="color:#00f;font-weight:bold">http.client</span>
+</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">import</span> <span style="color:#00f;font-weight:bold">time</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"># Import the Prometheus client library and flask helper.</span>
+</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">from</span> <span style="color:#00f;font-weight:bold">prometheus_client</span> <span style="color:#a2f;font-weight:bold">import</span> make_wsgi_app
+</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">from</span> <span style="color:#00f;font-weight:bold">werkzeug.middleware.dispatcher</span> <span style="color:#a2f;font-weight:bold">import</span> DispatcherMiddleware
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>app <span style="color:#666">=</span> Flask(__name__)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"># Add Prometheus WSGI middleware to route /metrics requests</span>
+</span></span><span style="display:flex;"><span>app<span style="color:#666">.</span>wsgi_app <span style="color:#666">=</span> DispatcherMiddleware(app<span style="color:#666">.</span>wsgi_app, {
+</span></span><span style="display:flex;"><span>    <span style="color:#b44">&#39;/metrics&#39;</span>: make_wsgi_app()
+</span></span><span style="display:flex;"><span>})
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">def</span> <span style="color:#00a000">fetchSomething</span>():
+</span></span><span style="display:flex;"><span>    connection <span style="color:#666">=</span> http<span style="color:#666">.</span>client<span style="color:#666">.</span>HTTPSConnection(<span style="color:#b44">&#34;httpbin.org&#34;</span>)
+</span></span><span style="display:flex;"><span>    connection<span style="color:#666">.</span>request(<span style="color:#b44">&#34;GET&#34;</span>, <span style="color:#b44">&#34;/anything&#34;</span>)
+</span></span><span style="display:flex;"><span>    response <span style="color:#666">=</span> connection<span style="color:#666">.</span>getresponse()
+</span></span><span style="display:flex;"><span>    <span style="color:#a2f">print</span>(<span style="color:#b44">&#34;Status: </span><span style="color:#b68;font-weight:bold">{}</span><span style="color:#b44"> and reason: </span><span style="color:#b68;font-weight:bold">{}</span><span style="color:#b44">&#34;</span><span style="color:#666">.</span>format(response<span style="color:#666">.</span>status, response<span style="color:#666">.</span>reason))
+</span></span><span style="display:flex;"><span>    connection<span style="color:#666">.</span>close()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a2f">@app</span><span style="color:#666">.</span>route(<span style="color:#b44">&#39;/&#39;</span>, methods <span style="color:#666">=</span> [<span style="color:#b44">&#39;GET&#39;</span>])
+</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">def</span> <span style="color:#00a000">home</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#a2f;font-weight:bold">if</span>(request<span style="color:#666">.</span>method <span style="color:#666">==</span> <span style="color:#b44">&#39;GET&#39;</span>):  
+</span></span><span style="display:flex;"><span>        <span style="color:#080;font-style:italic"># do something and record time</span>
+</span></span><span style="display:flex;"><span>        start <span style="color:#666">=</span> time<span style="color:#666">.</span>time()
+</span></span><span style="display:flex;"><span>        fetchSomething()
+</span></span><span style="display:flex;"><span>        end <span style="color:#666">=</span> time<span style="color:#666">.</span>time()
+</span></span><span style="display:flex;"><span>        t <span style="color:#666">=</span> (end <span style="color:#666">-</span> start)<span style="color:#666">*</span><span style="color:#666">1000</span>
+</span></span><span style="display:flex;"><span>        data <span style="color:#666">=</span> <span style="color:#b44">f</span><span style="color:#b44">&#34;fetch took </span><span style="color:#b68;font-weight:bold">{</span>t<span style="color:#b68;font-weight:bold">}</span><span style="color:#b44"> ms&#34;</span> 
+</span></span><span style="display:flex;"><span>        <span style="color:#a2f;font-weight:bold">return</span> jsonify({<span style="color:#b44">&#39;msg&#39;</span>: data})
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"># driver function</span>
+</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">if</span> __name__ <span style="color:#666">==</span> <span style="color:#b44">&#39;__main__&#39;</span>:
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>    app<span style="color:#666">.</span>run(debug <span style="color:#666">=</span> <span style="color:#a2f;font-weight:bold">True</span>)
+</span></span></code></pre></div><p>We can test the new <code>/metrics</code> endpoint and confirm that it is working. Prometheus automatically collects a few metrics about the application run time environment:</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL3Byb21ldGhldXNCYXNlTWV0cmljcy5wbmc=" src="img/prometheusBaseMetrics.png" alt="prometheus base metrics"  />  
   <small class="img-note">click to zoom in</small>
 </p></p>
 <h3 id="metrics-1">Metrics <a href="#metrics-1" class="anchor">🔗</a></h3><p>Once we have Prometheus included in our application it is time to add the custom metrics we care about.</p>
 <p>We will add a <strong>Counter</strong> for the number of requests to the application and a <strong>Gauge</strong> to track the time it takes to fetch the remote content.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#080;font-style:italic"># add the metrics classes</span>
-<span style="color:#a2f;font-weight:bold">from</span> <span style="color:#00f;font-weight:bold">prometheus_client</span> <span style="color:#a2f;font-weight:bold">import</span> Counter, Gauge
-
-<span style="color:#080;font-style:italic"># Define the metrics: one counter and one gauge</span>
-
-<span style="color:#080;font-style:italic"># HELP requests_total Count of requests</span>
-<span style="color:#080;font-style:italic"># TYPE requests_total counter</span>
-requests_counter <span style="color:#666">=</span> Counter(<span style="color:#b44">&#39;requests&#39;</span>, <span style="color:#b44">&#39;Count of requests&#39;</span>)
-
-<span style="color:#080;font-style:italic"># HELP fetch_time_ms Time to fetch in milliseconds</span>
-<span style="color:#080;font-style:italic"># TYPE fetch_time_ms gauge</span>
-fetch_time_ms <span style="color:#666">=</span> Gauge(<span style="color:#b44">&#39;fetch_time_ms&#39;</span>, <span style="color:#b44">&#39;Time to fetch in milliseconds&#39;</span>)
-
-</code></pre></div><p>Every time we need to increment our request counter, we call:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#080;font-style:italic"># increment the request counter</span>
-requests_counter<span style="color:#666">.</span>inc()
-</code></pre></div><p>And every time we need to update the time gauge, we do:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#080;font-style:italic"># set the metric value to the time elapsed</span>
-fetch_time_ms<span style="color:#666">.</span>set(t)
-</code></pre></div><p>Now the application code looks like this, pay attention to the new body of the <code>home()</code> method:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#a2f;font-weight:bold">from</span> <span style="color:#00f;font-weight:bold">flask</span> <span style="color:#a2f;font-weight:bold">import</span> Flask, jsonify, request
-<span style="color:#a2f;font-weight:bold">import</span> <span style="color:#00f;font-weight:bold">http.client</span>
-<span style="color:#a2f;font-weight:bold">import</span> <span style="color:#00f;font-weight:bold">time</span>
-
-<span style="color:#a2f;font-weight:bold">from</span> <span style="color:#00f;font-weight:bold">werkzeug.middleware.dispatcher</span> <span style="color:#a2f;font-weight:bold">import</span> DispatcherMiddleware
-<span style="color:#a2f;font-weight:bold">from</span> <span style="color:#00f;font-weight:bold">prometheus_client</span> <span style="color:#a2f;font-weight:bold">import</span> make_wsgi_app
-<span style="color:#a2f;font-weight:bold">from</span> <span style="color:#00f;font-weight:bold">prometheus_client</span> <span style="color:#a2f;font-weight:bold">import</span> Counter, Gauge
-
-<span style="color:#080;font-style:italic"># Metrics definition</span>
-
-<span style="color:#080;font-style:italic"># HELP requests_total Count of requests</span>
-<span style="color:#080;font-style:italic"># TYPE requests_total counter</span>
-requests_counter <span style="color:#666">=</span> Counter(<span style="color:#b44">&#39;requests&#39;</span>, <span style="color:#b44">&#39;Count of requests&#39;</span>)
-<span style="color:#080;font-style:italic"># HELP fetch_time_ms Time to fetch in milliseconds</span>
-<span style="color:#080;font-style:italic"># TYPE fetch_time_ms gauge</span>
-fetch_time_ms <span style="color:#666">=</span> Gauge(<span style="color:#b44">&#39;fetch_time_ms&#39;</span>, <span style="color:#b44">&#39;Time to fetch in milliseconds&#39;</span>)
-
-app <span style="color:#666">=</span> Flask(__name__)
-
-<span style="color:#080;font-style:italic"># Add Prometheus WSGI middleware to route /metrics requests</span>
-app<span style="color:#666">.</span>wsgi_app <span style="color:#666">=</span> DispatcherMiddleware(app<span style="color:#666">.</span>wsgi_app, {
-    <span style="color:#b44">&#39;/metrics&#39;</span>: make_wsgi_app()
-})
-
-<span style="color:#a2f;font-weight:bold">def</span> <span style="color:#00a000">fetchSomething</span>():
-    connection <span style="color:#666">=</span> http<span style="color:#666">.</span>client<span style="color:#666">.</span>HTTPSConnection(<span style="color:#b44">&#34;httpbin.org&#34;</span>)
-    connection<span style="color:#666">.</span>request(<span style="color:#b44">&#34;GET&#34;</span>, <span style="color:#b44">&#34;/anything&#34;</span>)
-    response <span style="color:#666">=</span> connection<span style="color:#666">.</span>getresponse()
-    <span style="color:#a2f">print</span>(<span style="color:#b44">&#34;Status: </span><span style="color:#b68;font-weight:bold">{}</span><span style="color:#b44"> and reason: </span><span style="color:#b68;font-weight:bold">{}</span><span style="color:#b44">&#34;</span><span style="color:#666">.</span>format(response<span style="color:#666">.</span>status, response<span style="color:#666">.</span>reason))
-    connection<span style="color:#666">.</span>close()
-
-<span style="color:#a2f">@app</span><span style="color:#666">.</span>route(<span style="color:#b44">&#39;/&#39;</span>, methods <span style="color:#666">=</span> [<span style="color:#b44">&#39;GET&#39;</span>])
-<span style="color:#a2f;font-weight:bold">def</span> <span style="color:#00a000">home</span>():
-    <span style="color:#a2f;font-weight:bold">if</span>(request<span style="color:#666">.</span>method <span style="color:#666">==</span> <span style="color:#b44">&#39;GET&#39;</span>):  
-        <span style="color:#080;font-style:italic"># increment the request counter</span>
-        requests_counter<span style="color:#666">.</span>inc()
-
-        <span style="color:#080;font-style:italic"># do something and record time</span>
-        start <span style="color:#666">=</span> time<span style="color:#666">.</span>time()
-        fetchSomething()
-        end <span style="color:#666">=</span> time<span style="color:#666">.</span>time()
-        t <span style="color:#666">=</span> (end <span style="color:#666">-</span> start)<span style="color:#666">*</span><span style="color:#666">1000</span>
-        
-        <span style="color:#080;font-style:italic"># set the metric value to the time elapsed</span>
-        fetch_time_ms<span style="color:#666">.</span>set(t)
-
-        data <span style="color:#666">=</span> <span style="color:#b44">f</span><span style="color:#b44">&#34;fetch took </span><span style="color:#b68;font-weight:bold">{</span>t<span style="color:#b68;font-weight:bold">}</span><span style="color:#b44"> ms&#34;</span> 
-        <span style="color:#a2f;font-weight:bold">return</span> jsonify({<span style="color:#b44">&#39;msg&#39;</span>: data})
-  
-  
-<span style="color:#080;font-style:italic"># driver function</span>
-<span style="color:#a2f;font-weight:bold">if</span> __name__ <span style="color:#666">==</span> <span style="color:#b44">&#39;__main__&#39;</span>:
-  
-    app<span style="color:#666">.</span>run(debug <span style="color:#666">=</span> <span style="color:#a2f;font-weight:bold">True</span>)
-
-</code></pre></div><p>Now, when we call our application and query the <code>/metrics</code> endpoint we can see the new indicators:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#080;font-style:italic"># add the metrics classes</span>
+</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">from</span> <span style="color:#00f;font-weight:bold">prometheus_client</span> <span style="color:#a2f;font-weight:bold">import</span> Counter, Gauge
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"># Define the metrics: one counter and one gauge</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"># HELP requests_total Count of requests</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"># TYPE requests_total counter</span>
+</span></span><span style="display:flex;"><span>requests_counter <span style="color:#666">=</span> Counter(<span style="color:#b44">&#39;requests&#39;</span>, <span style="color:#b44">&#39;Count of requests&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"># HELP fetch_time_ms Time to fetch in milliseconds</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"># TYPE fetch_time_ms gauge</span>
+</span></span><span style="display:flex;"><span>fetch_time_ms <span style="color:#666">=</span> Gauge(<span style="color:#b44">&#39;fetch_time_ms&#39;</span>, <span style="color:#b44">&#39;Time to fetch in milliseconds&#39;</span>)
+</span></span></code></pre></div><p>Every time we need to increment our request counter, we call:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#080;font-style:italic"># increment the request counter</span>
+</span></span><span style="display:flex;"><span>requests_counter<span style="color:#666">.</span>inc()
+</span></span></code></pre></div><p>And every time we need to update the time gauge, we do:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#080;font-style:italic"># set the metric value to the time elapsed</span>
+</span></span><span style="display:flex;"><span>fetch_time_ms<span style="color:#666">.</span>set(t)
+</span></span></code></pre></div><p>Now the application code looks like this, pay attention to the new body of the <code>home()</code> method:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">from</span> <span style="color:#00f;font-weight:bold">flask</span> <span style="color:#a2f;font-weight:bold">import</span> Flask, jsonify, request
+</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">import</span> <span style="color:#00f;font-weight:bold">http.client</span>
+</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">import</span> <span style="color:#00f;font-weight:bold">time</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">from</span> <span style="color:#00f;font-weight:bold">werkzeug.middleware.dispatcher</span> <span style="color:#a2f;font-weight:bold">import</span> DispatcherMiddleware
+</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">from</span> <span style="color:#00f;font-weight:bold">prometheus_client</span> <span style="color:#a2f;font-weight:bold">import</span> make_wsgi_app
+</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">from</span> <span style="color:#00f;font-weight:bold">prometheus_client</span> <span style="color:#a2f;font-weight:bold">import</span> Counter, Gauge
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"># Metrics definition</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"># HELP requests_total Count of requests</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"># TYPE requests_total counter</span>
+</span></span><span style="display:flex;"><span>requests_counter <span style="color:#666">=</span> Counter(<span style="color:#b44">&#39;requests&#39;</span>, <span style="color:#b44">&#39;Count of requests&#39;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"># HELP fetch_time_ms Time to fetch in milliseconds</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"># TYPE fetch_time_ms gauge</span>
+</span></span><span style="display:flex;"><span>fetch_time_ms <span style="color:#666">=</span> Gauge(<span style="color:#b44">&#39;fetch_time_ms&#39;</span>, <span style="color:#b44">&#39;Time to fetch in milliseconds&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>app <span style="color:#666">=</span> Flask(__name__)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"># Add Prometheus WSGI middleware to route /metrics requests</span>
+</span></span><span style="display:flex;"><span>app<span style="color:#666">.</span>wsgi_app <span style="color:#666">=</span> DispatcherMiddleware(app<span style="color:#666">.</span>wsgi_app, {
+</span></span><span style="display:flex;"><span>    <span style="color:#b44">&#39;/metrics&#39;</span>: make_wsgi_app()
+</span></span><span style="display:flex;"><span>})
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">def</span> <span style="color:#00a000">fetchSomething</span>():
+</span></span><span style="display:flex;"><span>    connection <span style="color:#666">=</span> http<span style="color:#666">.</span>client<span style="color:#666">.</span>HTTPSConnection(<span style="color:#b44">&#34;httpbin.org&#34;</span>)
+</span></span><span style="display:flex;"><span>    connection<span style="color:#666">.</span>request(<span style="color:#b44">&#34;GET&#34;</span>, <span style="color:#b44">&#34;/anything&#34;</span>)
+</span></span><span style="display:flex;"><span>    response <span style="color:#666">=</span> connection<span style="color:#666">.</span>getresponse()
+</span></span><span style="display:flex;"><span>    <span style="color:#a2f">print</span>(<span style="color:#b44">&#34;Status: </span><span style="color:#b68;font-weight:bold">{}</span><span style="color:#b44"> and reason: </span><span style="color:#b68;font-weight:bold">{}</span><span style="color:#b44">&#34;</span><span style="color:#666">.</span>format(response<span style="color:#666">.</span>status, response<span style="color:#666">.</span>reason))
+</span></span><span style="display:flex;"><span>    connection<span style="color:#666">.</span>close()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a2f">@app</span><span style="color:#666">.</span>route(<span style="color:#b44">&#39;/&#39;</span>, methods <span style="color:#666">=</span> [<span style="color:#b44">&#39;GET&#39;</span>])
+</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">def</span> <span style="color:#00a000">home</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#a2f;font-weight:bold">if</span>(request<span style="color:#666">.</span>method <span style="color:#666">==</span> <span style="color:#b44">&#39;GET&#39;</span>):  
+</span></span><span style="display:flex;"><span>        <span style="color:#080;font-style:italic"># increment the request counter</span>
+</span></span><span style="display:flex;"><span>        requests_counter<span style="color:#666">.</span>inc()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#080;font-style:italic"># do something and record time</span>
+</span></span><span style="display:flex;"><span>        start <span style="color:#666">=</span> time<span style="color:#666">.</span>time()
+</span></span><span style="display:flex;"><span>        fetchSomething()
+</span></span><span style="display:flex;"><span>        end <span style="color:#666">=</span> time<span style="color:#666">.</span>time()
+</span></span><span style="display:flex;"><span>        t <span style="color:#666">=</span> (end <span style="color:#666">-</span> start)<span style="color:#666">*</span><span style="color:#666">1000</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#080;font-style:italic"># set the metric value to the time elapsed</span>
+</span></span><span style="display:flex;"><span>        fetch_time_ms<span style="color:#666">.</span>set(t)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        data <span style="color:#666">=</span> <span style="color:#b44">f</span><span style="color:#b44">&#34;fetch took </span><span style="color:#b68;font-weight:bold">{</span>t<span style="color:#b68;font-weight:bold">}</span><span style="color:#b44"> ms&#34;</span> 
+</span></span><span style="display:flex;"><span>        <span style="color:#a2f;font-weight:bold">return</span> jsonify({<span style="color:#b44">&#39;msg&#39;</span>: data})
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"># driver function</span>
+</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">if</span> __name__ <span style="color:#666">==</span> <span style="color:#b44">&#39;__main__&#39;</span>:
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>    app<span style="color:#666">.</span>run(debug <span style="color:#666">=</span> <span style="color:#a2f;font-weight:bold">True</span>)
+</span></span></code></pre></div><p>Now, when we call our application and query the <code>/metrics</code> endpoint we can see the new indicators:</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL25ld01ldHJpY3MucG5n" src="img/newMetrics.png" alt="new metrics"  />  
   <small class="img-note">click to zoom in</small>
 </p></p>
 <h3 id="setup-prometheus-service">Setup Prometheus service <a href="#setup-prometheus-service" class="anchor">🔗</a></h3><p>It is time to launch a Prometheus service to collect our metrics.</p>
 <p>There are many ways to <a href="https://prometheus.io/docs/prometheus/latest/installation/" target="_blank" rel="noopener">install Prometheus</a>, we will use Docker for our exercise.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">docker run \
-    -p 9090:9090 \
-    -v /path/to/prometheus.yml:/etc/prometheus/prometheus.yml \
-    prom/prometheus
-</code></pre></div><p>Regardless of how you are running the service, you need to prepare the <a href="https://prometheus.io/docs/prometheus/latest/configuration/configuration/" target="_blank" rel="noopener">configuration file</a> to scrape the metrics from our application. In it, we need to define a <a href="https://prometheus.io/docs/concepts/jobs_instances/" target="_blank" rel="noopener">Job</a> to scrape the metrics from our application.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>docker run \
+</span></span><span style="display:flex;"><span>    -p 9090:9090 \
+</span></span><span style="display:flex;"><span>    -v /path/to/prometheus.yml:/etc/prometheus/prometheus.yml \
+</span></span><span style="display:flex;"><span>    prom/prometheus
+</span></span></code></pre></div><p>Regardless of how you are running the service, you need to prepare the <a href="https://prometheus.io/docs/prometheus/latest/configuration/configuration/" target="_blank" rel="noopener">configuration file</a> to scrape the metrics from our application. In it, we need to define a <a href="https://prometheus.io/docs/concepts/jobs_instances/" target="_blank" rel="noopener">Job</a> to scrape the metrics from our application.</p>
 <p>This is a very simple configuration file:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback"># my global config
-global:
-  scrape_interval:     15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
-  evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
-  # scrape_timeout is set to the global default (10s).
-  external_labels:
-    dc: sre1
-
-# A scrape configuration containing two endpoints to scrape:
-scrape_configs:
-  # The job name is added as a label `job=&lt;job_name&gt;` to any time series scraped from this config.
-  # Here it&#39;s Prometheus itself.
-  - job_name: &#39;prometheus&#39;   
-    static_configs:
-    - targets: [&#39;localhost:9090&#39;]
-  
-  # Scrape our Sample application&#39;s host:port
-  - job_name: &#39;pythonapp&#39;   
-    static_configs:
-    - targets: [&#39;docker.for.mac.host.internal:5000&#39;]
-    
-</code></pre></div><blockquote>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># my global config
+</span></span><span style="display:flex;"><span>global:
+</span></span><span style="display:flex;"><span>  scrape_interval:     15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+</span></span><span style="display:flex;"><span>  evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
+</span></span><span style="display:flex;"><span>  # scrape_timeout is set to the global default (10s).
+</span></span><span style="display:flex;"><span>  external_labels:
+</span></span><span style="display:flex;"><span>    dc: sre1
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># A scrape configuration containing two endpoints to scrape:
+</span></span><span style="display:flex;"><span>scrape_configs:
+</span></span><span style="display:flex;"><span>  # The job name is added as a label `job=&lt;job_name&gt;` to any time series scraped from this config.
+</span></span><span style="display:flex;"><span>  # Here it&#39;s Prometheus itself.
+</span></span><span style="display:flex;"><span>  - job_name: &#39;prometheus&#39;   
+</span></span><span style="display:flex;"><span>    static_configs:
+</span></span><span style="display:flex;"><span>    - targets: [&#39;localhost:9090&#39;]
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  # Scrape our Sample application&#39;s host:port
+</span></span><span style="display:flex;"><span>  - job_name: &#39;pythonapp&#39;   
+</span></span><span style="display:flex;"><span>    static_configs:
+</span></span><span style="display:flex;"><span>    - targets: [&#39;docker.for.mac.host.internal:5000&#39;]
+</span></span><span style="display:flex;"><span>    
+</span></span></code></pre></div><blockquote>
 <p>We do not include the <code>/metrics</code> path in the target since it is assumed by Prometheus.
 Because we are running Prometheus inside Docker for macOS, we need to use the host alias <code>docker.for.mac.host.internal</code> to access the application.</p>
 </blockquote>
@@ -388,13 +385,13 @@ Because we are running Prometheus inside Docker for macOS, we need to use the ho
 <p>Prometheus offers a rich querying language called PromQL that allows you to work with the metrics in different dimensions.
 You can find detailed documentation on PromQL on the official website: <a href="https://prometheus.io/docs/prometheus/latest/querying/basics/" target="_blank" rel="noopener">https://prometheus.io/docs/prometheus/latest/querying/basics/</a>. Right now we will focus on a couple of basic queries to inspect the state of our application:</p>
 <p>Simple metric selection. Shows the value for a particular metric, filtered by a set of labels assigned by Prometheus.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">metric{label=val, label=val,...}
-</code></pre></div><p>Rate of change of a metric. Typically used for simple counters when the velocity of change is more relevant than the value itself.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">rate(metric{label=val, label=val,...}[time period])
-</code></pre></div><p>Let&rsquo;s look at the metrics from our application:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>metric{label=val, label=val,...}
+</span></span></code></pre></div><p>Rate of change of a metric. Typically used for simple counters when the velocity of change is more relevant than the value itself.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>rate(metric{label=val, label=val,...}[time period])
+</span></span></code></pre></div><p>Let&rsquo;s look at the metrics from our application:</p>
 <p><em>The time it took to fetch remote content</em></p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">fetch_time_ms{job=&#34;pythonapp&#34;}
-</code></pre></div><p><p class="markdown-image"> 
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>fetch_time_ms{job=&#34;pythonapp&#34;}
+</span></span></code></pre></div><p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL2ZldGNoVGltZU1zLnBuZw==" src="img/fetchTimeMs.png" alt="fetch time metric"  />  
   <small class="img-note">click to zoom in</small>
 </p></p>
@@ -402,14 +399,14 @@ You can find detailed documentation on PromQL on the official website: <a href="
 <p>Notice the label <code>job</code>, equal to the &ldquo;job_name&rdquo; value we gave to the scrapping target in the configuration file. The second label <code>instance</code> is equal to the source host of the metrics. These labels are automatically assigned by Prometheus.</p>
 </blockquote>
 <p><em>Total Number of Requests</em></p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">requests_total{job=&#34;pythonapp&#34;}
-</code></pre></div><p><p class="markdown-image"> 
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>requests_total{job=&#34;pythonapp&#34;}
+</span></span></code></pre></div><p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL3JlcXVlc3RzVG90YWwucG5n" src="img/requestsTotal.png" alt="requests metric"  />  
   <small class="img-note">click to zoom in</small>
 </p></p>
 <p><em>Rate of Requests (RPS) for a 5m interval</em></p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">rate(requests_total{job=&#34;pythonapp&#34;}[5m])
-</code></pre></div><p><p class="markdown-image"> 
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>rate(requests_total{job=&#34;pythonapp&#34;}[5m])
+</span></span></code></pre></div><p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL3Jwcy5wbmc=" src="img/rps.png" alt="rps"  />  
   <small class="img-note">click to zoom in</small>
 </p></p>
