@@ -7,7 +7,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">    
 <meta name="viewport" content="width=device-width,minimum-scale=1">
 <meta name="description" content="MQTT is a widely used protocol in the IoT world. RabbitMQ is one of the most popular message brokers and supports different kinds of messaging protocols. One of them is MQTT. In this article, I will show you how to implement a robust, scalable, and flexible MQTT solution using RabbitMQ as the broker.">
-<meta name="generator" content="Hugo 0.103.1" />
+<meta name="generator" content="Hugo 0.92.2" />
 
 
   <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
@@ -29,7 +29,6 @@
 
 
 
-<script data-goatcounter="https://iotitlan.goatcounter.com/count"  async src="//gc.zgo.at/count.js"></script>
 
   </head>
 
@@ -63,7 +62,7 @@
           ·
         </span>
         <span>
-          2686 words
+          2682 words
         </span>
         <span class="split">
           ·
@@ -152,10 +151,10 @@
 <p><strong>Publishers</strong> connect to the broker and deliver messages on specific topics for example <code>a/b/c/d</code>. There is no need to set up a topic, publishing on the topic is enough to create it. There are no wildcards for publishing but you can publish to any level in the path.</p>
 <p>The protocol is bidirectional. Clients can receive and publish on any topic they have access to. Every client can specify certain properties of the connection to control the pub/sub behavior: like the QoS or the &ldquo;Will and Testament&rdquo;.</p>
 <h3 id="qos">QoS <a href="#qos" class="anchor">🔗</a></h3><p>One very important concept in MQTT is the Quality of Service (QoS) of the pub/sub connections. MQTT defines three incremental levels, from 0 to 2. Higher levels of QoS are more reliable but involve higher latency and complexity:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>0: The broker/client will deliver the message once, with no confirmation.
-</span></span><span style="display:flex;"><span>1: The broker/client will deliver the message at least once, with confirmation required.
-</span></span><span style="display:flex;"><span>2: The broker/client will deliver the message exactly once by using a four step handshake.
-</span></span></code></pre></div><h3 id="client-id">Client ID <a href="#client-id" class="anchor">🔗</a></h3><p>In MQTT, clients connect with a unique ID that is associated with the subscriptions. The client ID is used to resume subscriptions when operating at QoS &gt; 0. If a new client connects with a client id that is already in use, the oldest connection will be terminated. Always make sure that different clients or subscriptions have different client Ids.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">0: The broker/client will deliver the message once, with no confirmation.
+1: The broker/client will deliver the message at least once, with confirmation required.
+2: The broker/client will deliver the message exactly once by using a four step handshake.
+</code></pre></div><h3 id="client-id">Client ID <a href="#client-id" class="anchor">🔗</a></h3><p>In MQTT, clients connect with a unique ID that is associated with the subscriptions. The client ID is used to resume subscriptions when operating at QoS &gt; 0. If a new client connects with a client id that is already in use, the oldest connection will be terminated. Always make sure that different clients or subscriptions have different client Ids.</p>
 <p>For more details about the MQTT protocol, I recommend you to visit <a href="https://www.hivemq.com/blog/mqtt-essentials-part-1-introducing-mqtt" target="_blank" rel="noopener">https://www.hivemq.com/blog/mqtt-essentials-part-1-introducing-mqtt</a> and  <a href="http://mosquitto.org/man/mqtt-7.html" target="_blank" rel="noopener">http://mosquitto.org/man/mqtt-7.html</a></p>
 <h2 id="rabbitmq">RabbitMQ <a href="#rabbitmq" class="anchor">🔗</a></h2><p><a href="https://www.rabbitmq.com" target="_blank" rel="noopener">RabbitMQ</a> is one of the most popular message brokers in the market. It is easy to deploy and solves all kinds of messaging requirements at small and large scales. RabbitMQ&rsquo;s primary protocol is AMQP (Advanced Message Queuing Protocol), but it also supports MQTT.</p>
 <h3 id="a-little-about-amqp">A little about AMQP <a href="#a-little-about-amqp" class="anchor">🔗</a></h3><p>In AMQP, messages are published to <em>exchanges</em>. Exchanges then route message copies to <em>queues</em> using rules called <em>bindings</em> that use header attributes and routing keys to route messages. Then the broker either delivers messages to consumers subscribed to queues, or consumers fetch/pull messages from queues on demand.</p>
@@ -193,18 +192,18 @@
 <h2 id="implementing-an-mqtt-service-with-rabbitmq">Implementing an MQTT service with RabbitMQ <a href="#implementing-an-mqtt-service-with-rabbitmq" class="anchor">🔗</a></h2><p>The first thing to do is to get an instance of RabbitMQ with the <strong>MQTT plugin</strong> enabled. The plugin comes already bundled in the base package, we just need to enable it.</p>
 <p>For this article, I&rsquo;ll use a managed instance of RabbitMQ provided by <a href="https://www.cloudamqp.com" target="_blank" rel="noopener">CloudAMQP</a>. I like their service. I&rsquo;ve been using it in production for a few years now. It allows me to do my testing with secured connections — something I highly recommend—  and their free tier comes with the MQTT plugin already enabled.</p>
 <p>However, if Docker is your thing, I prepared a Dockerfile for you to work locally. It includes the MQTT and other interesting plugins.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Dockerfile" data-lang="Dockerfile"><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">FROM</span><span style="color:#b44"> rabbitmq:3.9-management-alpine</span><span style="">
-</span></span></span><span style="display:flex;"><span><span style=""></span><span style="color:#a2f;font-weight:bold">RUN</span> rabbitmq-plugins <span style="color:#a2f">enable</span> --offline rabbitmq_management rabbitmq_mqtt rabbitmq_federation_management rabbitmq_shovel rabbitmq_shovel_management<span style="">
-</span></span></span></code></pre></div><p>You can run the container like this:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#080;font-style:italic"># Build the image</span>
-</span></span><span style="display:flex;"><span>docker build -t rabbitmqtt:local .
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"># Run the container with port 8888 for Management UI, 1883 for MQTT, and 5672 for AMQP</span>
-</span></span><span style="display:flex;"><span>docker run -d --hostname my-rabbit --name rabbitmqtt -p 8888:15672 -p 1883:1883 -p 5672:5672 rabbitmqtt:local
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"># Check the list of plugins</span>
-</span></span><span style="display:flex;"><span>docker <span style="color:#a2f">exec</span> rabbitmqtt rabbitmq-plugins list
-</span></span></code></pre></div><blockquote>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Dockerfile" data-lang="Dockerfile"><span style="color:#a2f;font-weight:bold">FROM</span><span style="color:#b44"> rabbitmq:3.9-management-alpine</span><span style="">
+</span><span style=""></span><span style="color:#a2f;font-weight:bold">RUN</span> rabbitmq-plugins <span style="color:#a2f">enable</span> --offline rabbitmq_management rabbitmq_mqtt rabbitmq_federation_management rabbitmq_shovel rabbitmq_shovel_management<span style="">
+</span></code></pre></div><p>You can run the container like this:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#080;font-style:italic"># Build the image</span>
+docker build -t rabbitmqtt:local .
+
+<span style="color:#080;font-style:italic"># Run the container with port 8888 for Management UI, 1883 for MQTT, and 5672 for AMQP</span>
+docker run -d --hostname my-rabbit --name rabbitmqtt -p 8888:15672 -p 1883:1883 -p 5672:5672 rabbitmqtt:local
+
+<span style="color:#080;font-style:italic"># Check the list of plugins</span>
+docker <span style="color:#a2f">exec</span> rabbitmqtt rabbitmq-plugins list
+</code></pre></div><blockquote>
 <p>By default, the container creates an admin user with credentials: guest/guest.</p>
 </blockquote>
 <p>Go to the RabbitMQ Management UI (<code>http://localhost:8888</code> in your container) to verify everything is working fine.</p>
@@ -225,10 +224,10 @@
 <li>Client id: test.sub</li>
 <li>Topic: &ldquo;my/topic&rdquo;</li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#080;font-style:italic"># connecting to the topic &#34;my/topic&#34; in vhost &#34;root&#34; with user &#34;guest&#34;, and client id &#34;test.sub&#34; on port &#34;1883&#34; (unsecured)</span>
-</span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"># qos = 0</span>
-</span></span><span style="display:flex;"><span>mosquitto_sub -h localhost -d -t <span style="color:#b44">&#34;my/topic&#34;</span> -u guest -P guest -c -i test.sub -q <span style="color:#666">0</span> -p <span style="color:#666">1883</span>
-</span></span></code></pre></div><p>For my managed instance, I can use a secure connection parameters:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#080;font-style:italic"># connecting to the topic &#34;my/topic&#34; in vhost &#34;root&#34; with user &#34;guest&#34;, and client id &#34;test.sub&#34; on port &#34;1883&#34; (unsecured)</span>
+<span style="color:#080;font-style:italic"># qos = 0</span>
+mosquitto_sub -h localhost -d -t <span style="color:#b44">&#34;my/topic&#34;</span> -u guest -P guest -c -i test.sub -q <span style="color:#666">0</span> -p <span style="color:#666">1883</span>
+</code></pre></div><p>For my managed instance, I can use a secure connection parameters:</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="Li4vaW1nLzE5OTg4NTcyZTFmZTRmZmY4ZjJlNDJmMzgxNTdmMGEyLnBuZw==" src="../img/19988572e1fe4fff8f2e42f38157f0a2.png" alt="CloudAMQP"  />  
   <small class="img-note">click to zoom in</small>
@@ -236,15 +235,15 @@
 <blockquote>
 <p>Remember that in RabbitMQ, if you are connecting to a vhost, the username for the MQTT connection is formed by joining the virtual host and the user: <code>vhost:user</code>.</p>
 </blockquote>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># connecting on TLS port 8883
-</span></span><span style="display:flex;"><span>mosquitto_sub -h ${RABBITMQ_HOST} -d -t &#34;my/topic&#34; -u ${RABBITMQ_USER} -P ${RABBITMQ_PWD} -c -i test.sub -p 8883 -q 0
-</span></span></code></pre></div><p>Now let&rsquo;s publish a simple message to test our subscription.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#080;font-style:italic"># To local docker</span>
-</span></span><span style="display:flex;"><span>mosquitto_pub -h localhost -t <span style="color:#b44">&#34;my/topic&#34;</span> -u guest -P guest -c -i test.pub -q <span style="color:#666">0</span> -p <span style="color:#666">1883</span> -m <span style="color:#b44">&#34;hola mundo&#34;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"># To managed RMQ (TLS)</span>
-</span></span><span style="display:flex;"><span>❯ mosquitto_pub -h <span style="color:#b68;font-weight:bold">${</span><span style="color:#b8860b">RABBITMQ_HOST</span><span style="color:#b68;font-weight:bold">}</span> -d -t <span style="color:#b44">&#34;my/topic&#34;</span> -u <span style="color:#b68;font-weight:bold">${</span><span style="color:#b8860b">RABBITMQ_USER</span><span style="color:#b68;font-weight:bold">}</span> -P <span style="color:#b68;font-weight:bold">${</span><span style="color:#b8860b">RABBITMQ_PWD</span><span style="color:#b68;font-weight:bold">}</span> -i test.pub -q <span style="color:#666">0</span> -p <span style="color:#666">8883</span> -m <span style="color:#b44">&#34;hola mundo&#34;</span>
-</span></span></code></pre></div><p>You should see the message coming down to the subscriber:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback"># connecting on TLS port 8883
+mosquitto_sub -h ${RABBITMQ_HOST} -d -t &#34;my/topic&#34; -u ${RABBITMQ_USER} -P ${RABBITMQ_PWD} -c -i test.sub -p 8883 -q 0
+</code></pre></div><p>Now let&rsquo;s publish a simple message to test our subscription.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#080;font-style:italic"># To local docker</span>
+mosquitto_pub -h localhost -t <span style="color:#b44">&#34;my/topic&#34;</span> -u guest -P guest -c -i test.pub -q <span style="color:#666">0</span> -p <span style="color:#666">1883</span> -m <span style="color:#b44">&#34;hola mundo&#34;</span>
+
+<span style="color:#080;font-style:italic"># To managed RMQ (TLS)</span>
+❯ mosquitto_pub -h <span style="color:#b68;font-weight:bold">${</span><span style="color:#b8860b">RABBITMQ_HOST</span><span style="color:#b68;font-weight:bold">}</span> -d -t <span style="color:#b44">&#34;my/topic&#34;</span> -u <span style="color:#b68;font-weight:bold">${</span><span style="color:#b8860b">RABBITMQ_USER</span><span style="color:#b68;font-weight:bold">}</span> -P <span style="color:#b68;font-weight:bold">${</span><span style="color:#b8860b">RABBITMQ_PWD</span><span style="color:#b68;font-weight:bold">}</span> -i test.pub -q <span style="color:#666">0</span> -p <span style="color:#666">8883</span> -m <span style="color:#b44">&#34;hola mundo&#34;</span>
+</code></pre></div><p>You should see the message coming down to the subscriber:</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="Li4vaW1nLzJlYjJmMjgzYjliMzRiZTQ4NGY5ZWRhYjBiZWM3ZjllLnBuZw==" src="../img/2eb2f283b9b34be484f9edab0bec7f9e.png" alt="console"  />  
   <small class="img-note">click to zoom in</small>
@@ -254,9 +253,9 @@
 </blockquote>
 <h2 id="how-it-works">How it works <a href="#how-it-works" class="anchor">🔗</a></h2><p>Let&rsquo;s take a look at what is happening in RabbitMQ because of the MQTT connections. We can use the Management UI.</p>
 <h3 id="mqtt-subscriptions-and-amqp-queues">MQTT Subscriptions and AMQP Queues <a href="#mqtt-subscriptions-and-amqp-queues" class="anchor">🔗</a></h3><p>The first important thing to notice is how an MQTT subscription creates a new queue in RabbitMQ automatically. The queue features depend on the subscription QoS. See what happens when we subscribe the MQTT client with QoS=0.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#080;font-style:italic"># Connecting with QoS 0</span>
-</span></span><span style="display:flex;"><span>mosquitto_sub -h <span style="color:#b68;font-weight:bold">${</span><span style="color:#b8860b">RABBITMQ_HOST</span><span style="color:#b68;font-weight:bold">}</span> -d -t <span style="color:#b44">&#34;#&#34;</span> -u <span style="color:#b68;font-weight:bold">${</span><span style="color:#b8860b">RABBITMQ_USER</span><span style="color:#b68;font-weight:bold">}</span> -P <span style="color:#b68;font-weight:bold">${</span><span style="color:#b8860b">RABBITMQ_PWD</span><span style="color:#b68;font-weight:bold">}</span> -c -i test.sub -p <span style="color:#666">8883</span> -q <span style="color:#666">0</span>
-</span></span></code></pre></div><p>A new queue is automatically created with the name pattern <code>mqtt-subscription-{client id}{qos}</code></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#080;font-style:italic"># Connecting with QoS 0</span>
+mosquitto_sub -h <span style="color:#b68;font-weight:bold">${</span><span style="color:#b8860b">RABBITMQ_HOST</span><span style="color:#b68;font-weight:bold">}</span> -d -t <span style="color:#b44">&#34;#&#34;</span> -u <span style="color:#b68;font-weight:bold">${</span><span style="color:#b8860b">RABBITMQ_USER</span><span style="color:#b68;font-weight:bold">}</span> -P <span style="color:#b68;font-weight:bold">${</span><span style="color:#b8860b">RABBITMQ_PWD</span><span style="color:#b68;font-weight:bold">}</span> -c -i test.sub -p <span style="color:#666">8883</span> -q <span style="color:#666">0</span>
+</code></pre></div><p>A new queue is automatically created with the name pattern <code>mqtt-subscription-{client id}{qos}</code></p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="Li4vaW1nLzY0Yjg1MWY5MmQ5ZTQ4YTI4OGVkOWM0NjExZjdiNmY5LnBuZw==" src="../img/64b851f92d9e48a288ed9c4611f7b6f9.png" alt="queues"  />  
   <small class="img-note">click to zoom in</small>
@@ -267,9 +266,9 @@
 <p>Note that the queues are only created by subscribing to a topic. Publishing does not create queues since the client publishes to the exchange, not a queue.</p>
 </blockquote>
 <p>Subscribing with QoS1 causes the queue to be created as  &ldquo;Durable&rdquo;, but with an expiration.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#080;font-style:italic"># Connecting with QoS 1</span>
-</span></span><span style="display:flex;"><span>mosquitto_sub -h <span style="color:#b68;font-weight:bold">${</span><span style="color:#b8860b">RABBITMQ_HOST</span><span style="color:#b68;font-weight:bold">}</span> -d -t <span style="color:#b44">&#34;#&#34;</span> -u <span style="color:#b68;font-weight:bold">${</span><span style="color:#b8860b">RABBITMQ_USER</span><span style="color:#b68;font-weight:bold">}</span> -P <span style="color:#b68;font-weight:bold">${</span><span style="color:#b8860b">RABBITMQ_PWD</span><span style="color:#b68;font-weight:bold">}</span> -c -i test.sub -p <span style="color:#666">8883</span> -q <span style="color:#666">1</span>
-</span></span></code></pre></div><p><p class="markdown-image"> 
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#080;font-style:italic"># Connecting with QoS 1</span>
+mosquitto_sub -h <span style="color:#b68;font-weight:bold">${</span><span style="color:#b8860b">RABBITMQ_HOST</span><span style="color:#b68;font-weight:bold">}</span> -d -t <span style="color:#b44">&#34;#&#34;</span> -u <span style="color:#b68;font-weight:bold">${</span><span style="color:#b8860b">RABBITMQ_USER</span><span style="color:#b68;font-weight:bold">}</span> -P <span style="color:#b68;font-weight:bold">${</span><span style="color:#b8860b">RABBITMQ_PWD</span><span style="color:#b68;font-weight:bold">}</span> -c -i test.sub -p <span style="color:#666">8883</span> -q <span style="color:#666">1</span>
+</code></pre></div><p><p class="markdown-image"> 
   <img class="zoomable" id="Li4vaW1nLzEyNmEzOGRjNzA5MTQ3ODhiYzIyYTc0Y2NlNTY0YmY0LnBuZw==" src="../img/126a38dc70914788bc22a74cce564bf4.png" alt="queues"  />  
   <small class="img-note">click to zoom in</small>
 </p></p>
@@ -373,8 +372,8 @@
 </p></p>
 <h3 id="publish-with-amqp-and-receive-via-mqtt">Publish with AMQP and receive via MQTT <a href="#publish-with-amqp-and-receive-via-mqtt" class="anchor">🔗</a></h3><p>So far all the examples we have seen start with an MQTT client publishing messages. But everything about MQTT and AMQP is bidirectional. We can use an AMQP client to publish to the Topic Exchange so that the subscribed MQTT clients can receive the messages.</p>
 <p>If we use <code>rabtap</code> to publish directly to the <code>amq.topic</code> exchange with the routing key <code>my.topic</code></p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>❯ <span style="color:#a2f">echo</span> <span style="color:#b44">&#34;hello back&#34;</span> | rabtap pub --exchange<span style="color:#666">=</span>amq.topic --routingkey<span style="color:#666">=</span>my.topic --uri amqps://<span style="color:#b68;font-weight:bold">${</span><span style="color:#b8860b">RABBITMQ_USER</span><span style="color:#b68;font-weight:bold">}</span>:<span style="color:#b68;font-weight:bold">${</span><span style="color:#b8860b">RABBITMQ_PWD</span><span style="color:#b68;font-weight:bold">}</span>@<span style="color:#b68;font-weight:bold">${</span><span style="color:#b8860b">RABBITMQ_HOST</span><span style="color:#b68;font-weight:bold">}</span>/<span style="color:#b68;font-weight:bold">${</span><span style="color:#b8860b">RABBITMQ_VHOST</span><span style="color:#b68;font-weight:bold">}</span>
-</span></span></code></pre></div><p>We see the MQTT client receiving the messages immediately on the &ldquo;my/topic&rdquo; topic:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">❯ <span style="color:#a2f">echo</span> <span style="color:#b44">&#34;hello back&#34;</span> | rabtap pub --exchange<span style="color:#666">=</span>amq.topic --routingkey<span style="color:#666">=</span>my.topic --uri amqps://<span style="color:#b68;font-weight:bold">${</span><span style="color:#b8860b">RABBITMQ_USER</span><span style="color:#b68;font-weight:bold">}</span>:<span style="color:#b68;font-weight:bold">${</span><span style="color:#b8860b">RABBITMQ_PWD</span><span style="color:#b68;font-weight:bold">}</span>@<span style="color:#b68;font-weight:bold">${</span><span style="color:#b8860b">RABBITMQ_HOST</span><span style="color:#b68;font-weight:bold">}</span>/<span style="color:#b68;font-weight:bold">${</span><span style="color:#b8860b">RABBITMQ_VHOST</span><span style="color:#b68;font-weight:bold">}</span>
+</code></pre></div><p>We see the MQTT client receiving the messages immediately on the &ldquo;my/topic&rdquo; topic:</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="Li4vaW1nLzhmMmEyNzk1MjVhNjQ4OWE5ZGNlYmUyZTIzZTIxOTI1LnBuZw==" src="../img/8f2a279525a6489a9dcebe2e23e21925.png" alt="Screen Shot"  />  
   <small class="img-note">click to zoom in</small>

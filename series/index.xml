@@ -6,7 +6,16 @@
     <description>Recent content in Series on brain dump</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 22 Nov 2022 19:01:59 -0800</lastBuildDate><atom:link href="https://carlosolmos.dev/series/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 07 Jan 2023 09:17:36 -0800</lastBuildDate><atom:link href="https://carlosolmos.dev/series/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Cryptography Lab</title>
+      <link>https://carlosolmos.dev/series/cryptography-lab/</link>
+      <pubDate>Sat, 07 Jan 2023 09:17:36 -0800</pubDate>
+      
+      <guid>https://carlosolmos.dev/series/cryptography-lab/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>everactive API</title>
       <link>https://carlosolmos.dev/series/everactive-api/</link>

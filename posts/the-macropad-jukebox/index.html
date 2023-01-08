@@ -7,7 +7,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">    
 <meta name="viewport" content="width=device-width,minimum-scale=1">
 <meta name="description" content="MacroPad RP2040 &#43; Raspberry Pi &#43; some code = Rock and Roll. In this guide, I provide all the code and the instructions to assemble my MacroPad Jukebox: a severely over-engineered gadget to play my music collection.">
-<meta name="generator" content="Hugo 0.103.1" />
+<meta name="generator" content="Hugo 0.92.2" />
 
 
   <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
@@ -29,7 +29,6 @@
 
 
 
-<script data-goatcounter="https://iotitlan.goatcounter.com/count"  async src="//gc.zgo.at/count.js"></script>
 
   </head>
 
@@ -63,7 +62,7 @@
           ·
         </span>
         <span>
-          3735 words
+          3732 words
         </span>
         <span class="split">
           ·
@@ -164,19 +163,19 @@ The music collection is loaded onto the Raspberry Pi and arranged in a series of
   <small class="img-note">click to zoom in</small>
 </p></p>
 <p>Make sure VLC is installed. Download a sample mp3 file and test the player using any audio output —speaker or headphones.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>pi@raspberrypi:~ $ wget https://download.samplelib.com/mp3/sample-6s.mp3
-</span></span></code></pre></div><p><p class="markdown-image"> 
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">pi@raspberrypi:~ $ wget https://download.samplelib.com/mp3/sample-6s.mp3
+</code></pre></div><p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL3ZsYy1wbGF5ZXItdGVzdC5wbmc=" src="img/vlc-player-test.png" alt=""  />  
   <small class="img-note">click to zoom in</small>
 </p></p>
 <h4 id="go-sdk">Go SDK <a href="#go-sdk" class="anchor">🔗</a></h4><p>I found it easier to build the software inside the RPi to avoid any incompatibilities. Install the golang SDK that is available for the RPi OS via <code>apt</code> packages:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>pi@raspberrypi:~ $ sudo apt install golang
-</span></span></code></pre></div><blockquote>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">pi@raspberrypi:~ $ sudo apt install golang
+</code></pre></div><blockquote>
 <p>It is also possible to build the binary for ARM in another computer and upload it to the RPi.</p>
 </blockquote>
 <h3 id="2-get-the-projects-source-code">2. Get the project&rsquo;s source code. <a href="#2-get-the-projects-source-code" class="anchor">🔗</a></h3><p>Clone or download the project&rsquo;s source code repository from GitHub:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>pi@raspberrypi:~ $ git clone https://github.com/carlosolmos/macropadjukebox
-</span></span></code></pre></div><h3 id="3-prepare-the-macropad-rp2040">3. Prepare the Macropad RP2040 <a href="#3-prepare-the-macropad-rp2040" class="anchor">🔗</a></h3><p>Prepare the MacroPad RP2040 for CircuitPython programming following this Quickstart guide from Adafruit: <a href="https://learn.adafruit.com/adafruit-macropad-rp2040/circuitpython" target="_blank" rel="noopener">https://learn.adafruit.com/adafruit-macropad-rp2040/circuitpython</a></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">pi@raspberrypi:~ $ git clone https://github.com/carlosolmos/macropadjukebox
+</code></pre></div><h3 id="3-prepare-the-macropad-rp2040">3. Prepare the Macropad RP2040 <a href="#3-prepare-the-macropad-rp2040" class="anchor">🔗</a></h3><p>Prepare the MacroPad RP2040 for CircuitPython programming following this Quickstart guide from Adafruit: <a href="https://learn.adafruit.com/adafruit-macropad-rp2040/circuitpython" target="_blank" rel="noopener">https://learn.adafruit.com/adafruit-macropad-rp2040/circuitpython</a></p>
 <blockquote>
 <p>I used CircuitPython 7.3.3 but newer versions should work.</p>
 </blockquote>
@@ -197,21 +196,21 @@ The music collection is loaded onto the Raspberry Pi and arranged in a series of
   <small class="img-note">click to zoom in</small>
 </p></p>
 <h4 id="load-the-project-python-code-and-the-circuitpython-libraries">Load the project python code and the CircuitPython libraries <a href="#load-the-project-python-code-and-the-circuitpython-libraries" class="anchor">🔗</a></h4><p>Copy the following libraries from the bundle folder to the <code>/lib</code> folder in the MacroPad drive.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>adafruit_bitmap_font
-</span></span><span style="display:flex;"><span>adafruit_debouncer.mpy
-</span></span><span style="display:flex;"><span>adafruit_display_shapes
-</span></span><span style="display:flex;"><span>adafruit_display_text
-</span></span><span style="display:flex;"><span>adafruit_hid
-</span></span><span style="display:flex;"><span>adafruit_macropad.mpy
-</span></span><span style="display:flex;"><span>adafruit_midi
-</span></span><span style="display:flex;"><span>adafruit_pixelbuf.mpy
-</span></span><span style="display:flex;"><span>adafruit_simple_text_display.mpy
-</span></span><span style="display:flex;"><span>adafruit_ticks.mpy
-</span></span><span style="display:flex;"><span>neopixel.mpy
-</span></span></code></pre></div><p>Copy the project python files to the root of the MacroPad drive. Replace any existing files.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>macropadjukebox/macropad/code.py
-</span></span><span style="display:flex;"><span>macropadjukebox/macropad/boot.py
-</span></span></code></pre></div><p>The MacroPad drive should contain these files:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">adafruit_bitmap_font
+adafruit_debouncer.mpy
+adafruit_display_shapes
+adafruit_display_text
+adafruit_hid
+adafruit_macropad.mpy
+adafruit_midi
+adafruit_pixelbuf.mpy
+adafruit_simple_text_display.mpy
+adafruit_ticks.mpy
+neopixel.mpy
+</code></pre></div><p>Copy the project python files to the root of the MacroPad drive. Replace any existing files.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">macropadjukebox/macropad/code.py
+macropadjukebox/macropad/boot.py
+</code></pre></div><p>The MacroPad drive should contain these files:</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL21hY3JvcGFkLWNvZGUucG5n" src="img/macropad-code.png" alt=""  />  
   <small class="img-note">click to zoom in</small>
@@ -231,17 +230,17 @@ The music collection is loaded onto the Raspberry Pi and arranged in a series of
   <small class="img-note">click to zoom in</small>
 </p></p>
 <h3 id="4-build-and-install-the-jukebox-service">4. Build and install the jukebox service. <a href="#4-build-and-install-the-jukebox-service" class="anchor">🔗</a></h3><h4 id="build-the-go-service">Build the Go service <a href="#build-the-go-service" class="anchor">🔗</a></h4><p>Use the <code>go build</code> command to create the executable for the service:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>pi@raspberrypi:~ $ cd macropadjukebox/
-</span></span><span style="display:flex;"><span>pi@raspberrypi:~/macropadjukebox $ go build -o jukebox main.go
-</span></span></code></pre></div><p><p class="markdown-image"> 
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">pi@raspberrypi:~ $ cd macropadjukebox/
+pi@raspberrypi:~/macropadjukebox $ go build -o jukebox main.go
+</code></pre></div><p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL2dvLWJ1aWxkLnBuZw==" src="img/go-build.png" alt=""  />  
   <small class="img-note">click to zoom in</small>
 </p></p>
 <p>Copy the binary to the home directory —optional, but recommended.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>pi@raspberrypi:~/macropadjukebox $ cp jukebox /home/pi
-</span></span></code></pre></div><h3 id="5-prepare-the-music-collection">5. Prepare the music collection <a href="#5-prepare-the-music-collection" class="anchor">🔗</a></h3><p>In the root folder of the repo, there is a sample configuration file <code>config-example.json</code>. Make a copy in the home directory. Name it <code>config.json</code>.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>pi@raspberrypi:~/macropadjukebox $ cp config-example.json /home/pi/config.json
-</span></span></code></pre></div><p>Copy some files from your music collection to the Raspberry Pi —VLC can play just about any audio format. I like to use the <code>/home/pi/Music</code> folder but any other path should be okay.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">pi@raspberrypi:~/macropadjukebox $ cp jukebox /home/pi
+</code></pre></div><h3 id="5-prepare-the-music-collection">5. Prepare the music collection <a href="#5-prepare-the-music-collection" class="anchor">🔗</a></h3><p>In the root folder of the repo, there is a sample configuration file <code>config-example.json</code>. Make a copy in the home directory. Name it <code>config.json</code>.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">pi@raspberrypi:~/macropadjukebox $ cp config-example.json /home/pi/config.json
+</code></pre></div><p>Copy some files from your music collection to the Raspberry Pi —VLC can play just about any audio format. I like to use the <code>/home/pi/Music</code> folder but any other path should be okay.</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL211c2ljY29sbGVjdGlvbi5wbmc=" src="img/musiccollection.png" alt=""  />  
   <small class="img-note">click to zoom in</small>
@@ -258,10 +257,10 @@ The music collection is loaded onto the Raspberry Pi and arranged in a series of
 </p></p>
 <h3 id="6-test-the-jukebox">6. Test the Jukebox <a href="#6-test-the-jukebox" class="anchor">🔗</a></h3><p>Connect the MacroPad to the RPi, and the headphones or speakers.</p>
 <p>Start VLC with RC from a terminal</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>pi@raspberrypi:~ $ vlc --extraintf rc --rc-host localhost:8888
-</span></span></code></pre></div><p>Run the <code>jukebox</code> service from another terminal.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>pi@raspberrypi:~ $ ./jukebox 
-</span></span></code></pre></div><p>The Playlists should be loaded to the MacroPad. Use the rotary encoder to select an album and push it to play it.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">pi@raspberrypi:~ $ vlc --extraintf rc --rc-host localhost:8888
+</code></pre></div><p>Run the <code>jukebox</code> service from another terminal.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">pi@raspberrypi:~ $ ./jukebox 
+</code></pre></div><p>The Playlists should be loaded to the MacroPad. Use the rotary encoder to select an album and push it to play it.</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL21hY3JvcGFkLWxvYWRlZC5wbmc=" src="img/macropad-loaded.png" alt=""  />  
   <small class="img-note">click to zoom in</small>
@@ -279,22 +278,22 @@ The music collection is loaded onto the Raspberry Pi and arranged in a series of
 </p></p>
 <h3 id="7-prepare-the-service-to-start-at-boot-time">7. Prepare the service to start at boot time <a href="#7-prepare-the-service-to-start-at-boot-time" class="anchor">🔗</a></h3><p>The jukebox should start automatically when powered on. Use <code>crontab</code> in the Raspberry Pi to launch the service at boot time.</p>
 <p>The project code has a bash script named <code>runboot.sh</code>. I prepared this file to start VLC in headless RC mode, and the <code>jukebox</code> service. I added a few pauses to account for the serial port initialization.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#080">#!/bin/bash
-</span></span></span><span style="display:flex;"><span><span style="color:#080"></span><span style="color:#a2f">set</span> -x
-</span></span><span style="display:flex;"><span><span style="color:#a2f">set</span> -e
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>sleep <span style="color:#666">5</span>
-</span></span><span style="display:flex;"><span><span style="color:#a2f">cd</span> /home/pi
-</span></span><span style="display:flex;"><span>cvlc --rc-host <span style="color:#b44">&#34;localhost:8888&#34;</span> -I rc &gt; /dev/null 2&gt;&amp;<span style="color:#666">1</span> &amp;
-</span></span><span style="display:flex;"><span>sleep <span style="color:#666">5</span>
-</span></span><span style="display:flex;"><span>./jukebox &gt; /home/pi/jukebox.log 2&gt;&amp;<span style="color:#666">1</span> &amp;
-</span></span></code></pre></div><p>Copy the script to the home folder and make sure it is executable.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>pi@raspberrypi:~ $ cp macropadjukebox/runboot.sh ./runboot.sh
-</span></span><span style="display:flex;"><span>pi@raspberrypi:~ $ chmod +x runboot.sh
-</span></span></code></pre></div><p>Create an entry in the <code>crontab</code> to execute the script at boot time.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>pi@raspberrypi:~ $ crontab -e
-</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>@reboot cd /home/pi &amp;&amp; ./runboot.sh &amp;
-</span></span></code></pre></div><p><p class="markdown-image"> 
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#080">#!/bin/bash
+</span><span style="color:#080"></span><span style="color:#a2f">set</span> -x
+<span style="color:#a2f">set</span> -e
+
+sleep <span style="color:#666">5</span>
+<span style="color:#a2f">cd</span> /home/pi
+cvlc --rc-host <span style="color:#b44">&#34;localhost:8888&#34;</span> -I rc &gt; /dev/null 2&gt;&amp;<span style="color:#666">1</span> &amp;
+sleep <span style="color:#666">5</span>
+./jukebox &gt; /home/pi/jukebox.log 2&gt;&amp;<span style="color:#666">1</span> &amp;
+</code></pre></div><p>Copy the script to the home folder and make sure it is executable.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">pi@raspberrypi:~ $ cp macropadjukebox/runboot.sh ./runboot.sh
+pi@raspberrypi:~ $ chmod +x runboot.sh
+</code></pre></div><p>Create an entry in the <code>crontab</code> to execute the script at boot time.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">pi@raspberrypi:~ $ crontab -e
+</code></pre></div><div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">@reboot cd /home/pi &amp;&amp; ./runboot.sh &amp;
+</code></pre></div><p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL2Nyb250YWItZW50cnkucG5n" src="img/crontab-entry.png" alt=""  />  
   <small class="img-note">click to zoom in</small>
 </p></p>
@@ -311,19 +310,19 @@ The music collection is loaded onto the Raspberry Pi and arranged in a series of
 </p></p>
 <p>VLC has an amazing amount of features. It supports different user interfaces. Apart from the standard desktop GUI, VLC can be used via a web UI, the console, and a remote control interface. The remote control (RC) interface can be accessed via a TCP socket (with telnet or NC) and it presents a command shell for user interaction. More on that here: <a href="https://wiki.videolan.org/Documentation:Advanced_Use_of_VLC/#RC_and_RTCI" target="_blank" rel="noopener">https://wiki.videolan.org/Documentation:Advanced_Use_of_VLC/#RC_and_RTCI</a></p>
 <p>The RC interface has to be enabled when launched, for example:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>$ vlc --extraintf rc --rc-host localhost:8888
-</span></span></code></pre></div><p>Once VLC is running with RC, we can send commands via a socket or enter into an interactive shell with Telnet.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">$ vlc --extraintf rc --rc-host localhost:8888
+</code></pre></div><p>Once VLC is running with RC, we can send commands via a socket or enter into an interactive shell with Telnet.</p>
 <p>Example: add a playlist and commence playback automatically:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>$ echo &#34;add Music/ElephantGym-Dreams.m3u&#34; | nc -q 1 localhost 8888
-</span></span></code></pre></div><p><p class="markdown-image"> 
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">$ echo &#34;add Music/ElephantGym-Dreams.m3u&#34; | nc -q 1 localhost 8888
+</code></pre></div><p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL3JjLWNvbW1hbmQucG5n" src="img/rc-command.png" alt=""  />  
   <small class="img-note">click to zoom in</small>
 </p></p>
 <p>To clear the playlist and stop playback we can use:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>$ echo &#34;clear&#34; | nc -q 1 localhost 8888
-</span></span></code></pre></div><p>We don&rsquo;t need to use the graphical interface at all. We can instead use <code>cvlc</code> for a CLI or headless interface. The flag <code>-I rc</code> makes RC the main interface.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>cvlc -I rc --rc-host localhost:8888
-</span></span></code></pre></div><p><p class="markdown-image"> 
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">$ echo &#34;clear&#34; | nc -q 1 localhost 8888
+</code></pre></div><p>We don&rsquo;t need to use the graphical interface at all. We can instead use <code>cvlc</code> for a CLI or headless interface. The flag <code>-I rc</code> makes RC the main interface.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">cvlc -I rc --rc-host localhost:8888
+</code></pre></div><p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL3ZsYy1oZWFkbGVzcy5wbmc=" src="img/vlc-headless.png" alt=""  />  
   <small class="img-note">click to zoom in</small>
 </p></p>
@@ -343,215 +342,215 @@ The music collection is loaded onto the Raspberry Pi and arranged in a series of
 </ol>
 <p>I decided not to keep the socket connection to VLC open because the commands should come only sporadically, and I don&rsquo;t want to worry about accidental disconnections. Nothing like a stateless protocol!</p>
 <h3 id="the-configuration-file">The configuration file <a href="#the-configuration-file" class="anchor">🔗</a></h3><p>The configuration file is a JSON document containing the information about the VLC RC interface (host and port), the serial device name where the MacroPad is connected, and the music collection —playlists. The playlists field is a dictionary of unique indexes (I use a numeric sequence) mapped to the playlist name and file path.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>  <span style="color:#008000;font-weight:bold">&#34;vlcHost&#34;</span>: <span style="color:#b44">&#34;localhost:8888&#34;</span>,
-</span></span><span style="display:flex;"><span>  <span style="color:#008000;font-weight:bold">&#34;serialPort&#34;</span>: <span style="color:#b44">&#34;/dev/ttyACM1&#34;</span>,
-</span></span><span style="display:flex;"><span>  <span style="color:#008000;font-weight:bold">&#34;playlists&#34;</span>: {
-</span></span><span style="display:flex;"><span>    <span style="color:#008000;font-weight:bold">&#34;00&#34;</span>: {
-</span></span><span style="display:flex;"><span>      <span style="color:#008000;font-weight:bold">&#34;name&#34;</span>: <span style="color:#b44">&#34;_collections_&#34;</span>
-</span></span><span style="display:flex;"><span>    },
-</span></span><span style="display:flex;"><span>    <span style="color:#008000;font-weight:bold">&#34;01&#34;</span>: {
-</span></span><span style="display:flex;"><span>      <span style="color:#008000;font-weight:bold">&#34;name&#34;</span>: <span style="color:#b44">&#34;Death Cab For Cutie - Transatlanticism&#34;</span>,
-</span></span><span style="display:flex;"><span>      <span style="color:#008000;font-weight:bold">&#34;file&#34;</span>: <span style="color:#b44">&#34;/home/pi/Music/DeathCabForCutie-Transatlanticism.m3u&#34;</span>
-</span></span><span style="display:flex;"><span>    },
-</span></span><span style="display:flex;"><span>    <span style="color:#008000;font-weight:bold">&#34;02&#34;</span>: {
-</span></span><span style="display:flex;"><span>      <span style="color:#008000;font-weight:bold">&#34;name&#34;</span>: <span style="color:#b44">&#34;Metallica - Metallica&#34;</span>,
-</span></span><span style="display:flex;"><span>      <span style="color:#008000;font-weight:bold">&#34;file&#34;</span>: <span style="color:#b44">&#34;/home/pi/Music/Metallica-Metallica.m3u&#34;</span>
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>   }
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>The first entry in the playlists dictionary is a special entry (00) that helps the MacroPad read and organize the collection.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#b44">&#34;00&#34;</span><span style="">:</span> {
-</span></span><span style="display:flex;"><span>	<span style="color:#008000;font-weight:bold">&#34;name&#34;</span>: <span style="color:#b44">&#34;_collections_&#34;</span>
-</span></span><span style="display:flex;"><span>}<span style="">,</span>
-</span></span><span style="display:flex;"><span><span style="">...</span>
-</span></span></code></pre></div><p>The m3u files are simply plain text with a list of song files.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
+  <span style="color:#008000;font-weight:bold">&#34;vlcHost&#34;</span>: <span style="color:#b44">&#34;localhost:8888&#34;</span>,
+  <span style="color:#008000;font-weight:bold">&#34;serialPort&#34;</span>: <span style="color:#b44">&#34;/dev/ttyACM1&#34;</span>,
+  <span style="color:#008000;font-weight:bold">&#34;playlists&#34;</span>: {
+    <span style="color:#008000;font-weight:bold">&#34;00&#34;</span>: {
+      <span style="color:#008000;font-weight:bold">&#34;name&#34;</span>: <span style="color:#b44">&#34;_collections_&#34;</span>
+    },
+    <span style="color:#008000;font-weight:bold">&#34;01&#34;</span>: {
+      <span style="color:#008000;font-weight:bold">&#34;name&#34;</span>: <span style="color:#b44">&#34;Death Cab For Cutie - Transatlanticism&#34;</span>,
+      <span style="color:#008000;font-weight:bold">&#34;file&#34;</span>: <span style="color:#b44">&#34;/home/pi/Music/DeathCabForCutie-Transatlanticism.m3u&#34;</span>
+    },
+    <span style="color:#008000;font-weight:bold">&#34;02&#34;</span>: {
+      <span style="color:#008000;font-weight:bold">&#34;name&#34;</span>: <span style="color:#b44">&#34;Metallica - Metallica&#34;</span>,
+      <span style="color:#008000;font-weight:bold">&#34;file&#34;</span>: <span style="color:#b44">&#34;/home/pi/Music/Metallica-Metallica.m3u&#34;</span>
+    }
+   }
+}
+</code></pre></div><p>The first entry in the playlists dictionary is a special entry (00) that helps the MacroPad read and organize the collection.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="color:#b44">&#34;00&#34;</span><span style="">:</span> {
+	<span style="color:#008000;font-weight:bold">&#34;name&#34;</span>: <span style="color:#b44">&#34;_collections_&#34;</span>
+}<span style="">,</span>
+<span style="">...</span>
+</code></pre></div><p>The m3u files are simply plain text with a list of song files.</p>
 <h3 id="serial-port-programming-in-go">Serial Port programming in Go <a href="#serial-port-programming-in-go" class="anchor">🔗</a></h3><p>I found a few different Go libraries for serial programming. Most of them were very old and abandoned. Finally, I found <code>https://github.com/bugst/go-serial</code>. What I like about this library —apart from the fact that is actively developed— is that I don&rsquo;t have to worry about the underlying operating system. It also has nice helper functions for operations like listing the available serial ports.</p>
 <p>The serial port we intend to use is pre-defined in the configuration file. However, we have to account for the fact that the MacroPad and the Raspberry Pi are separate devices and the serial port might not be ready when the service starts. The service should wait for the port to become available. We can do this in a waiting loop where we list the ports looking for the right name.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span>found <span style="color:#666">:=</span> <span style="color:#a2f;font-weight:bold">false</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#a2f;font-weight:bold">for</span> {
-</span></span><span style="display:flex;"><span>		log.<span style="color:#00a000">Println</span>(<span style="color:#b44">&#34;list serial ports&#34;</span>)
-</span></span><span style="display:flex;"><span>		ports, err <span style="color:#666">:=</span> serial.<span style="color:#00a000">GetPortsList</span>()
-</span></span><span style="display:flex;"><span>		<span style="color:#a2f;font-weight:bold">if</span> err <span style="color:#666">!=</span> <span style="color:#a2f;font-weight:bold">nil</span> {
-</span></span><span style="display:flex;"><span>			log.<span style="color:#00a000">Fatal</span>(err)
-</span></span><span style="display:flex;"><span>		}
-</span></span><span style="display:flex;"><span>		<span style="color:#a2f;font-weight:bold">if</span> <span style="color:#a2f">len</span>(ports) <span style="color:#666">==</span> <span style="color:#666">0</span> {
-</span></span><span style="display:flex;"><span>			log.<span style="color:#00a000">Fatal</span>(<span style="color:#b44">&#34;No serial ports found!&#34;</span>)
-</span></span><span style="display:flex;"><span>		}
-</span></span><span style="display:flex;"><span>		<span style="color:#a2f;font-weight:bold">for</span> _, portName <span style="color:#666">:=</span> <span style="color:#a2f;font-weight:bold">range</span> ports {
-</span></span><span style="display:flex;"><span>			log.<span style="color:#00a000">Printf</span>(<span style="color:#b44">&#34;Port: %v\n&#34;</span>, portName)
-</span></span><span style="display:flex;"><span>			<span style="color:#a2f;font-weight:bold">if</span> portName <span style="color:#666">==</span> sc.config.SerialPort {
-</span></span><span style="display:flex;"><span>				found = <span style="color:#a2f;font-weight:bold">true</span>
-</span></span><span style="display:flex;"><span>				<span style="color:#a2f;font-weight:bold">break</span>
-</span></span><span style="display:flex;"><span>			}
-</span></span><span style="display:flex;"><span>		}
-</span></span><span style="display:flex;"><span>		<span style="color:#a2f;font-weight:bold">if</span> found {
-</span></span><span style="display:flex;"><span>			<span style="color:#a2f;font-weight:bold">break</span>
-</span></span><span style="display:flex;"><span>		}
-</span></span><span style="display:flex;"><span>		time.<span style="color:#00a000">Sleep</span>(<span style="color:#666">3</span> <span style="color:#666">*</span> time.Second)
-</span></span><span style="display:flex;"><span>	}
-</span></span></code></pre></div><p>Once the port is found, we can open it and set it up for communications. The read timeout has to be disabled because there will be long periods of time without any transmission. Since this is the main function of the program we can afford to lock waiting for something new to transmit.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span>mode <span style="color:#666">:=</span> <span style="color:#666">&amp;</span>serial.Mode{
-</span></span><span style="display:flex;"><span>		BaudRate: <span style="color:#666">9600</span>,
-</span></span><span style="display:flex;"><span>		Parity:   serial.NoParity,
-</span></span><span style="display:flex;"><span>		StopBits: serial.OneStopBit,
-</span></span><span style="display:flex;"><span>		DataBits: <span style="color:#666">8</span>,
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">var</span> err <span style="color:#0b0;font-weight:bold">error</span>
-</span></span><span style="display:flex;"><span>sc.port, err = serial.<span style="color:#00a000">Open</span>(sc.config.SerialPort, mode)
-</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">if</span> err <span style="color:#666">!=</span> <span style="color:#a2f;font-weight:bold">nil</span> {
-</span></span><span style="display:flex;"><span>	log.<span style="color:#00a000">Fatal</span>(err)
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">defer</span> sc.port.<span style="color:#00a000">Close</span>()
-</span></span><span style="display:flex;"><span>err = sc.port.<span style="color:#00a000">SetReadTimeout</span>(serial.NoTimeout)
-</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">if</span> err <span style="color:#666">!=</span> <span style="color:#a2f;font-weight:bold">nil</span> {
-</span></span><span style="display:flex;"><span>	log.<span style="color:#00a000">Fatal</span>(err)
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>The first transmission after the port is ready will be to send the information of the music collection -playlists- to the MacroPad. We use a reduced version (without file paths) of the playlist JSON dictionary. Ultimately, the JSON string is written to the serial port as an array of bytes. On the MacroPad side, the code is expecting a return character <code>\r</code> as the End-Of-Line marker.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">func</span> (sc <span style="color:#666">*</span>SerialComms) <span style="color:#00a000">sendData</span>(data []<span style="color:#0b0;font-weight:bold">byte</span>) <span style="color:#0b0;font-weight:bold">error</span> {
-</span></span><span style="display:flex;"><span>	_, err <span style="color:#666">:=</span> sc.port.<span style="color:#00a000">Write</span>([]<span style="color:#a2f">byte</span>(fmt.<span style="color:#00a000">Sprintf</span>(<span style="color:#b44">&#34;%s\r&#34;</span>, data)))
-</span></span><span style="display:flex;"><span>	<span style="color:#a2f;font-weight:bold">if</span> err <span style="color:#666">!=</span> <span style="color:#a2f;font-weight:bold">nil</span> {
-</span></span><span style="display:flex;"><span>		<span style="color:#a2f;font-weight:bold">return</span> err
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>	<span style="color:#a2f;font-weight:bold">return</span> <span style="color:#a2f;font-weight:bold">nil</span>
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>Finally, we run on an infinite loop waiting for messages from the serial line. When a new message arrives, it is processed with one of two functions. One function works with the playlist selections (prefixed <code>pl|</code>), and the other function responds to the playback commands (prefix <code>cmd|</code>).</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span>buff <span style="color:#666">:=</span> <span style="color:#a2f">make</span>([]<span style="color:#0b0;font-weight:bold">byte</span>, <span style="color:#666">256</span>)
-</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">for</span> {
-</span></span><span style="display:flex;"><span>	<span style="color:#080;font-style:italic">// Reads bytes
-</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"></span>	n, err <span style="color:#666">:=</span> sc.port.<span style="color:#00a000">Read</span>(buff)
-</span></span><span style="display:flex;"><span>	<span style="color:#a2f;font-weight:bold">if</span> err <span style="color:#666">!=</span> <span style="color:#a2f;font-weight:bold">nil</span> {
-</span></span><span style="display:flex;"><span>		<span style="color:#080;font-style:italic">//zero tolerance for errors in the serial line.
-</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"></span>		log.<span style="color:#00a000">Fatal</span>(err) 
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>	<span style="color:#a2f;font-weight:bold">if</span> n <span style="color:#666">==</span> <span style="color:#666">0</span> {
-</span></span><span style="display:flex;"><span>		<span style="color:#a2f;font-weight:bold">continue</span>
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>	input <span style="color:#666">:=</span> <span style="color:#a2f">string</span>(buff[:n])
-</span></span><span style="display:flex;"><span>	<span style="color:#a2f;font-weight:bold">if</span> strings.<span style="color:#00a000">LastIndex</span>(strings.<span style="color:#00a000">ToLower</span>(input), <span style="color:#b44">&#34;cmd|&#34;</span>) <span style="color:#666">==</span> <span style="color:#666">0</span> {
-</span></span><span style="display:flex;"><span>		sc.<span style="color:#00a000">processKeyCommand</span>(input)
-</span></span><span style="display:flex;"><span>	} <span style="color:#a2f;font-weight:bold">else</span> <span style="color:#a2f;font-weight:bold">if</span> strings.<span style="color:#00a000">LastIndex</span>(strings.<span style="color:#00a000">ToLower</span>(input), <span style="color:#b44">&#34;pl|&#34;</span>) <span style="color:#666">==</span> <span style="color:#666">0</span> {
-</span></span><span style="display:flex;"><span>		sc.<span style="color:#00a000">processPlaylistSelection</span>(input)
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><h3 id="vlc-commands">VLC commands <a href="#vlc-commands" class="anchor">🔗</a></h3><p>The VLC RC interface responds to a specific list of command messages. I compiled a <a href="https://github.com/carlosolmos/macropadjukebox/blob/main/vlc.md" target="_blank" rel="noopener">list from the cvlc command documentation</a>. The service has a series of helper functions to send the appropriate command strings to the VLC RC interface. Every helper function prepares one or more command strings to be sent to VLC via a single-use TCP socket connection using the method <code>VLCsendCommand</code>.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>func VLCsendCommand(cmdList []string, waitForResponse bool) (string, error) {
-</span></span><span style="display:flex;"><span>	log.Printf(&#34;sending commands %s\n&#34;, cmdList)
-</span></span><span style="display:flex;"><span>	//return &#34;&#34;, nil
-</span></span><span style="display:flex;"><span>	vlcsocket, err := net.Dial(&#34;tcp&#34;, VlcHost)
-</span></span><span style="display:flex;"><span>	if err != nil {
-</span></span><span style="display:flex;"><span>		log.Println(&#34;Connection to socket failed:&#34;, err)
-</span></span><span style="display:flex;"><span>		return &#34;&#34;, err
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>	// wait for the VLC prompt to respond.
-</span></span><span style="display:flex;"><span>	time.Sleep(1 * time.Second)
-</span></span><span style="display:flex;"><span>	// read prompt out of the way
-</span></span><span style="display:flex;"><span>	recvBuf := make([]byte, 1024)
-</span></span><span style="display:flex;"><span>	n, err := vlcsocket.Read(recvBuf[:])
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	// send commands
-</span></span><span style="display:flex;"><span>	res := &#34;&#34;
-</span></span><span style="display:flex;"><span>	for _, cmd := range cmdList {
-</span></span><span style="display:flex;"><span>		cmdString := fmt.Sprintf(&#34;%s\n&#34;, cmd)
-</span></span><span style="display:flex;"><span>		_, err = vlcsocket.Write([]byte(cmdString))
-</span></span><span style="display:flex;"><span>		if err != nil {
-</span></span><span style="display:flex;"><span>			log.Println(&#34;Write to socket failed:&#34;, err)
-</span></span><span style="display:flex;"><span>			return &#34;&#34;, err
-</span></span><span style="display:flex;"><span>		}
-</span></span><span style="display:flex;"><span>		// read command response
-</span></span><span style="display:flex;"><span>		if waitForResponse {
-</span></span><span style="display:flex;"><span>			err = vlcsocket.SetReadDeadline(time.Now().Add(3 * time.Second))
-</span></span><span style="display:flex;"><span>			if err != nil {
-</span></span><span style="display:flex;"><span>				log.Println(&#34;SetReadDeadline failed:&#34;, err)
-</span></span><span style="display:flex;"><span>				// do something else, for example create new conn
-</span></span><span style="display:flex;"><span>				return &#34;&#34;, err
-</span></span><span style="display:flex;"><span>			}
-</span></span><span style="display:flex;"><span>			// try 3 times
-</span></span><span style="display:flex;"><span>			for i := 0; i &lt; 3; i++ {
-</span></span><span style="display:flex;"><span>				recvBuf := make([]byte, 1024)
-</span></span><span style="display:flex;"><span>				n, err = vlcsocket.Read(recvBuf[:]) // recv data
-</span></span><span style="display:flex;"><span>				if err != nil {
-</span></span><span style="display:flex;"><span>					if netErr, ok := err.(net.Error); ok &amp;&amp; netErr.Timeout() {
-</span></span><span style="display:flex;"><span>						//timeout
-</span></span><span style="display:flex;"><span>						break
-</span></span><span style="display:flex;"><span>					} else {
-</span></span><span style="display:flex;"><span>						// some error else, do something else, for example create new conn
-</span></span><span style="display:flex;"><span>						log.Println(&#34;Read from socket error:&#34;, err)
-</span></span><span style="display:flex;"><span>						return res, nil
-</span></span><span style="display:flex;"><span>					}
-</span></span><span style="display:flex;"><span>				}
-</span></span><span style="display:flex;"><span>				if n == 0 {
-</span></span><span style="display:flex;"><span>					break
-</span></span><span style="display:flex;"><span>				}
-</span></span><span style="display:flex;"><span>				res = res + string(recvBuf)
-</span></span><span style="display:flex;"><span>			}
-</span></span><span style="display:flex;"><span>		}
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>	// close the connection gracefully
-</span></span><span style="display:flex;"><span>	_, err = vlcsocket.Write([]byte(&#34;quit\n&#34;))
-</span></span><span style="display:flex;"><span>	if err != nil {
-</span></span><span style="display:flex;"><span>		return res, err
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>	_ = vlcsocket.Close()
-</span></span><span style="display:flex;"><span>	return res, nil
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>As I said, two types of messages come from the MacroPad: playlist selection and playback commands. The playback commands are defined by the prefix <code>cmd|</code> and the name of the function to execute.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>cmd|play
-</span></span><span style="display:flex;"><span>cmd|stop
-</span></span><span style="display:flex;"><span>cmd|next
-</span></span></code></pre></div><p>We keep a map of these names and their corresponding helper functions in the <a href="https://github.com/carlosolmos/macropadjukebox/blob/main/services/configuration.go#L37" target="_blank" rel="noopener">configuration.go file</a>. For example, the command <code>cmd|play</code> will trigger the function <code>VLC_Play()</code> and the command <code>cmd|clear</code> will do <code>VLC_Clear()</code>. I found this to be a good way to avoid a long <code>if-else-if</code> abomination:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>var KeyFunctionsMap = map[string]func(){
-</span></span><span style="display:flex;"><span>	&#34;play&#34;: func() {
-</span></span><span style="display:flex;"><span>		fmt.Println(&#34;play&#34;)
-</span></span><span style="display:flex;"><span>		err := VLC_Play()
-</span></span><span style="display:flex;"><span>		if err != nil {
-</span></span><span style="display:flex;"><span>			log.Printf(&#34;error: %s\n&#34;, err.Error())
-</span></span><span style="display:flex;"><span>		}
-</span></span><span style="display:flex;"><span>	},
-</span></span><span style="display:flex;"><span>	...
-</span></span><span style="display:flex;"><span>	&#34;clear&#34;: func() {
-</span></span><span style="display:flex;"><span>		fmt.Println(&#34;clear&#34;)
-</span></span><span style="display:flex;"><span>		err = VLC_Clear()
-</span></span><span style="display:flex;"><span>		if err != nil {
-</span></span><span style="display:flex;"><span>			log.Printf(&#34;error: %s\n&#34;, err.Error())
-</span></span><span style="display:flex;"><span>		}
-</span></span><span style="display:flex;"><span>	},
-</span></span></code></pre></div><p>Each helper prepares the command strings to send to VLC:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">func</span> <span style="color:#00a000">VLC_Play</span>() <span style="color:#0b0;font-weight:bold">error</span> {
-</span></span><span style="display:flex;"><span>	_, err <span style="color:#666">:=</span> <span style="color:#00a000">VLCsendCommand</span>([]<span style="color:#0b0;font-weight:bold">string</span>{<span style="color:#b44">&#34;play&#34;</span>}, <span style="color:#a2f;font-weight:bold">false</span>)
-</span></span><span style="display:flex;"><span>	<span style="color:#a2f;font-weight:bold">if</span> err <span style="color:#666">!=</span> <span style="color:#a2f;font-weight:bold">nil</span> {
-</span></span><span style="display:flex;"><span>		<span style="color:#a2f;font-weight:bold">return</span> err
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>	<span style="color:#a2f;font-weight:bold">return</span> <span style="color:#a2f;font-weight:bold">nil</span>
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>The execution of the command function takes on a generic form:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>	 // playback command
-</span></span><span style="display:flex;"><span>	  cmdToks := strings.Split(command, &#34;|&#34;)
-</span></span><span style="display:flex;"><span>	  ...
-</span></span><span style="display:flex;"><span>		cmdFun, ok := KeyFunctionsMap[cmdToks[1]]
-</span></span><span style="display:flex;"><span>		if ok {
-</span></span><span style="display:flex;"><span>			cmdFun()
-</span></span><span style="display:flex;"><span>		} else {
-</span></span><span style="display:flex;"><span>			log.Println(&#34; command not found&#34;)
-</span></span><span style="display:flex;"><span>		}
-</span></span><span style="display:flex;"><span>		...
-</span></span></code></pre></div><p>The playlist selection command works a little differently. The message contains the prefix <code>pl|</code> followed by the playlist index —as defined in the configuration file.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">found <span style="color:#666">:=</span> <span style="color:#a2f;font-weight:bold">false</span>
+	<span style="color:#a2f;font-weight:bold">for</span> {
+		log.<span style="color:#00a000">Println</span>(<span style="color:#b44">&#34;list serial ports&#34;</span>)
+		ports, err <span style="color:#666">:=</span> serial.<span style="color:#00a000">GetPortsList</span>()
+		<span style="color:#a2f;font-weight:bold">if</span> err <span style="color:#666">!=</span> <span style="color:#a2f;font-weight:bold">nil</span> {
+			log.<span style="color:#00a000">Fatal</span>(err)
+		}
+		<span style="color:#a2f;font-weight:bold">if</span> <span style="color:#a2f">len</span>(ports) <span style="color:#666">==</span> <span style="color:#666">0</span> {
+			log.<span style="color:#00a000">Fatal</span>(<span style="color:#b44">&#34;No serial ports found!&#34;</span>)
+		}
+		<span style="color:#a2f;font-weight:bold">for</span> _, portName <span style="color:#666">:=</span> <span style="color:#a2f;font-weight:bold">range</span> ports {
+			log.<span style="color:#00a000">Printf</span>(<span style="color:#b44">&#34;Port: %v\n&#34;</span>, portName)
+			<span style="color:#a2f;font-weight:bold">if</span> portName <span style="color:#666">==</span> sc.config.SerialPort {
+				found = <span style="color:#a2f;font-weight:bold">true</span>
+				<span style="color:#a2f;font-weight:bold">break</span>
+			}
+		}
+		<span style="color:#a2f;font-weight:bold">if</span> found {
+			<span style="color:#a2f;font-weight:bold">break</span>
+		}
+		time.<span style="color:#00a000">Sleep</span>(<span style="color:#666">3</span> <span style="color:#666">*</span> time.Second)
+	}
+</code></pre></div><p>Once the port is found, we can open it and set it up for communications. The read timeout has to be disabled because there will be long periods of time without any transmission. Since this is the main function of the program we can afford to lock waiting for something new to transmit.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">mode <span style="color:#666">:=</span> <span style="color:#666">&amp;</span>serial.Mode{
+		BaudRate: <span style="color:#666">9600</span>,
+		Parity:   serial.NoParity,
+		StopBits: serial.OneStopBit,
+		DataBits: <span style="color:#666">8</span>,
+	}
+<span style="color:#a2f;font-weight:bold">var</span> err <span style="color:#0b0;font-weight:bold">error</span>
+sc.port, err = serial.<span style="color:#00a000">Open</span>(sc.config.SerialPort, mode)
+<span style="color:#a2f;font-weight:bold">if</span> err <span style="color:#666">!=</span> <span style="color:#a2f;font-weight:bold">nil</span> {
+	log.<span style="color:#00a000">Fatal</span>(err)
+}
+<span style="color:#a2f;font-weight:bold">defer</span> sc.port.<span style="color:#00a000">Close</span>()
+err = sc.port.<span style="color:#00a000">SetReadTimeout</span>(serial.NoTimeout)
+<span style="color:#a2f;font-weight:bold">if</span> err <span style="color:#666">!=</span> <span style="color:#a2f;font-weight:bold">nil</span> {
+	log.<span style="color:#00a000">Fatal</span>(err)
+}
+</code></pre></div><p>The first transmission after the port is ready will be to send the information of the music collection -playlists- to the MacroPad. We use a reduced version (without file paths) of the playlist JSON dictionary. Ultimately, the JSON string is written to the serial port as an array of bytes. On the MacroPad side, the code is expecting a return character <code>\r</code> as the End-Of-Line marker.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#a2f;font-weight:bold">func</span> (sc <span style="color:#666">*</span>SerialComms) <span style="color:#00a000">sendData</span>(data []<span style="color:#0b0;font-weight:bold">byte</span>) <span style="color:#0b0;font-weight:bold">error</span> {
+	_, err <span style="color:#666">:=</span> sc.port.<span style="color:#00a000">Write</span>([]<span style="color:#a2f">byte</span>(fmt.<span style="color:#00a000">Sprintf</span>(<span style="color:#b44">&#34;%s\r&#34;</span>, data)))
+	<span style="color:#a2f;font-weight:bold">if</span> err <span style="color:#666">!=</span> <span style="color:#a2f;font-weight:bold">nil</span> {
+		<span style="color:#a2f;font-weight:bold">return</span> err
+	}
+	<span style="color:#a2f;font-weight:bold">return</span> <span style="color:#a2f;font-weight:bold">nil</span>
+}
+</code></pre></div><p>Finally, we run on an infinite loop waiting for messages from the serial line. When a new message arrives, it is processed with one of two functions. One function works with the playlist selections (prefixed <code>pl|</code>), and the other function responds to the playback commands (prefix <code>cmd|</code>).</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">buff <span style="color:#666">:=</span> <span style="color:#a2f">make</span>([]<span style="color:#0b0;font-weight:bold">byte</span>, <span style="color:#666">256</span>)
+<span style="color:#a2f;font-weight:bold">for</span> {
+	<span style="color:#080;font-style:italic">// Reads bytes
+</span><span style="color:#080;font-style:italic"></span>	n, err <span style="color:#666">:=</span> sc.port.<span style="color:#00a000">Read</span>(buff)
+	<span style="color:#a2f;font-weight:bold">if</span> err <span style="color:#666">!=</span> <span style="color:#a2f;font-weight:bold">nil</span> {
+		<span style="color:#080;font-style:italic">//zero tolerance for errors in the serial line.
+</span><span style="color:#080;font-style:italic"></span>		log.<span style="color:#00a000">Fatal</span>(err) 
+	}
+	<span style="color:#a2f;font-weight:bold">if</span> n <span style="color:#666">==</span> <span style="color:#666">0</span> {
+		<span style="color:#a2f;font-weight:bold">continue</span>
+	}
+	input <span style="color:#666">:=</span> <span style="color:#a2f">string</span>(buff[:n])
+	<span style="color:#a2f;font-weight:bold">if</span> strings.<span style="color:#00a000">LastIndex</span>(strings.<span style="color:#00a000">ToLower</span>(input), <span style="color:#b44">&#34;cmd|&#34;</span>) <span style="color:#666">==</span> <span style="color:#666">0</span> {
+		sc.<span style="color:#00a000">processKeyCommand</span>(input)
+	} <span style="color:#a2f;font-weight:bold">else</span> <span style="color:#a2f;font-weight:bold">if</span> strings.<span style="color:#00a000">LastIndex</span>(strings.<span style="color:#00a000">ToLower</span>(input), <span style="color:#b44">&#34;pl|&#34;</span>) <span style="color:#666">==</span> <span style="color:#666">0</span> {
+		sc.<span style="color:#00a000">processPlaylistSelection</span>(input)
+	}
+}
+</code></pre></div><h3 id="vlc-commands">VLC commands <a href="#vlc-commands" class="anchor">🔗</a></h3><p>The VLC RC interface responds to a specific list of command messages. I compiled a <a href="https://github.com/carlosolmos/macropadjukebox/blob/main/vlc.md" target="_blank" rel="noopener">list from the cvlc command documentation</a>. The service has a series of helper functions to send the appropriate command strings to the VLC RC interface. Every helper function prepares one or more command strings to be sent to VLC via a single-use TCP socket connection using the method <code>VLCsendCommand</code>.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">func VLCsendCommand(cmdList []string, waitForResponse bool) (string, error) {
+	log.Printf(&#34;sending commands %s\n&#34;, cmdList)
+	//return &#34;&#34;, nil
+	vlcsocket, err := net.Dial(&#34;tcp&#34;, VlcHost)
+	if err != nil {
+		log.Println(&#34;Connection to socket failed:&#34;, err)
+		return &#34;&#34;, err
+	}
+	// wait for the VLC prompt to respond.
+	time.Sleep(1 * time.Second)
+	// read prompt out of the way
+	recvBuf := make([]byte, 1024)
+	n, err := vlcsocket.Read(recvBuf[:])
+
+	// send commands
+	res := &#34;&#34;
+	for _, cmd := range cmdList {
+		cmdString := fmt.Sprintf(&#34;%s\n&#34;, cmd)
+		_, err = vlcsocket.Write([]byte(cmdString))
+		if err != nil {
+			log.Println(&#34;Write to socket failed:&#34;, err)
+			return &#34;&#34;, err
+		}
+		// read command response
+		if waitForResponse {
+			err = vlcsocket.SetReadDeadline(time.Now().Add(3 * time.Second))
+			if err != nil {
+				log.Println(&#34;SetReadDeadline failed:&#34;, err)
+				// do something else, for example create new conn
+				return &#34;&#34;, err
+			}
+			// try 3 times
+			for i := 0; i &lt; 3; i++ {
+				recvBuf := make([]byte, 1024)
+				n, err = vlcsocket.Read(recvBuf[:]) // recv data
+				if err != nil {
+					if netErr, ok := err.(net.Error); ok &amp;&amp; netErr.Timeout() {
+						//timeout
+						break
+					} else {
+						// some error else, do something else, for example create new conn
+						log.Println(&#34;Read from socket error:&#34;, err)
+						return res, nil
+					}
+				}
+				if n == 0 {
+					break
+				}
+				res = res + string(recvBuf)
+			}
+		}
+	}
+	// close the connection gracefully
+	_, err = vlcsocket.Write([]byte(&#34;quit\n&#34;))
+	if err != nil {
+		return res, err
+	}
+	_ = vlcsocket.Close()
+	return res, nil
+}
+</code></pre></div><p>As I said, two types of messages come from the MacroPad: playlist selection and playback commands. The playback commands are defined by the prefix <code>cmd|</code> and the name of the function to execute.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">cmd|play
+cmd|stop
+cmd|next
+</code></pre></div><p>We keep a map of these names and their corresponding helper functions in the <a href="https://github.com/carlosolmos/macropadjukebox/blob/main/services/configuration.go#L37" target="_blank" rel="noopener">configuration.go file</a>. For example, the command <code>cmd|play</code> will trigger the function <code>VLC_Play()</code> and the command <code>cmd|clear</code> will do <code>VLC_Clear()</code>. I found this to be a good way to avoid a long <code>if-else-if</code> abomination:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">var KeyFunctionsMap = map[string]func(){
+	&#34;play&#34;: func() {
+		fmt.Println(&#34;play&#34;)
+		err := VLC_Play()
+		if err != nil {
+			log.Printf(&#34;error: %s\n&#34;, err.Error())
+		}
+	},
+	...
+	&#34;clear&#34;: func() {
+		fmt.Println(&#34;clear&#34;)
+		err = VLC_Clear()
+		if err != nil {
+			log.Printf(&#34;error: %s\n&#34;, err.Error())
+		}
+	},
+</code></pre></div><p>Each helper prepares the command strings to send to VLC:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#a2f;font-weight:bold">func</span> <span style="color:#00a000">VLC_Play</span>() <span style="color:#0b0;font-weight:bold">error</span> {
+	_, err <span style="color:#666">:=</span> <span style="color:#00a000">VLCsendCommand</span>([]<span style="color:#0b0;font-weight:bold">string</span>{<span style="color:#b44">&#34;play&#34;</span>}, <span style="color:#a2f;font-weight:bold">false</span>)
+	<span style="color:#a2f;font-weight:bold">if</span> err <span style="color:#666">!=</span> <span style="color:#a2f;font-weight:bold">nil</span> {
+		<span style="color:#a2f;font-weight:bold">return</span> err
+	}
+	<span style="color:#a2f;font-weight:bold">return</span> <span style="color:#a2f;font-weight:bold">nil</span>
+}
+</code></pre></div><p>The execution of the command function takes on a generic form:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">	 // playback command
+	  cmdToks := strings.Split(command, &#34;|&#34;)
+	  ...
+		cmdFun, ok := KeyFunctionsMap[cmdToks[1]]
+		if ok {
+			cmdFun()
+		} else {
+			log.Println(&#34; command not found&#34;)
+		}
+		...
+</code></pre></div><p>The playlist selection command works a little differently. The message contains the prefix <code>pl|</code> followed by the playlist index —as defined in the configuration file.</p>
 <p>Playlist selection command:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>pl|{index}
-</span></span><span style="display:flex;"><span>e.g.  pl|01
-</span></span></code></pre></div><p>The service finds the playlist file (m3u) associated with the index in the configuration map and sends to VLC the commands to reset the playlist (<code>clear</code>) and begin playing the new one (<code>add {filename}</code>).</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>func VLC_StartPlaylist(playlist string) error {
-</span></span><span style="display:flex;"><span>	cmdList := []string{
-</span></span><span style="display:flex;"><span>		&#34;clear&#34;,
-</span></span><span style="display:flex;"><span>		fmt.Sprintf(&#34;add %s&#34;, playlist),
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>	_, err := VLCsendCommand(cmdList, false)
-</span></span><span style="display:flex;"><span>	if err != nil {
-</span></span><span style="display:flex;"><span>		return err
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>	return nil
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>All these helper functions are defined in the file <a href="https://github.com/carlosolmos/macropadjukebox/blob/main/services/vlc.go" target="_blank" rel="noopener">https://github.com/carlosolmos/macropadjukebox/blob/main/services/vlc.go</a>.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">pl|{index}
+e.g.  pl|01
+</code></pre></div><p>The service finds the playlist file (m3u) associated with the index in the configuration map and sends to VLC the commands to reset the playlist (<code>clear</code>) and begin playing the new one (<code>add {filename}</code>).</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">func VLC_StartPlaylist(playlist string) error {
+	cmdList := []string{
+		&#34;clear&#34;,
+		fmt.Sprintf(&#34;add %s&#34;, playlist),
+	}
+	_, err := VLCsendCommand(cmdList, false)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+</code></pre></div><p>All these helper functions are defined in the file <a href="https://github.com/carlosolmos/macropadjukebox/blob/main/services/vlc.go" target="_blank" rel="noopener">https://github.com/carlosolmos/macropadjukebox/blob/main/services/vlc.go</a>.</p>
 <h2 id="macropad">MacroPad <a href="#macropad" class="anchor">🔗</a></h2><p>The Arduino MacroPad RP2040 is a great gadget. It packs a 3x4 keyboard with neopixels, an OLED display, a speaker, and a decent microcontroller compatible with CircuitPython and Arduino.</p>
 <p><a href="https://learn.adafruit.com/adafruit-macropad-rp2040" target="_blank" rel="noopener">https://learn.adafruit.com/adafruit-macropad-rp2040</a></p>
 <p>I set up the MacroPad as the controller of the Jukebox.</p>
@@ -575,13 +574,13 @@ The music collection is loaded onto the Raspberry Pi and arranged in a series of
 <p>CircuitPython (the <code>usb_cdc</code> module) enables by default a &ldquo;Communications Device Class&rdquo; serial device that can be used to interact with a <a href="https://learn.adafruit.com/welcome-to-circuitpython/kattni-connecting-to-the-serial-console" target="_blank" rel="noopener">console</a> and a <a href="https://learn.adafruit.com/welcome-to-circuitpython/the-repl" target="_blank" rel="noopener">REPL</a> interface. None of these are helpful for exchanging data over the serial line. Luckily, the <code>usb_cdc</code> module can enable a second serial device just for data exchange. This serial data device is enumerated separately.</p>
 <p>To enable this device we have to create a file called <code>boot.py</code>, and put it in the root directory of the MacroPad drive, with the following code:</p>
 <p><code>boot.py</code></p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>import usb_cdc
-</span></span><span style="display:flex;"><span>try:
-</span></span><span style="display:flex;"><span>	  # enable console AND data serial devices
-</span></span><span style="display:flex;"><span>    usb_cdc.enable(console=True, data=True)    
-</span></span><span style="display:flex;"><span>except Exception as e:
-</span></span><span style="display:flex;"><span>    print(e)
-</span></span></code></pre></div><p>After rebooting the MacroPad you&rsquo;ll see a second serial device in your computer or raspberry pi:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">import usb_cdc
+try:
+	  # enable console AND data serial devices
+    usb_cdc.enable(console=True, data=True)    
+except Exception as e:
+    print(e)
+</code></pre></div><p>After rebooting the MacroPad you&rsquo;ll see a second serial device in your computer or raspberry pi:</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL0NEQy1zZXJpYWwtZGV2aWNlcy5wbmc=" src="img/CDC-serial-devices.png" alt=""  />  
   <small class="img-note">click to zoom in</small>
@@ -592,62 +591,64 @@ The music collection is loaded onto the Raspberry Pi and arranged in a series of
 </p></p>
 <p>More info about the CDC devices in CircuitPython: <a href="https://learn.adafruit.com/customizing-usb-devices-in-circuitpython/circuitpy-midi-serial" target="_blank" rel="noopener">https://learn.adafruit.com/customizing-usb-devices-in-circuitpython/circuitpy-midi-serial</a></p>
 <h3 id="music-playlists">Music playlists <a href="#music-playlists" class="anchor">🔗</a></h3><p>The playlist configuration is received as a JSON document from the jukebox service via the serial data line. The playlist names and indices are stored in circular arrays that are iterated over by the rotary encoder. The MacroPad library for the rotary encoder keeps a sequence that increments (clockwise) or decrements (counterclockwise) indefinitely. With a module operation, we translate the encoder position to a circular array index.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>position <span style="color:#666">=</span> macropad<span style="color:#666">.</span>encoder
-</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">if</span> position <span style="color:#666">!=</span> encoder_last_position:
-</span></span><span style="display:flex;"><span>    <span style="color:#a2f;font-weight:bold">if</span> <span style="color:#a2f">len</span>(playlistIndexes)<span style="color:#666">&gt;</span><span style="color:#666">0</span>:
-</span></span><span style="display:flex;"><span>        plPos <span style="color:#666">=</span> position <span style="color:#666">%</span> <span style="color:#a2f">len</span>(playlistIndexes)
-</span></span><span style="display:flex;"><span>        pl_index<span style="color:#666">=</span>playlistIndexes[plPos]
-</span></span><span style="display:flex;"><span>        playlistName <span style="color:#666">=</span> playlists[pl_index]<span style="color:#666">.</span>strip()
-</span></span><span style="display:flex;"><span>        group[<span style="color:#666">13</span>]<span style="color:#666">.</span>text <span style="color:#666">=</span> <span style="color:#b44">&#34;</span><span style="color:#b68;font-weight:bold">{}</span><span style="color:#b44">&#34;</span><span style="color:#666">.</span>format(playlistName[:<span style="color:#666">24</span>])
-</span></span><span style="display:flex;"><span>    encoder_last_position <span style="color:#666">=</span> position
-</span></span></code></pre></div><p>When the rotary encoder switch is pressed, the command <code>pl|{playlist index}</code> is sent via the serial data line to the jukebox service.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#080;font-style:italic"># encoder push switch</span>
-</span></span><span style="display:flex;"><span>macropad<span style="color:#666">.</span>encoder_switch_debounced<span style="color:#666">.</span>update()
-</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">if</span> macropad<span style="color:#666">.</span>encoder_switch_debounced<span style="color:#666">.</span>pressed:
-</span></span><span style="display:flex;"><span>    group[<span style="color:#666">9</span>]<span style="color:#666">.</span>text <span style="color:#666">=</span> <span style="color:#b44">&#34;PL: </span><span style="color:#b68;font-weight:bold">{}</span><span style="color:#b44">&#34;</span><span style="color:#666">.</span> <span style="color:#a2f">format</span>(pl_index)
-</span></span><span style="display:flex;"><span>    <span style="color:#080;font-style:italic"># send playlist change</span>
-</span></span><span style="display:flex;"><span>    sendData(<span style="color:#b44">&#39;pl|</span><span style="color:#b68;font-weight:bold">{}</span><span style="color:#b44">&#39;</span><span style="color:#666">.</span>format(pl_index))
-</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">else</span>:
-</span></span><span style="display:flex;"><span>    group[<span style="color:#666">9</span>]<span style="color:#666">.</span>text <span style="color:#666">=</span> controlKeys[<span style="color:#666">9</span>][<span style="color:#666">0</span>]
-</span></span></code></pre></div><h3 id="keypad-controls">Keypad Controls <a href="#keypad-controls" class="anchor">🔗</a></h3><p>The playback controls are mapped to the MacroPad keypad in this way.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>Keypad Controls
-</span></span><span style="display:flex;"><span>Play: 		Key 0
-</span></span><span style="display:flex;"><span>Pause:		Key 1
-</span></span><span style="display:flex;"><span>Stop:		  Key 2
-</span></span><span style="display:flex;"><span>Prev:		  Key 3
-</span></span><span style="display:flex;"><span>Next:		  Key 5
-</span></span><span style="display:flex;"><span>Vol Dwn:	Key 6
-</span></span><span style="display:flex;"><span>Vol Up:		Key 8
-</span></span><span style="display:flex;"><span>Clear:	  Key 9
-</span></span><span style="display:flex;"><span>Reset:	  Key 11
-</span></span></code></pre></div><p>We use a list of <code>{Name, command}</code> tuples to hold the map. The entries are arranged in the corresponding key index. The empty slots represent keys that are not used.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>controlKeys <span style="color:#666">=</span> [
-</span></span><span style="display:flex;"><span>    (<span style="color:#b44">&#39;Play&#39;</span>, <span style="color:#b44">&#39;cmd|play&#39;</span>),
-</span></span><span style="display:flex;"><span>    (<span style="color:#b44">&#39;Pause&#39;</span>, <span style="color:#b44">&#39;cmd|pause&#39;</span>),
-</span></span><span style="display:flex;"><span>    (<span style="color:#b44">&#39;Stop&#39;</span>, <span style="color:#b44">&#39;cmd|stop&#39;</span>),
-</span></span><span style="display:flex;"><span>    (<span style="color:#b44">&#39;Prev&#39;</span>, <span style="color:#b44">&#39;cmd|prev&#39;</span>),
-</span></span><span style="display:flex;"><span>    (<span style="color:#b44">&#39;&#39;</span>, <span style="color:#b44">&#39;&#39;</span>),
-</span></span><span style="display:flex;"><span>    (<span style="color:#b44">&#39;Next&#39;</span>, <span style="color:#b44">&#39;cmd|next&#39;</span>),
-</span></span><span style="display:flex;"><span>    (<span style="color:#b44">&#39;Vol Dn&#39;</span>, <span style="color:#b44">&#39;cmd|voldown&#39;</span>),
-</span></span><span style="display:flex;"><span>    (<span style="color:#b44">&#39;&#39;</span>, <span style="color:#b44">&#39;&#39;</span>),
-</span></span><span style="display:flex;"><span>    (<span style="color:#b44">&#39;Vol Up&#39;</span>,<span style="color:#b44">&#39;cmd|volup&#39;</span>),
-</span></span><span style="display:flex;"><span>    (<span style="color:#b44">&#39;Clear&#39;</span>, <span style="color:#b44">&#39;cmd|clear&#39;</span>),
-</span></span><span style="display:flex;"><span>    (<span style="color:#b44">&#39;&#39;</span>, <span style="color:#b44">&#39;&#39;</span>),
-</span></span><span style="display:flex;"><span>    (<span style="color:#b44">&#39;Reset&#39;</span>, <span style="color:#b44">&#39;cmd|reset&#39;</span>),
-</span></span><span style="display:flex;"><span>]
-</span></span></code></pre></div><p>When a key is pressed, we send the corresponding command from the <code>controlKeys</code> array to the serial data line.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>key_event <span style="color:#666">=</span> macropad<span style="color:#666">.</span>keys<span style="color:#666">.</span>events<span style="color:#666">.</span>get()
-</span></span><span style="display:flex;"><span><span style="color:#a2f;font-weight:bold">if</span> key_event:
-</span></span><span style="display:flex;"><span>    <span style="color:#a2f;font-weight:bold">if</span> key_event<span style="color:#666">.</span>key_number <span style="color:#666">&lt;</span> <span style="color:#666">12</span>:
-</span></span><span style="display:flex;"><span>        <span style="color:#a2f;font-weight:bold">if</span> key_event<span style="color:#666">.</span>pressed:
-</span></span><span style="display:flex;"><span>            macropad<span style="color:#666">.</span>pixels[key_event<span style="color:#666">.</span>key_number] <span style="color:#666">=</span> <span style="color:#666">0x002EB8</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#080;font-style:italic"># send command</span>
-</span></span><span style="display:flex;"><span>            sendData(controlKeys[key_event<span style="color:#666">.</span>key_number][<span style="color:#666">1</span>])
-</span></span><span style="display:flex;"><span>            group[<span style="color:#666">9</span>]<span style="color:#666">.</span>text <span style="color:#666">=</span> <span style="color:#b44">&#34;Key: </span><span style="color:#b68;font-weight:bold">{}</span><span style="color:#b44">&#34;</span><span style="color:#666">.</span>format(key_event<span style="color:#666">.</span>key_number)
-</span></span><span style="display:flex;"><span>        <span style="color:#a2f;font-weight:bold">else</span>:
-</span></span><span style="display:flex;"><span>            macropad<span style="color:#666">.</span>pixels[key_event<span style="color:#666">.</span>key_number] <span style="color:#666">=</span> <span style="color:#666">0</span>
-</span></span><span style="display:flex;"><span>            group[<span style="color:#666">9</span>]<span style="color:#666">.</span>text <span style="color:#666">=</span> controlKeys[<span style="color:#666">9</span>][<span style="color:#666">0</span>]
-</span></span></code></pre></div><h2 id="whats-next">What&rsquo;s next? <a href="#whats-next" class="anchor">🔗</a></h2><p>After completing the project I realized there is a number of things I could do to improve this project:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">position <span style="color:#666">=</span> macropad<span style="color:#666">.</span>encoder
+<span style="color:#a2f;font-weight:bold">if</span> position <span style="color:#666">!=</span> encoder_last_position:
+    <span style="color:#a2f;font-weight:bold">if</span> <span style="color:#a2f">len</span>(playlistIndexes)<span style="color:#666">&gt;</span><span style="color:#666">0</span>:
+        plPos <span style="color:#666">=</span> position <span style="color:#666">%</span> <span style="color:#a2f">len</span>(playlistIndexes)
+        pl_index<span style="color:#666">=</span>playlistIndexes[plPos]
+        playlistName <span style="color:#666">=</span> playlists[pl_index]<span style="color:#666">.</span>strip()
+        group[<span style="color:#666">13</span>]<span style="color:#666">.</span>text <span style="color:#666">=</span> <span style="color:#b44">&#34;</span><span style="color:#b68;font-weight:bold">{}</span><span style="color:#b44">&#34;</span><span style="color:#666">.</span>format(playlistName[:<span style="color:#666">24</span>])
+    encoder_last_position <span style="color:#666">=</span> position
+</code></pre></div><p>When the rotary encoder switch is pressed, the command <code>pl|{playlist index}</code> is sent via the serial data line to the jukebox service.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#080;font-style:italic"># encoder push switch</span>
+macropad<span style="color:#666">.</span>encoder_switch_debounced<span style="color:#666">.</span>update()
+<span style="color:#a2f;font-weight:bold">if</span> macropad<span style="color:#666">.</span>encoder_switch_debounced<span style="color:#666">.</span>pressed:
+    group[<span style="color:#666">9</span>]<span style="color:#666">.</span>text <span style="color:#666">=</span> <span style="color:#b44">&#34;PL: </span><span style="color:#b68;font-weight:bold">{}</span><span style="color:#b44">&#34;</span><span style="color:#666">.</span> <span style="color:#a2f">format</span>(pl_index)
+    <span style="color:#080;font-style:italic"># send playlist change</span>
+    sendData(<span style="color:#b44">&#39;pl|</span><span style="color:#b68;font-weight:bold">{}</span><span style="color:#b44">&#39;</span><span style="color:#666">.</span>format(pl_index))
+<span style="color:#a2f;font-weight:bold">else</span>:
+    group[<span style="color:#666">9</span>]<span style="color:#666">.</span>text <span style="color:#666">=</span> controlKeys[<span style="color:#666">9</span>][<span style="color:#666">0</span>]
+</code></pre></div><h3 id="keypad-controls">Keypad Controls <a href="#keypad-controls" class="anchor">🔗</a></h3><p>The playback controls are mapped to the MacroPad keypad in this way.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">Keypad Controls
+Play: 		Key 0
+Pause:		Key 1
+Stop:		  Key 2
+Prev:		  Key 3
+Next:		  Key 5
+Vol Dwn:	Key 6
+Vol Up:		Key 8
+Clear:	  Key 9
+Reset:	  Key 11
+
+</code></pre></div><p>We use a list of <code>{Name, command}</code> tuples to hold the map. The entries are arranged in the corresponding key index. The empty slots represent keys that are not used.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">controlKeys <span style="color:#666">=</span> [
+    (<span style="color:#b44">&#39;Play&#39;</span>, <span style="color:#b44">&#39;cmd|play&#39;</span>),
+    (<span style="color:#b44">&#39;Pause&#39;</span>, <span style="color:#b44">&#39;cmd|pause&#39;</span>),
+    (<span style="color:#b44">&#39;Stop&#39;</span>, <span style="color:#b44">&#39;cmd|stop&#39;</span>),
+    (<span style="color:#b44">&#39;Prev&#39;</span>, <span style="color:#b44">&#39;cmd|prev&#39;</span>),
+    (<span style="color:#b44">&#39;&#39;</span>, <span style="color:#b44">&#39;&#39;</span>),
+    (<span style="color:#b44">&#39;Next&#39;</span>, <span style="color:#b44">&#39;cmd|next&#39;</span>),
+    (<span style="color:#b44">&#39;Vol Dn&#39;</span>, <span style="color:#b44">&#39;cmd|voldown&#39;</span>),
+    (<span style="color:#b44">&#39;&#39;</span>, <span style="color:#b44">&#39;&#39;</span>),
+    (<span style="color:#b44">&#39;Vol Up&#39;</span>,<span style="color:#b44">&#39;cmd|volup&#39;</span>),
+    (<span style="color:#b44">&#39;Clear&#39;</span>, <span style="color:#b44">&#39;cmd|clear&#39;</span>),
+    (<span style="color:#b44">&#39;&#39;</span>, <span style="color:#b44">&#39;&#39;</span>),
+    (<span style="color:#b44">&#39;Reset&#39;</span>, <span style="color:#b44">&#39;cmd|reset&#39;</span>),
+]
+</code></pre></div><p>When a key is pressed, we send the corresponding command from the <code>controlKeys</code> array to the serial data line.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">key_event <span style="color:#666">=</span> macropad<span style="color:#666">.</span>keys<span style="color:#666">.</span>events<span style="color:#666">.</span>get()
+<span style="color:#a2f;font-weight:bold">if</span> key_event:
+    <span style="color:#a2f;font-weight:bold">if</span> key_event<span style="color:#666">.</span>key_number <span style="color:#666">&lt;</span> <span style="color:#666">12</span>:
+        <span style="color:#a2f;font-weight:bold">if</span> key_event<span style="color:#666">.</span>pressed:
+            macropad<span style="color:#666">.</span>pixels[key_event<span style="color:#666">.</span>key_number] <span style="color:#666">=</span> <span style="color:#666">0x002EB8</span>
+            <span style="color:#080;font-style:italic"># send command</span>
+            sendData(controlKeys[key_event<span style="color:#666">.</span>key_number][<span style="color:#666">1</span>])
+            group[<span style="color:#666">9</span>]<span style="color:#666">.</span>text <span style="color:#666">=</span> <span style="color:#b44">&#34;Key: </span><span style="color:#b68;font-weight:bold">{}</span><span style="color:#b44">&#34;</span><span style="color:#666">.</span>format(key_event<span style="color:#666">.</span>key_number)
+        <span style="color:#a2f;font-weight:bold">else</span>:
+            macropad<span style="color:#666">.</span>pixels[key_event<span style="color:#666">.</span>key_number] <span style="color:#666">=</span> <span style="color:#666">0</span>
+            group[<span style="color:#666">9</span>]<span style="color:#666">.</span>text <span style="color:#666">=</span> controlKeys[<span style="color:#666">9</span>][<span style="color:#666">0</span>]
+
+</code></pre></div><h2 id="whats-next">What&rsquo;s next? <a href="#whats-next" class="anchor">🔗</a></h2><p>After completing the project I realized there is a number of things I could do to improve this project:</p>
 <ul>
 <li>A better mechanism to load new music without editing the config file.</li>
 <li>More media actions: random, fast-forward, rewind, etc.</li>

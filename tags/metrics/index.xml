@@ -14,7 +14,7 @@
       
       <guid>https://carlosolmos.dev/posts/instrumenting-applications-with-prometheus/</guid>
       <description>&amp;ldquo;What is not defined cannot be measured. What is not measured, cannot be improved. What is not improved, is always degraded&amp;rdquo;. William Thomson Kelvin
-In this article, we will learn how to create custom metrics for a simple web application and use Prometheus to collect and report on them.
+ In this article, we will learn how to create custom metrics for a simple web application and use Prometheus to collect and report on them.
 Site Reliability Engineering 🔗This post is part of a series about Site Reliability Engineering (SRE). In the series, we will talk about different concepts, tools, and techniques to keep a large-scale system healthy.</description>
     </item>
     

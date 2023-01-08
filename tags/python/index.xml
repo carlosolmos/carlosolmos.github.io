@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>python on brain dump</title>
+    <link>https://carlosolmos.dev/tags/python/</link>
+    <description>Recent content in python on brain dump</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 07 Jan 2023 09:17:36 -0800</lastBuildDate><atom:link href="https://carlosolmos.dev/tags/python/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>The Cryptography Lab</title>
+      <link>https://carlosolmos.dev/posts/the-cryptography-lab/</link>
+      <pubDate>Sat, 07 Jan 2023 09:17:36 -0800</pubDate>
+      
+      <guid>https://carlosolmos.dev/posts/the-cryptography-lab/</guid>
+      <description>The Science of Secret Writing 🔗https://cryptographylab.streamlit.app 🔗I started this project to help me understand the encryption techniques Simon Singh explains in his fantastic book The Code Book - The Science of Secrecy From Ancient Egypt to Quantum Cryptography (Anchor Books, 2000). I plan to work with the concepts of cryptography and cryptanalysis history, laid out by Singh in his book, implementing the algorithms —to the best of my abilities— with Python snippets and libraries.</description>
+    </item>
+    
+  </channel>
+</rss>

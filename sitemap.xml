@@ -3,7 +3,37 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://carlosolmos.dev/</loc>
-    <lastmod>2022-12-26T15:52:52-08:00</lastmod>
+    <lastmod>2023-01-07T09:17:36-08:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.dev/categories/</loc>
+    <lastmod>2023-01-07T09:17:36-08:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.dev/tags/cryptography/</loc>
+    <lastmod>2023-01-07T09:17:36-08:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.dev/series/cryptography-lab/</loc>
+    <lastmod>2023-01-07T09:17:36-08:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.dev/tags/cybersecurity/</loc>
+    <lastmod>2023-01-07T09:17:36-08:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.dev/posts/</loc>
+    <lastmod>2023-01-07T09:17:36-08:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.dev/categories/project/</loc>
+    <lastmod>2023-01-07T09:17:36-08:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.dev/tags/python/</loc>
+    <lastmod>2023-01-07T09:17:36-08:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.dev/series/</loc>
+    <lastmod>2023-01-07T09:17:36-08:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.dev/tags/</loc>
+    <lastmod>2023-01-07T09:17:36-08:00</lastmod>
+  </url><url>
+    <loc>https://carlosolmos.dev/posts/the-cryptography-lab/</loc>
+    <lastmod>2023-01-07T09:17:36-08:00</lastmod>
   </url><url>
     <loc>https://carlosolmos.dev/tags/circuitpython/</loc>
     <lastmod>2022-12-26T15:52:52-08:00</lastmod>
@@ -14,22 +44,10 @@
     <loc>https://carlosolmos.dev/tags/overengineered/</loc>
     <lastmod>2022-12-26T15:52:52-08:00</lastmod>
   </url><url>
-    <loc>https://carlosolmos.dev/posts/</loc>
-    <lastmod>2022-12-26T15:52:52-08:00</lastmod>
-  </url><url>
-    <loc>https://carlosolmos.dev/tags/</loc>
-    <lastmod>2022-12-26T15:52:52-08:00</lastmod>
-  </url><url>
     <loc>https://carlosolmos.dev/posts/the-macropad-jukebox/</loc>
     <lastmod>2022-12-26T15:52:52-08:00</lastmod>
   </url><url>
     <loc>https://carlosolmos.dev/posts/abandonware-evaluating-the-health-of-the-libraries-in-your-project/</loc>
-    <lastmod>2022-12-18T19:10:44-08:00</lastmod>
-  </url><url>
-    <loc>https://carlosolmos.dev/categories/</loc>
-    <lastmod>2022-12-18T19:10:44-08:00</lastmod>
-  </url><url>
-    <loc>https://carlosolmos.dev/tags/cybersecurity/</loc>
     <lastmod>2022-12-18T19:10:44-08:00</lastmod>
   </url><url>
     <loc>https://carlosolmos.dev/categories/know-how/</loc>
@@ -66,9 +84,6 @@
     <lastmod>2022-11-22T19:01:59-08:00</lastmod>
   </url><url>
     <loc>https://carlosolmos.dev/tags/nodered/</loc>
-    <lastmod>2022-11-22T19:01:59-08:00</lastmod>
-  </url><url>
-    <loc>https://carlosolmos.dev/series/</loc>
     <lastmod>2022-11-22T19:01:59-08:00</lastmod>
   </url><url>
     <loc>https://carlosolmos.dev/tags/env/</loc>

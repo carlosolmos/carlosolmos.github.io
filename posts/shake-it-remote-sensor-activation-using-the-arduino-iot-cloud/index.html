@@ -7,7 +7,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">    
 <meta name="viewport" content="width=device-width,minimum-scale=1">
 <meta name="description" content="An overengineered solution to activate an Everactive batteryless motion sensor remotely using a wifi-enabled microcontroller and a cloud service.">
-<meta name="generator" content="Hugo 0.103.1" />
+<meta name="generator" content="Hugo 0.92.2" />
 
 
   <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
@@ -29,7 +29,6 @@
 
 
 
-<script data-goatcounter="https://iotitlan.goatcounter.com/count"  async src="//gc.zgo.at/count.js"></script>
 
   </head>
 
@@ -63,7 +62,7 @@
           ·
         </span>
         <span>
-          1804 words
+          1801 words
         </span>
         <span class="split">
           ·
@@ -160,20 +159,21 @@
 </blockquote>
 <h3 id="controlling-the-motors">Controlling the Motors <a href="#controlling-the-motors" class="anchor">🔗</a></h3><p>I used Arduino code to program the microcontroller. The motor modules I selected are very easy to use, they support a simple high/low activation via a digital signal, which is all I need.</p>
 <p>The simplest Arduino code to operate the motors looks like this:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#0b0;font-weight:bold">int</span> motorPin<span style="color:#666">=</span><span style="color:#666">3</span>;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#0b0;font-weight:bold">void</span> <span style="color:#00a000">setup</span>() {
-</span></span><span style="display:flex;"><span>  <span style="color:#080;font-style:italic">// motor pin 
-</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"></span>  pinMode(motorPin, OUTPUT );
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#0b0;font-weight:bold">void</span> <span style="color:#00a000">loop</span>() {
-</span></span><span style="display:flex;"><span>    digitalWrite(motorPin, HIGH); <span style="color:#080;font-style:italic">// turn the Motor all the way up
-</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"></span>    delay(<span style="color:#666">2500</span>);
-</span></span><span style="display:flex;"><span>    digitalWrite(motorPin, LOW); <span style="color:#080;font-style:italic">//turn the motor off
-</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"></span>    delay(<span style="color:#666">1000</span>); 
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><h2 id="receiving-messages-from-the-cloud">Receiving messages from the Cloud <a href="#receiving-messages-from-the-cloud" class="anchor">🔗</a></h2><p>The program I need is a little bit more complex, but still straightforward: I used a couple of variables in the Arduino IoT Cloud and the built-in data synchronization mechanisms its SDK provides out of the box.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#0b0;font-weight:bold">int</span> motorPin<span style="color:#666">=</span><span style="color:#666">3</span>;
+
+<span style="color:#0b0;font-weight:bold">void</span> <span style="color:#00a000">setup</span>() {
+  <span style="color:#080;font-style:italic">// motor pin 
+</span><span style="color:#080;font-style:italic"></span>  pinMode(motorPin, OUTPUT );
+}
+
+<span style="color:#0b0;font-weight:bold">void</span> <span style="color:#00a000">loop</span>() {
+    digitalWrite(motorPin, HIGH); <span style="color:#080;font-style:italic">// turn the Motor all the way up
+</span><span style="color:#080;font-style:italic"></span>    delay(<span style="color:#666">2500</span>);
+    digitalWrite(motorPin, LOW); <span style="color:#080;font-style:italic">//turn the motor off
+</span><span style="color:#080;font-style:italic"></span>    delay(<span style="color:#666">1000</span>); 
+}
+
+</code></pre></div><h2 id="receiving-messages-from-the-cloud">Receiving messages from the Cloud <a href="#receiving-messages-from-the-cloud" class="anchor">🔗</a></h2><p>The program I need is a little bit more complex, but still straightforward: I used a couple of variables in the Arduino IoT Cloud and the built-in data synchronization mechanisms its SDK provides out of the box.</p>
 <p>The board reacts to the changes in a Cloud variable I call <code>shakeTimes</code>, and activates the motor accordingly. A <code>success</code> variable is set to notify that the command was received.</p>
 <p><p class="markdown-image"> 
   <img class="zoomable" id="aW1nL2Zsb3cucG5n" src="img/flow.png" alt=""  />  
@@ -256,121 +256,121 @@
   <small class="img-note">click to zoom in</small>
 </p></p>
 <p>I see from the auto-generated comments that the two cloud variables are already declared in the code:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>  <span style="color:#0b0;font-weight:bold">int</span> shakeTimes;
-</span></span><span style="display:flex;"><span>  <span style="color:#0b0;font-weight:bold">bool</span> success;
-</span></span></code></pre></div><p>The <code>setup()</code> function is already populated with the serial and the Cloud library initialization. I initialize the pin I will use to control the motors:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#0b0;font-weight:bold">void</span> <span style="color:#00a000">setup</span>() {
-</span></span><span style="display:flex;"><span>  <span style="color:#080;font-style:italic">// motor pin 
-</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"></span>pinMode(motorPin, OUTPUT );
-</span></span></code></pre></div><p>Because I want the LED widget in the dashboard to reflect the status of the actuator, I have to be sure to set the value to <code>false</code> in the <code>loop()</code> function.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#0b0;font-weight:bold">void</span> <span style="color:#00a000">loop</span>() {
-</span></span><span style="display:flex;"><span>  success<span style="color:#666">=</span><span style="color:#a2f">false</span>;
-</span></span><span style="display:flex;"><span>  ArduinoCloud.update();
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>The real magic happens when the <code>shakeTimes</code> variable is modified. The Arduino IoT Cloud library prepared a function for me to capture this event and work with the new value.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#0b0;font-weight:bold">void</span> <span style="color:#00a000">onShakeTimesChange</span>()  {
-</span></span><span style="display:flex;"><span> <span style="color:#080;font-style:italic">// Add your code here to act upon the ShakeTimes change
-</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"></span> <span style="color:#a2f;font-weight:bold">if</span>(shakeTimes<span style="color:#666">&gt;</span><span style="color:#666">0</span>){
-</span></span><span style="display:flex;"><span>   shake(shakeTimes);
-</span></span><span style="display:flex;"><span> }
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><blockquote>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">  <span style="color:#0b0;font-weight:bold">int</span> shakeTimes;
+  <span style="color:#0b0;font-weight:bold">bool</span> success;
+</code></pre></div><p>The <code>setup()</code> function is already populated with the serial and the Cloud library initialization. I initialize the pin I will use to control the motors:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#0b0;font-weight:bold">void</span> <span style="color:#00a000">setup</span>() {
+  <span style="color:#080;font-style:italic">// motor pin 
+</span><span style="color:#080;font-style:italic"></span>pinMode(motorPin, OUTPUT );
+</code></pre></div><p>Because I want the LED widget in the dashboard to reflect the status of the actuator, I have to be sure to set the value to <code>false</code> in the <code>loop()</code> function.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#0b0;font-weight:bold">void</span> <span style="color:#00a000">loop</span>() {
+  success<span style="color:#666">=</span><span style="color:#a2f">false</span>;
+  ArduinoCloud.update();
+}
+</code></pre></div><p>The real magic happens when the <code>shakeTimes</code> variable is modified. The Arduino IoT Cloud library prepared a function for me to capture this event and work with the new value.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#0b0;font-weight:bold">void</span> <span style="color:#00a000">onShakeTimesChange</span>()  {
+ <span style="color:#080;font-style:italic">// Add your code here to act upon the ShakeTimes change
+</span><span style="color:#080;font-style:italic"></span> <span style="color:#a2f;font-weight:bold">if</span>(shakeTimes<span style="color:#666">&gt;</span><span style="color:#666">0</span>){
+   shake(shakeTimes);
+ }
+}
+</code></pre></div><blockquote>
 <p>Note that all the plumbing to sync the variable value from the dashboard to the board is abstracted out by the Arduino IoT Cloud library. Pretty cool, ha! but more on this later.</p>
 </blockquote>
 <p>The <code>shake</code> function is responsible for updating the <code>success</code> variable to acknowledge the command, and for activating — and deactivating — the motor as many times as specified in the value.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#0b0;font-weight:bold">void</span> <span style="color:#00a000">shake</span>(<span style="color:#0b0;font-weight:bold">int</span> laps){
-</span></span><span style="display:flex;"><span>  <span style="color:#a2f;font-weight:bold">if</span>(laps<span style="color:#666">&lt;=</span><span style="color:#666">0</span>){
-</span></span><span style="display:flex;"><span>    laps <span style="color:#666">=</span> <span style="color:#666">1</span>;
-</span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>  Serial.println(<span style="color:#b44">&#34;shaking&#34;</span>);
-</span></span><span style="display:flex;"><span>  success<span style="color:#666">=</span><span style="color:#a2f">true</span>;
-</span></span><span style="display:flex;"><span>  ArduinoCloud.update();
-</span></span><span style="display:flex;"><span>  <span style="color:#a2f;font-weight:bold">for</span>(<span style="color:#0b0;font-weight:bold">int</span> i<span style="color:#666">=</span><span style="color:#666">0</span>; i<span style="color:#666">&lt;</span>laps; i<span style="color:#666">++</span>){
-</span></span><span style="display:flex;"><span>    digitalWrite(motorPin, HIGH); <span style="color:#080;font-style:italic">// turn the Motor all the way up
-</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"></span>    delay(<span style="color:#666">2500</span>);
-</span></span><span style="display:flex;"><span>    digitalWrite(motorPin, LOW); <span style="color:#080;font-style:italic">//turn the motor off
-</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"></span>    delay(<span style="color:#666">1000</span>);
-</span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>This is what the full code looks like:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-style:italic">/* 
-</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic">  Sketch generated by the Arduino IoT Cloud Thing &#34;shakeit&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic">  https://create.arduino.cc/cloud/things/0173e502-f6e5-4f02-ac02-16127f6c1aa0 
-</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic">
-</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic">  Arduino IoT Cloud Variables description
-</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic">
-</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic">  The following variables are automatically generated and updated when changes are made to the Thing
-</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic">
-</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic">  int shakeTimes;
-</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic">  bool success;
-</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic">
-</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic">  Variables which are marked as READ/WRITE in the Cloud Thing will also have functions
-</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic">  which are called when their values are changed from the Dashboard.
-</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic">  These functions are generated with the Thing and added at the end of this sketch.
-</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic">*/</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#080">#include</span> <span style="color:#080">&#34;thingProperties.h&#34;</span><span style="color:#080">
-</span></span></span><span style="display:flex;"><span><span style="color:#080"></span>
-</span></span><span style="display:flex;"><span><span style="color:#0b0;font-weight:bold">int</span> motorPin<span style="color:#666">=</span><span style="color:#666">3</span>;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#0b0;font-weight:bold">void</span> <span style="color:#00a000">setup</span>() {
-</span></span><span style="display:flex;"><span>  <span style="color:#080;font-style:italic">// motor pin 
-</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"></span>  pinMode(motorPin, OUTPUT );
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  <span style="color:#080;font-style:italic">// Initialize serial and wait for port to open:
-</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"></span>  Serial.begin(<span style="color:#666">9600</span>);
-</span></span><span style="display:flex;"><span>  <span style="color:#080;font-style:italic">// This delay gives the chance to wait for a Serial Monitor without blocking if none is found
-</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"></span>  delay(<span style="color:#666">1500</span>); 
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  <span style="color:#080;font-style:italic">// Defined in thingProperties.h
-</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"></span>  initProperties();
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  <span style="color:#080;font-style:italic">// Connect to Arduino IoT Cloud
-</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"></span>  ArduinoCloud.begin(ArduinoIoTPreferredConnection);
-</span></span><span style="display:flex;"><span>  
-</span></span><span style="display:flex;"><span>  <span style="color:#080;font-style:italic">/*
-</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic">     The following function allows you to obtain more information
-</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic">     related to the state of network and IoT Cloud connection and errors
-</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic">     the higher number the more granular information you’ll get.
-</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic">     The default is 0 (only errors).
-</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic">     Maximum is 4
-</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"> */</span>
-</span></span><span style="display:flex;"><span>  setDebugMessageLevel(<span style="color:#666">2</span>);
-</span></span><span style="display:flex;"><span>  ArduinoCloud.printDebugInfo();
-</span></span><span style="display:flex;"><span>  
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#0b0;font-weight:bold">void</span> <span style="color:#00a000">loop</span>() {
-</span></span><span style="display:flex;"><span>  success<span style="color:#666">=</span><span style="color:#a2f">false</span>;
-</span></span><span style="display:flex;"><span>  ArduinoCloud.update();
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#0b0;font-weight:bold">void</span> <span style="color:#00a000">shake</span>(<span style="color:#0b0;font-weight:bold">int</span> laps){
-</span></span><span style="display:flex;"><span>  <span style="color:#a2f;font-weight:bold">if</span>(laps<span style="color:#666">&lt;=</span><span style="color:#666">0</span>){
-</span></span><span style="display:flex;"><span>    laps <span style="color:#666">=</span> <span style="color:#666">1</span>;
-</span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>  Serial.println(<span style="color:#b44">&#34;shaking&#34;</span>);
-</span></span><span style="display:flex;"><span>  success<span style="color:#666">=</span><span style="color:#a2f">true</span>;
-</span></span><span style="display:flex;"><span>  ArduinoCloud.update();
-</span></span><span style="display:flex;"><span>  <span style="color:#a2f;font-weight:bold">for</span>(<span style="color:#0b0;font-weight:bold">int</span> i<span style="color:#666">=</span><span style="color:#666">0</span>; i<span style="color:#666">&lt;</span>laps; i<span style="color:#666">++</span>){
-</span></span><span style="display:flex;"><span>    digitalWrite(motorPin, HIGH); <span style="color:#080;font-style:italic">// turn the Motor all the way up
-</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"></span>    delay(<span style="color:#666">2500</span>);
-</span></span><span style="display:flex;"><span>    digitalWrite(motorPin, LOW); <span style="color:#080;font-style:italic">//turn the motor off
-</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"></span>    delay(<span style="color:#666">1000</span>);
-</span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic">/*
-</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic">  Since ShakeTimes is READ_WRITE variable, onShakeTimesChange() is
-</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic">  executed every time a new value is received from IoT Cloud.
-</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic">*/</span>
-</span></span><span style="display:flex;"><span><span style="color:#0b0;font-weight:bold">void</span> <span style="color:#00a000">onShakeTimesChange</span>()  {
-</span></span><span style="display:flex;"><span>  <span style="color:#080;font-style:italic">// Add your code here to act upon ShakeTimes change
-</span></span></span><span style="display:flex;"><span><span style="color:#080;font-style:italic"></span>  <span style="color:#a2f;font-weight:bold">if</span>(shakeTimes<span style="color:#666">&gt;</span><span style="color:#666">0</span>){
-</span></span><span style="display:flex;"><span>    shake(shakeTimes);
-</span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><ol start="6">
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#0b0;font-weight:bold">void</span> <span style="color:#00a000">shake</span>(<span style="color:#0b0;font-weight:bold">int</span> laps){
+  <span style="color:#a2f;font-weight:bold">if</span>(laps<span style="color:#666">&lt;=</span><span style="color:#666">0</span>){
+    laps <span style="color:#666">=</span> <span style="color:#666">1</span>;
+  }
+  Serial.println(<span style="color:#b44">&#34;shaking&#34;</span>);
+  success<span style="color:#666">=</span><span style="color:#a2f">true</span>;
+  ArduinoCloud.update();
+  <span style="color:#a2f;font-weight:bold">for</span>(<span style="color:#0b0;font-weight:bold">int</span> i<span style="color:#666">=</span><span style="color:#666">0</span>; i<span style="color:#666">&lt;</span>laps; i<span style="color:#666">++</span>){
+    digitalWrite(motorPin, HIGH); <span style="color:#080;font-style:italic">// turn the Motor all the way up
+</span><span style="color:#080;font-style:italic"></span>    delay(<span style="color:#666">2500</span>);
+    digitalWrite(motorPin, LOW); <span style="color:#080;font-style:italic">//turn the motor off
+</span><span style="color:#080;font-style:italic"></span>    delay(<span style="color:#666">1000</span>);
+  }
+}
+</code></pre></div><p>This is what the full code looks like:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-style:italic">/* 
+</span><span style="color:#080;font-style:italic">  Sketch generated by the Arduino IoT Cloud Thing &#34;shakeit&#34;
+</span><span style="color:#080;font-style:italic">  https://create.arduino.cc/cloud/things/0173e502-f6e5-4f02-ac02-16127f6c1aa0 
+</span><span style="color:#080;font-style:italic">
+</span><span style="color:#080;font-style:italic">  Arduino IoT Cloud Variables description
+</span><span style="color:#080;font-style:italic">
+</span><span style="color:#080;font-style:italic">  The following variables are automatically generated and updated when changes are made to the Thing
+</span><span style="color:#080;font-style:italic">
+</span><span style="color:#080;font-style:italic">  int shakeTimes;
+</span><span style="color:#080;font-style:italic">  bool success;
+</span><span style="color:#080;font-style:italic">
+</span><span style="color:#080;font-style:italic">  Variables which are marked as READ/WRITE in the Cloud Thing will also have functions
+</span><span style="color:#080;font-style:italic">  which are called when their values are changed from the Dashboard.
+</span><span style="color:#080;font-style:italic">  These functions are generated with the Thing and added at the end of this sketch.
+</span><span style="color:#080;font-style:italic">*/</span>
+
+<span style="color:#080">#include</span> <span style="color:#080">&#34;thingProperties.h&#34;</span><span style="color:#080">
+</span><span style="color:#080"></span>
+<span style="color:#0b0;font-weight:bold">int</span> motorPin<span style="color:#666">=</span><span style="color:#666">3</span>;
+
+<span style="color:#0b0;font-weight:bold">void</span> <span style="color:#00a000">setup</span>() {
+  <span style="color:#080;font-style:italic">// motor pin 
+</span><span style="color:#080;font-style:italic"></span>  pinMode(motorPin, OUTPUT );
+
+  <span style="color:#080;font-style:italic">// Initialize serial and wait for port to open:
+</span><span style="color:#080;font-style:italic"></span>  Serial.begin(<span style="color:#666">9600</span>);
+  <span style="color:#080;font-style:italic">// This delay gives the chance to wait for a Serial Monitor without blocking if none is found
+</span><span style="color:#080;font-style:italic"></span>  delay(<span style="color:#666">1500</span>); 
+
+  <span style="color:#080;font-style:italic">// Defined in thingProperties.h
+</span><span style="color:#080;font-style:italic"></span>  initProperties();
+
+  <span style="color:#080;font-style:italic">// Connect to Arduino IoT Cloud
+</span><span style="color:#080;font-style:italic"></span>  ArduinoCloud.begin(ArduinoIoTPreferredConnection);
+  
+  <span style="color:#080;font-style:italic">/*
+</span><span style="color:#080;font-style:italic">     The following function allows you to obtain more information
+</span><span style="color:#080;font-style:italic">     related to the state of network and IoT Cloud connection and errors
+</span><span style="color:#080;font-style:italic">     the higher number the more granular information you’ll get.
+</span><span style="color:#080;font-style:italic">     The default is 0 (only errors).
+</span><span style="color:#080;font-style:italic">     Maximum is 4
+</span><span style="color:#080;font-style:italic"> */</span>
+  setDebugMessageLevel(<span style="color:#666">2</span>);
+  ArduinoCloud.printDebugInfo();
+  
+}
+
+<span style="color:#0b0;font-weight:bold">void</span> <span style="color:#00a000">loop</span>() {
+  success<span style="color:#666">=</span><span style="color:#a2f">false</span>;
+  ArduinoCloud.update();
+}
+
+<span style="color:#0b0;font-weight:bold">void</span> <span style="color:#00a000">shake</span>(<span style="color:#0b0;font-weight:bold">int</span> laps){
+  <span style="color:#a2f;font-weight:bold">if</span>(laps<span style="color:#666">&lt;=</span><span style="color:#666">0</span>){
+    laps <span style="color:#666">=</span> <span style="color:#666">1</span>;
+  }
+  Serial.println(<span style="color:#b44">&#34;shaking&#34;</span>);
+  success<span style="color:#666">=</span><span style="color:#a2f">true</span>;
+  ArduinoCloud.update();
+  <span style="color:#a2f;font-weight:bold">for</span>(<span style="color:#0b0;font-weight:bold">int</span> i<span style="color:#666">=</span><span style="color:#666">0</span>; i<span style="color:#666">&lt;</span>laps; i<span style="color:#666">++</span>){
+    digitalWrite(motorPin, HIGH); <span style="color:#080;font-style:italic">// turn the Motor all the way up
+</span><span style="color:#080;font-style:italic"></span>    delay(<span style="color:#666">2500</span>);
+    digitalWrite(motorPin, LOW); <span style="color:#080;font-style:italic">//turn the motor off
+</span><span style="color:#080;font-style:italic"></span>    delay(<span style="color:#666">1000</span>);
+  }
+}
+
+<span style="color:#080;font-style:italic">/*
+</span><span style="color:#080;font-style:italic">  Since ShakeTimes is READ_WRITE variable, onShakeTimesChange() is
+</span><span style="color:#080;font-style:italic">  executed every time a new value is received from IoT Cloud.
+</span><span style="color:#080;font-style:italic">*/</span>
+<span style="color:#0b0;font-weight:bold">void</span> <span style="color:#00a000">onShakeTimesChange</span>()  {
+  <span style="color:#080;font-style:italic">// Add your code here to act upon ShakeTimes change
+</span><span style="color:#080;font-style:italic"></span>  <span style="color:#a2f;font-weight:bold">if</span>(shakeTimes<span style="color:#666">&gt;</span><span style="color:#666">0</span>){
+    shake(shakeTimes);
+  }
+}
+</code></pre></div><ol start="6">
 <li>Programming the board.</li>
 </ol>
 <p>From the Web IDE, I can upload the code to the board. Once the upload is complete, I can go to the Dashboard and play around with the <code>shakeTimes</code> value to test the comms.</p>
